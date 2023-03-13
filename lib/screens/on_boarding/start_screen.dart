@@ -85,9 +85,7 @@ class _StartScreenState extends State<StartScreen> {
                   backgroundColor: purpleBeaty,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(50))),
-              onPressed: () {
-                print('Pressed!');
-              },
+              onPressed: (() => Navigator.of(context).pushNamed('/login')),
               child: const Text(
                 'Get started',
                 style: TextStyle(
