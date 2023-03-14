@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _RegisterScreenState extends State<RegisterScreen> {
   Color littleLight = const Color(0xFFF3FFAB);
   Color purpleBeaty = const Color(0xFF8E05C2);
 
@@ -24,7 +24,7 @@ class _LoginScreenState extends State<LoginScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Sign in now',
+                'Sign up now',
                 style: TextStyle(
                     fontFamily: 'Poppins',
                     fontWeight: FontWeight.w500,
@@ -36,6 +36,14 @@ class _LoginScreenState extends State<LoginScreen> {
                 'Welcome to Merume!',
                 style: TextStyle(
                     fontFamily: 'WorkSans', fontSize: 16, color: Colors.white),
+              ),
+              const SizedBox(height: 50.0),
+              const TextField(
+                decoration: InputDecoration(
+                  hintText: 'Nickname',
+                  fillColor: Colors.white,
+                  filled: true,
+                ),
               ),
               const SizedBox(height: 50.0),
               const TextField(
@@ -54,26 +62,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   filled: true,
                 ),
               ),
-              const SizedBox(
-                height: 32.0,
-              ),
-              Align(
-                alignment: Alignment.bottomRight,
-                child: Text(
-                  'Forgot password?',
-                  style: TextStyle(
-                    color: littleLight,
-                    fontFamily: 'WorkSans',
-                    fontSize: 15,
-                  ),
-                ),
-              ),
               const SizedBox(height: 50.0),
               Center(
                 child: ElevatedButton(
                   onPressed: () {
-                    //ToDo: make signIn here
-                    print('Sign in here');
+                    //ToDo: make sign up here
+                    print('Sign up');
                   },
                   style: ElevatedButton.styleFrom(
                       fixedSize: const Size(178, 38),
@@ -81,7 +75,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(50))),
                   child: const Text(
-                    'Sign in',
+                    'Sign up',
                     style: TextStyle(
                       color: Colors.white,
                       fontFamily: 'WorkSans',
@@ -92,12 +86,12 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               const SizedBox(height: 24.0),
               TextButton(
-                onPressed: (() => Navigator.of(context).pushNamed('/register')),
+                onPressed: (() => Navigator.of(context).pushNamed('/login')),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Text(
-                      'I don\'t have an account ',
+                      'I already have an account ',
                       style: TextStyle(
                         fontFamily: 'WorkSans',
                         fontSize: 16,
@@ -105,7 +99,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                     Text(
-                      'Sign up',
+                      'Sign in',
                       style: TextStyle(
                         fontFamily: 'WorkSans',
                         fontSize: 16,
