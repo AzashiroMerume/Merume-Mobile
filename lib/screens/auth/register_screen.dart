@@ -86,7 +86,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
               const SizedBox(height: 24.0),
               TextButton(
-                onPressed: (() => Navigator.of(context).pushNamed('/login')),
+                onPressed: (() =>
+                    Navigator.of(context).pushReplacementNamed('/login')),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

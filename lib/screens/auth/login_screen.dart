@@ -59,14 +59,18 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               Align(
                 alignment: Alignment.bottomRight,
-                child: Text(
-                  'Forgot password?',
-                  style: TextStyle(
-                    color: littleLight,
-                    fontFamily: 'WorkSans',
-                    fontSize: 15,
-                  ),
-                ),
+                child: TextButton(
+                    onPressed: () {
+                      print('Forgot pass');
+                    },
+                    child: Text(
+                      'Forgot password?',
+                      style: TextStyle(
+                        color: littleLight,
+                        fontFamily: 'WorkSans',
+                        fontSize: 15,
+                      ),
+                    )),
               ),
               const SizedBox(height: 50.0),
               Center(
@@ -92,7 +96,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               const SizedBox(height: 24.0),
               TextButton(
-                onPressed: (() => Navigator.of(context).pushNamed('/register')),
+                onPressed: (() => Navigator.of(context).pushReplacementNamed('/register')),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
