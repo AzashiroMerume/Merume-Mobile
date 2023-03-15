@@ -2,10 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:merume_mobile/screens/on_boarding/start_screen.dart';
 import 'package:merume_mobile/screens/auth/login_screen.dart';
 import 'package:merume_mobile/screens/auth/register_screen.dart';
+import 'package:merume_mobile/screens/main/main_screen.dart';
 
 void main() {
   runApp(MaterialApp(
-    // initialRoute: '/register',
+    theme: ThemeData(
+      appBarTheme: const AppBarTheme(
+        color: Colors.transparent, //<-- SEE HERE
+      ),
+      scaffoldBackgroundColor: Colors.black,
+    ),
+    initialRoute: '/main',
     home: const DefaultTextStyle(
       style: TextStyle(
         decoration: TextDecoration.none,
@@ -15,6 +22,7 @@ void main() {
     routes: {
       '/login': (context) => LoginScreen(),
       '/register': (context) => RegisterScreen(),
+      '/main': (context) => MainScreen(),
     },
   ));
 }
