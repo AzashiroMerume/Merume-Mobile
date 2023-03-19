@@ -20,9 +20,9 @@ void main() {
       child: StartScreen(),
     ),
     routes: {
-      '/login': (context) => LoginScreen(),
-      '/register': (context) => RegisterScreen(),
-      '/main': (context) => MainScreen(),
+      '/login': (context) => const LoginScreen(),
+      '/register': (context) => const RegisterScreen(),
+      '/main': (context) => const MainScreen(),
     },
   ));
 }

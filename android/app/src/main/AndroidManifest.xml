@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.merume_mobile">
+    <!-- Required to fetch data from the internet. -->
    <application
         android:label="merume_mobile"
         android:name="${applicationName}"
