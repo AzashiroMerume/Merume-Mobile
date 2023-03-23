@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:merume_mobile/api/channels_api.dart';
+import 'package:merume_mobile/api/user_channels_api.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -9,13 +9,13 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  late Future<List<Channel>> futureChannels;
+  // late Stream<List<Channel>> streamChannels;
 
-  @override
-  void initState() {
-    super.initState();
-    futureChannels = fetchChannels();
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   streamChannels = fetchChannels();
+  // }
 
   Color littleLight = const Color(0xFFF3FFAB);
   Color purpleBeaty = const Color(0xFF8E05C2);
@@ -136,15 +136,18 @@ class _MainScreenState extends State<MainScreen> {
               ),
               const SizedBox(height: 16),
               Expanded(
-                child: FutureBuilder<List<Channel>>(
-                  future: futureChannels,
+                child: StreamBuilder<List<Channel>>(
+                  stream: fetchChannels(),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
+                      final channels = snapshot.data!;
                       return ListView.builder(
-                        itemCount: snapshot.data!.length,
+                        itemCount: channels.length,
                         itemBuilder: (_, index) => Container(
                           margin: const EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 5),
+                            horizontal: 10,
+                            vertical: 5,
+                          ),
                           padding: const EdgeInsets.all(20.0),
                           decoration: BoxDecoration(
                             color: const Color(0xff97FFFF),
@@ -155,14 +158,14 @@ class _MainScreenState extends State<MainScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                snapshot.data![index].name,
+                                channels[index].name,
                                 style: const TextStyle(
                                   fontSize: 18.0,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
                               const SizedBox(height: 10),
-                              Text(snapshot.data![index].description),
+                              Text(channels[index].description),
                             ],
                           ),
                         ),
@@ -174,7 +177,7 @@ class _MainScreenState extends State<MainScreen> {
                     }
                   },
                 ),
-              )
+              ),
             ],
           ),
         ),
