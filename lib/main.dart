@@ -8,11 +8,10 @@ void main() {
   runApp(MaterialApp(
     theme: ThemeData(
       appBarTheme: const AppBarTheme(
-        color: Colors.transparent, //<-- SEE HERE
+        color: Colors.transparent,
       ),
       scaffoldBackgroundColor: Colors.black,
     ),
-    initialRoute: '/main',
     home: const DefaultTextStyle(
       style: TextStyle(
         decoration: TextDecoration.none,
