@@ -137,7 +137,7 @@ class _MainScreenState extends State<MainScreen> {
               const SizedBox(height: 16),
               Expanded(
                 child: StreamBuilder<List<Channel>>(
-                  stream: fetchChannels(),
+                  stream: fetchSubscribedUserChannels(),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       final channels = snapshot.data!;

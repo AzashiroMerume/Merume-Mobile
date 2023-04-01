@@ -2,11 +2,17 @@ import 'dart:async';
 import 'dart:convert';
 
 // import 'package:http/http.dart' as http;
-import 'package:web_socket_channel/web_socket_channel.dart';
+import 'package:web_socket_channel/io.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-Stream<List<Channel>> fetchChannels() async* {
-  final channelUrl = 'ws://localhost:8081/channels';
-  final channel = WebSocketChannel.connect(Uri.parse(channelUrl));
+final storage = FlutterSecureStorage();
+
+Stream<List<Channel>> fetchSubscribedUserChannels() async* {
+  final channelUrl = 'ws://localhost:8081/users/channels/subscriptions';
+  final authToken = await storage.read(key: 'authToken');
+  final headers = {'Authorization': '$authToken'};
+  final channel =
+      IOWebSocketChannel.connect(Uri.parse(channelUrl), headers: headers);
 
   // Listen to incoming data from the WebSocket
   await for (var data in channel.stream) {
@@ -35,7 +41,7 @@ class Channel {
   factory Channel.fromJson(Map<String, dynamic> json) {
     return Channel(
       id: json['_id']['\$oid'] ?? '',
-      ownerId: json['owner_id'] ?? '',
+      ownerId: json['owner_id']['\$oid'] ?? '',
       name: json['name'] ?? '',
       description: json['description'] ?? '',
       baseImage: json['base_image'] ?? '',

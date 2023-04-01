@@ -37,6 +37,7 @@ dependencies:
   http: ^0.13.5
   web_socket_channel: ^2.3.0
   email_validator: ^2.1.17
+  flutter_secure_storage: ^8.0.0
 
 dev_dependencies:
   flutter_test:
