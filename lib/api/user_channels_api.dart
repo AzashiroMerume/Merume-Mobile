@@ -7,8 +7,24 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 final storage = FlutterSecureStorage();
 
-Stream<List<Channel>> fetchSubscribedUserChannels() async* {
+Stream<List<Channel>> fetchSubscriptions() async* {
   final channelUrl = 'ws://localhost:8081/users/channels/subscriptions';
+  final authToken = await storage.read(key: 'authToken');
+  final headers = {'Authorization': '$authToken'};
+  final channel =
+      IOWebSocketChannel.connect(Uri.parse(channelUrl), headers: headers);
+
+  // Listen to incoming data from the WebSocket
+  await for (var data in channel.stream) {
+    final List<dynamic> channelsJson = json.decode(data);
+    final channels =
+        channelsJson.map((json) => Channel.fromJson(json)).toList();
+    yield channels;
+  }
+}
+
+Stream<List<Channel>> fetchOwnChannels() async* {
+  final channelUrl = 'ws://localhost:8081/users/channels/created';
   final authToken = await storage.read(key: 'authToken');
   final headers = {'Authorization': '$authToken'};
   final channel =
