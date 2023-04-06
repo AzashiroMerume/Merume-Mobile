@@ -8,7 +8,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 final storage = FlutterSecureStorage();
 
 Stream<List<Channel>> fetchSubscriptions() async* {
-  final channelUrl = 'ws://localhost:8081/users/channels/subscriptions';
+  const channelUrl = 'ws://localhost:8081/users/channels/subscriptions';
   final authToken = await storage.read(key: 'authToken');
   final headers = {'Authorization': '$authToken'};
   final channel =
@@ -24,7 +24,7 @@ Stream<List<Channel>> fetchSubscriptions() async* {
 }
 
 Stream<List<Channel>> fetchOwnChannels() async* {
-  final channelUrl = 'ws://localhost:8081/users/channels/created';
+  const channelUrl = 'ws://localhost:8081/users/channels/created';
   final authToken = await storage.read(key: 'authToken');
   final headers = {'Authorization': '$authToken'};
   final channel =

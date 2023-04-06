@@ -3,8 +3,13 @@ import 'package:merume_mobile/screens/on_boarding/start_screen.dart';
 import 'package:merume_mobile/screens/auth/login_screen.dart';
 import 'package:merume_mobile/screens/auth/register_screen.dart';
 import 'package:merume_mobile/screens/main/main_screen.dart';
+import 'package:merume_mobile/api/auth_api.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized(); // Initialize binding
+
+  final isAuthenticated = await verifyAuth();
+
   runApp(MaterialApp(
     theme: ThemeData(
       appBarTheme: const AppBarTheme(
@@ -12,13 +17,14 @@ void main() {
       ),
       scaffoldBackgroundColor: Colors.black,
     ),
-    home: const DefaultTextStyle(
-      style: TextStyle(
-        decoration: TextDecoration.none,
-      ),
-      child: StartScreen(),
-    ),
+    initialRoute: isAuthenticated ? '/main' : '/start',
     routes: {
+      '/start': (context) => const DefaultTextStyle(
+            style: TextStyle(
+              decoration: TextDecoration.none,
+            ),
+            child: StartScreen(),
+          ),
       '/login': (context) => const LoginScreen(),
       '/register': (context) => const RegisterScreen(),
       '/main': (context) => const MainScreen(),

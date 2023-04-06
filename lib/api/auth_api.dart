@@ -46,3 +46,27 @@ Future<void> login(String email, String password) async {
     throw Exception(errorMessage);
   }
 }
+
+Future<bool> verifyAuth() async {
+  final authToken = await storage.read(key: 'authToken');
+
+  if (authToken == null) {
+    return false;
+  }
+
+  final response = await http.get(
+    Uri.parse('http://localhost:8081/auth'),
+    headers: {
+      'Authorization': authToken,
+    },
+  );
+
+  final responseData = json.decode(response.body);
+
+  if (responseData['success'] != false) {
+    return true;
+  } else {
+    await storage.delete(key: 'authToken');
+    return false;
+  }
+}

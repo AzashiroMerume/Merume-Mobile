@@ -18,7 +18,6 @@ class _MainScreenState extends State<MainScreen> {
   final List<Widget> _screens = [
     CreatedChannelsScreen(),
     SubscriptionChannelsScreen(),
-    // other screens here
   ];
 
   Icon customIcon = const Icon(Icons.search);
@@ -93,15 +92,15 @@ class _MainScreenState extends State<MainScreen> {
           backgroundColor: Colors.black,
           items: const [
             BottomNavigationBarItem(
-              icon: Icon(Icons.home),
+              icon: Icon(Icons.home, color: Colors.deepPurpleAccent),
               label: 'Home',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.subscriptions),
+              icon: Icon(Icons.subscriptions, color: Colors.deepPurpleAccent),
               label: 'Owned',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.person),
+              icon: Icon(Icons.person, color: Colors.deepPurpleAccent),
               label: 'Profile',
             ),
             // other bottom tab bar items here
