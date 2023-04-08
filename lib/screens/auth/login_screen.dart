@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import '../../api/auth_api.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+  final String? errorMessage;
+
+  const LoginScreen({super.key, this.errorMessage});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -26,6 +28,12 @@ class _LoginScreenState extends State<LoginScreen> {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    errorMessage = widget.errorMessage ?? '';
   }
 
   Map<String, String> errors = {};
@@ -53,10 +61,10 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-          child: Padding(
-        padding: const EdgeInsets.only(
-            top: 100.0, bottom: 100.0, right: 47.0, left: 47.0),
-        child: Column(
+        child: Padding(
+          padding: const EdgeInsets.only(
+              top: 100.0, bottom: 100.0, right: 47.0, left: 47.0),
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -117,17 +125,16 @@ class _LoginScreenState extends State<LoginScreen> {
               Align(
                 alignment: Alignment.bottomRight,
                 child: TextButton(
-                    onPressed: () {
-                      print('Forgot pass');
-                    },
-                    child: Text(
-                      'Forgot password?',
-                      style: TextStyle(
-                        color: littleLight,
-                        fontFamily: 'WorkSans',
-                        fontSize: 15,
-                      ),
-                    )),
+                  onPressed: () {},
+                  child: Text(
+                    'Forgot password?',
+                    style: TextStyle(
+                      color: littleLight,
+                      fontFamily: 'WorkSans',
+                      fontSize: 15,
+                    ),
+                  ),
+                ),
               ),
               const SizedBox(height: 50.0),
               Center(
@@ -139,8 +146,11 @@ class _LoginScreenState extends State<LoginScreen> {
                     });
                     if (errors.isEmpty) {
                       try {
+                        NavigatorState state = Navigator.of(context);
+
                         await login(email, password);
-                        Navigator.of(context).pushNamedAndRemoveUntil(
+
+                        state.pushNamedAndRemoveUntil(
                           '/main',
                           (Route<dynamic> route) => false,
                         );
@@ -195,8 +205,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   ],
                 ),
               )
-            ]),
-      )),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

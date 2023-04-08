@@ -1,33 +1,46 @@
 import 'package:flutter/material.dart';
-import 'package:merume_mobile/screens/on_boarding/start_screen.dart';
 import 'package:merume_mobile/screens/auth/login_screen.dart';
 import 'package:merume_mobile/screens/auth/register_screen.dart';
 import 'package:merume_mobile/screens/main/main_screen.dart';
 import 'package:merume_mobile/api/auth_api.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized(); // Initialize binding
+  WidgetsFlutterBinding.ensureInitialized();
 
-  final isAuthenticated = await verifyAuth();
+  try {
+    final isAuthenticated = await verifyAuth();
+    runApp(MyApp(isAuthenticated: isAuthenticated));
+  } catch (e) {
+    runApp(MyApp(errorMessage: e.toString()));
+  }
+}
 
-  runApp(MaterialApp(
-    theme: ThemeData(
-      appBarTheme: const AppBarTheme(
-        color: Colors.transparent,
+class MyApp extends StatelessWidget {
+  final bool? isAuthenticated;
+  final String? errorMessage;
+
+  const MyApp({super.key, this.isAuthenticated, this.errorMessage});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Merume',
+      theme: ThemeData(
+        appBarTheme: const AppBarTheme(
+          color: Colors.transparent,
+        ),
+        scaffoldBackgroundColor: Colors.black,
       ),
-      scaffoldBackgroundColor: Colors.black,
-    ),
-    initialRoute: isAuthenticated ? '/main' : '/start',
-    routes: {
-      '/start': (context) => const DefaultTextStyle(
-            style: TextStyle(
-              decoration: TextDecoration.none,
-            ),
-            child: StartScreen(),
-          ),
-      '/login': (context) => const LoginScreen(),
-      '/register': (context) => const RegisterScreen(),
-      '/main': (context) => const MainScreen(),
-    },
-  ));
+      home: errorMessage != null
+          ? LoginScreen(errorMessage: errorMessage!)
+          : isAuthenticated!
+              ? const MainScreen()
+              : LoginScreen(),
+      routes: {
+        '/login': (context) => LoginScreen(),
+        '/register': (context) => const RegisterScreen(),
+        '/main': (context) => const MainScreen(),
+      },
+    );
+  }
 }
