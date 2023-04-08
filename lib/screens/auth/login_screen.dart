@@ -139,7 +139,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     });
                     if (errors.isEmpty) {
                       try {
-                        final user = await login(email, password);
+                        await login(email, password);
                         Navigator.of(context).pushNamedAndRemoveUntil(
                           '/main',
                           (Route<dynamic> route) => false,

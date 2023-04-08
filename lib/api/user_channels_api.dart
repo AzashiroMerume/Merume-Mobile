@@ -5,7 +5,7 @@ import 'dart:convert';
 import 'package:web_socket_channel/io.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-final storage = FlutterSecureStorage();
+const storage = FlutterSecureStorage();
 
 Stream<List<Channel>> fetchSubscriptions() async* {
   const channelUrl = 'ws://localhost:8081/users/channels/subscriptions';
@@ -56,9 +56,9 @@ class Channel {
 
   factory Channel.fromJson(Map<String, dynamic> json) {
     return Channel(
-      id: json['_id']['\$oid'] ?? '',
-      ownerId: json['owner_id']['\$oid'] ?? '',
-      name: json['name'] ?? '',
+      id: json['_id']['\$oid'],
+      ownerId: json['owner_id']['\$oid'],
+      name: json['name'],
       description: json['description'] ?? '',
       baseImage: json['base_image'] ?? '',
     );

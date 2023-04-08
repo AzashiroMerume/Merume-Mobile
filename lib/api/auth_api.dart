@@ -1,9 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-final storage = FlutterSecureStorage();
+const storage = FlutterSecureStorage();
 
 Future<void> register(String nickname, String email, String password) async {
   final response = await http.post(
@@ -54,19 +55,35 @@ Future<bool> verifyAuth() async {
     return false;
   }
 
-  final response = await http.get(
-    Uri.parse('http://localhost:8081/auth'),
-    headers: {
-      'Authorization': authToken,
-    },
-  );
+  try {
+    final response = await http.get(
+      Uri.parse('http://localhost:8081/auth'),
+      headers: {
+        'Authorization': authToken,
+      },
+    );
 
-  final responseData = json.decode(response.body);
-
-  if (responseData['success'] != false) {
-    return true;
-  } else {
-    await storage.delete(key: 'authToken');
+    if (response.statusCode == 200) {
+      return true;
+    } else if (response.statusCode == 401) {
+      await storage.delete(key: 'authToken');
+      return false;
+    } else if (response.statusCode >= 500) {
+      // handle server error
+      print('Server Error: ${response.statusCode}');
+      return false;
+    } else {
+      // handle other HTTP errors
+      print('HTTP Error: ${response.statusCode}');
+      return false;
+    }
+  } on SocketException catch (e) {
+    // handle network errors
+    print('Network Error: $e');
+    return false;
+  } catch (e) {
+    // handle other errors
+    print('Unknown error: $e');
     return false;
   }
 }

@@ -144,7 +144,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     });
                     if (errors.isEmpty) {
                       try {
-                        final user = await register(nickname, email, password);
+                        await register(nickname, email, password);
                         Navigator.of(context).pushNamedAndRemoveUntil(
                           '/main',
                           (Route<dynamic> route) => false,

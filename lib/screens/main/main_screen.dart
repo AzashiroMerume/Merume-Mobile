@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:merume_mobile/screens/main/tab_bar_screens/created_channels_screen.dart';
 import 'package:merume_mobile/screens/main/tab_bar_screens/subscriptions_channels_screen.dart';
+import 'package:merume_mobile/screens/main/tab_bar_screens/recomendation_screen.dart';
 
 class MainScreen extends StatefulWidget {
-  const MainScreen({Key? key}) : super(key: key);
+  const MainScreen({super.key});
 
   @override
   State<MainScreen> createState() => _MainScreenState();
@@ -16,8 +17,9 @@ class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 0;
 
   final List<Widget> _screens = [
-    CreatedChannelsScreen(),
-    SubscriptionChannelsScreen(),
+    const RecomendationScreen(),
+    const CreatedChannelsScreen(),
+    const SubscriptionChannelsScreen(),
   ];
 
   Icon customIcon = const Icon(Icons.search);
@@ -76,7 +78,7 @@ class _MainScreenState extends State<MainScreen> {
               color: Colors.grey.withOpacity(0.5),
               spreadRadius: 2,
               blurRadius: 5,
-              offset: Offset(0, 3),
+              offset: const Offset(0, 3),
             ),
           ],
           border: Border(
