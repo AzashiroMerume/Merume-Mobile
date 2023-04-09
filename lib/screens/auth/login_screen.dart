@@ -2,6 +2,7 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 
 import '../../api/auth_api.dart';
+import '../../exceptions.dart';
 
 class LoginScreen extends StatefulWidget {
   final String? errorMessage;
@@ -156,7 +157,23 @@ class _LoginScreenState extends State<LoginScreen> {
                         );
                       } catch (e) {
                         setState(() {
-                          errorMessage = e.toString();
+                          if (e is AuthenticationException) {
+                            errorMessage = e.message;
+                          } else if (e is NotFoundException) {
+                            errorMessage = 'Email not found, try to sign up.';
+                          } else if (e is NetworkException) {
+                            errorMessage =
+                                'Network error. Please check your internet connection.';
+                          } else if (e is ServerException) {
+                            errorMessage =
+                                'Server error. Please try again later.';
+                          } else if (e is HttpException) {
+                            errorMessage =
+                                'HTTP error. Please try again later.';
+                          } else {
+                            errorMessage =
+                                'An unexpected error occurred. Please try again later.';
+                          }
                         });
                       }
                     } else {

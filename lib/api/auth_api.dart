@@ -9,48 +9,79 @@ import '../exceptions.dart';
 const storage = FlutterSecureStorage();
 
 Future<void> register(String nickname, String email, String password) async {
-  final response = await http.post(
-    Uri.parse('http://localhost:8081/auth/register'),
-    body: json.encode({
-      'nickname': nickname,
-      'email': email,
-      'password': password,
-    }),
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  );
+  try {
+    final response = await http.post(
+      Uri.parse('http://localhost:8081/auth/register'),
+      body: json.encode({
+        'nickname': nickname,
+        'email': email,
+        'password': password,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    );
 
-  final responseData = json.decode(response.body);
-
-  if (responseData['success'] == true && responseData['data'] != null) {
-    await storage.write(key: 'authToken', value: responseData['data'][0]);
-  } else {
-    final errorMessage = responseData['error_message'] ?? 'Unknown error';
-    throw RegistrationException(errorMessage);
+    if (response.statusCode == 201) {
+      final responseData = json.decode(response.body);
+      if (responseData['success'] == true) {
+        await storage.write(key: 'authToken', value: responseData['data'][0]);
+      }
+    } else if (response.statusCode == 400) {
+      final responseData = json.decode(response.body);
+      throw RegistrationException(responseData['error_message']);
+    } else if (response.statusCode == 500) {
+      throw InternalServerErrorException('Internal server error');
+    } else if (response.statusCode == 501) {
+      throw NotImplementedException('Not implemented');
+    } else if (response.statusCode == 503) {
+      throw ServiceUnavailableException('Service unavailable');
+    } else if (response.statusCode >= 504) {
+      throw TimeoutException('Request timed out');
+    } else {
+      throw HttpException('Unexpected status code: ${response.statusCode}');
+    }
+  } on SocketException catch (e) {
+    throw NetworkException('Network error');
   }
 }
 
 Future<void> login(String email, String password) async {
-  final response = await http.post(
-    Uri.parse('http://localhost:8081/auth/login'),
-    body: json.encode({'email': email, 'password': password}),
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  );
+  try {
+    final response = await http.post(
+      Uri.parse('http://localhost:8081/auth/login'),
+      body: json.encode({'email': email, 'password': password}),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    );
 
-  if (response.statusCode >= 400) {
-    throw HttpException('Unexpected status code: ${response.statusCode}');
-  }
+    if (response.statusCode == 200) {
+      final responseData = json.decode(response.body);
 
-  final responseData = json.decode(response.body);
-
-  if (responseData['success'] == true) {
-    await storage.write(key: 'authToken', value: responseData['data'][0]);
-  } else {
-    final errorMessage = responseData['error_message'];
-    throw Exception(errorMessage);
+      if (responseData['success'] == true) {
+        await storage.write(key: 'authToken', value: responseData['data'][0]);
+      } else {
+        final errorMessage = responseData['error_message'];
+        throw AuthenticationException(errorMessage);
+      }
+    } else if (response.statusCode == 400) {
+      throw AuthenticationException('Invalid email or password');
+    } else if (response.statusCode == 404) {
+      throw NotFoundException('Email not found');
+    } else if (response.statusCode == 500) {
+      throw InternalServerErrorException('Internal server error');
+    } else if (response.statusCode == 501) {
+      throw NotImplementedException('Not implemented');
+    } else if (response.statusCode == 503) {
+      throw ServiceUnavailableException('Service unavailable');
+    } else if (response.statusCode >= 504) {
+      throw TimeoutException('Request timed out');
+    } else {
+      throw HttpException('Unexpected status code: ${response.statusCode}');
+    }
+  } on SocketException catch (e) {
+    throw NetworkException('Network error');
   }
 }
 
@@ -75,11 +106,17 @@ Future<bool> verifyAuth() async {
       await storage.delete(key: 'authToken');
       throw AuthenticationException('Invalid authentication token');
     } else if (response.statusCode == 500) {
-      throw ServerException('Server error: ${response.statusCode}');
+      throw InternalServerErrorException('Internal server error');
+    } else if (response.statusCode == 501) {
+      throw NotImplementedException('Not implemented');
+    } else if (response.statusCode == 503) {
+      throw ServiceUnavailableException('Service unavailable');
+    } else if (response.statusCode >= 504) {
+      throw TimeoutException('Request timed out');
     } else {
-      throw HttpException('HTTP error: ${response.statusCode}');
+      throw HttpException('Unexpected status code: ${response.statusCode}');
     }
   } on SocketException catch (e) {
-    throw NetworkException('Network error: $e');
+    throw NetworkException('Network error');
   }
 }
