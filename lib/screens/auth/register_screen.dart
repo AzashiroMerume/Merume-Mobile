@@ -161,7 +161,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 'Email already in use. Please try to sign in.';
                           } else if (e is UnprocessableEntityException) {
                             errorMessage =
-                                'Invalid input data. Please follow instructions.';
+                                'Invalid input data. Please fill in all required fields.';
                           } else if (e is NetworkException) {
                             errorMessage =
                                 'Network error has occured. Please check your internet connection.';

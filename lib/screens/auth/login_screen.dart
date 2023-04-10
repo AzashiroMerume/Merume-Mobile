@@ -141,7 +141,7 @@ class _LoginScreenState extends State<LoginScreen> {
               Center(
                 child: ElevatedButton(
                   onPressed: () async {
-                    validateFields(email, password);
+                    // validateFields(email, password);
                     setState(() {
                       errorMessage = '';
                     });
@@ -164,7 +164,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             errorMessage = 'Email not found, try to sign up.';
                           } else if (e is UnprocessableEntityException) {
                             errorMessage =
-                                'Invalid input data. Please follow instructions.';
+                                'Invalid input data. Please fill in all required fields.';
                           } else if (e is NetworkException) {
                             errorMessage =
                                 'Network error has occured. Please check your internet connection.';
