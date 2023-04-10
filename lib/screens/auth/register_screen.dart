@@ -2,6 +2,7 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 
 import '../../api/auth_api.dart';
+import '../../exceptions.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -85,7 +86,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               const SizedBox(height: 50.0),
               if (errorMessage.isNotEmpty)
                 Text(
-                  'Error: ${errorMessage.substring(11)}',
+                  'Error: $errorMessage',
                   style: const TextStyle(
                       fontFamily: 'WorkSans', fontSize: 16, color: Colors.red),
                 ),
@@ -139,6 +140,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 child: ElevatedButton(
                   onPressed: () async {
                     validateFields(nickname, email, password);
+
                     setState(() {
                       errorMessage = '';
                     });
@@ -154,7 +156,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         );
                       } catch (e) {
                         setState(() {
-                          errorMessage = e.toString();
+                          if (e is RegistrationException) {
+                            errorMessage = e.message;
+                          } else if (e is NetworkException) {
+                            errorMessage =
+                                'Network error. Please check your internet connection.';
+                          } else if (e is ServerException) {
+                            errorMessage =
+                                'Server error. Please try again later.';
+                          } else if (e is HttpException) {
+                            errorMessage =
+                                'HTTP error. Please try again later.';
+                          } else {
+                            errorMessage =
+                                'An unexpected error occurred. Please try again later.';
+                          }
                         });
                       }
                     } else {

@@ -30,18 +30,12 @@ Future<void> register(String nickname, String email, String password) async {
     } else if (response.statusCode == 400) {
       final responseData = json.decode(response.body);
       throw RegistrationException(responseData['error_message']);
-    } else if (response.statusCode == 500) {
-      throw InternalServerErrorException('Internal server error');
-    } else if (response.statusCode == 501) {
-      throw NotImplementedException('Not implemented');
-    } else if (response.statusCode == 503) {
-      throw ServiceUnavailableException('Service unavailable');
-    } else if (response.statusCode >= 504) {
-      throw TimeoutException('Request timed out');
+    } else if (response.statusCode >= 500) {
+      throw ServerException('Internal server error');
     } else {
       throw HttpException('Unexpected status code: ${response.statusCode}');
     }
-  } on SocketException catch (e) {
+  } on SocketException {
     throw NetworkException('Network error');
   }
 }
@@ -65,22 +59,16 @@ Future<void> login(String email, String password) async {
         final errorMessage = responseData['error_message'];
         throw AuthenticationException(errorMessage);
       }
-    } else if (response.statusCode == 400) {
+    } else if (response.statusCode == 400 || response.statusCode == 401) {
       throw AuthenticationException('Invalid email or password');
     } else if (response.statusCode == 404) {
       throw NotFoundException('Email not found');
-    } else if (response.statusCode == 500) {
-      throw InternalServerErrorException('Internal server error');
-    } else if (response.statusCode == 501) {
-      throw NotImplementedException('Not implemented');
-    } else if (response.statusCode == 503) {
-      throw ServiceUnavailableException('Service unavailable');
-    } else if (response.statusCode >= 504) {
-      throw TimeoutException('Request timed out');
+    } else if (response.statusCode >= 500) {
+      throw ServerException('Internal server error');
     } else {
       throw HttpException('Unexpected status code: ${response.statusCode}');
     }
-  } on SocketException catch (e) {
+  } on SocketException {
     throw NetworkException('Network error');
   }
 }
@@ -104,19 +92,13 @@ Future<bool> verifyAuth() async {
       return true;
     } else if (response.statusCode == 401) {
       await storage.delete(key: 'authToken');
-      throw AuthenticationException('Invalid authentication token');
-    } else if (response.statusCode == 500) {
+      throw AuthenticationException('');
+    } else if (response.statusCode >= 500) {
       throw InternalServerErrorException('Internal server error');
-    } else if (response.statusCode == 501) {
-      throw NotImplementedException('Not implemented');
-    } else if (response.statusCode == 503) {
-      throw ServiceUnavailableException('Service unavailable');
-    } else if (response.statusCode >= 504) {
-      throw TimeoutException('Request timed out');
     } else {
       throw HttpException('Unexpected status code: ${response.statusCode}');
     }
-  } on SocketException catch (e) {
+  } on SocketException {
     throw NetworkException('Network error');
   }
 }

@@ -86,7 +86,7 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(height: 50.0),
               if (errorMessage.isNotEmpty)
                 Text(
-                  'Error: ${errorMessage.substring(11)}',
+                  'Error: $errorMessage',
                   style: const TextStyle(
                       fontFamily: 'WorkSans', fontSize: 16, color: Colors.red),
                 ),
