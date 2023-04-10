@@ -28,8 +28,7 @@ Future<void> register(String nickname, String email, String password) async {
         await storage.write(key: 'authToken', value: responseData['data'][0]);
       }
     } else if (response.statusCode == 400) {
-      final responseData = json.decode(response.body);
-      throw RegistrationException(responseData['error_message']);
+      throw RegistrationException('Email already in use');
     } else if (response.statusCode == 422) {
       throw UnprocessableEntityException('Invalid input data');
     } else if (response.statusCode >= 500) {
@@ -54,15 +53,11 @@ Future<void> login(String email, String password) async {
 
     if (response.statusCode == 200) {
       final responseData = json.decode(response.body);
-
       if (responseData['success'] == true) {
         await storage.write(key: 'authToken', value: responseData['data'][0]);
-      } else {
-        final errorMessage = responseData['error_message'];
-        throw AuthenticationException(errorMessage);
       }
-    } else if (response.statusCode == 400 || response.statusCode == 401) {
-      throw AuthenticationException('Invalid email or password');
+    } else if (response.statusCode == 401) {
+      throw AuthenticationException('Credentials do not match.');
     } else if (response.statusCode == 404) {
       throw NotFoundException('Email not found');
     } else if (response.statusCode == 422) {
@@ -96,9 +91,9 @@ Future<bool> verifyAuth() async {
       return true;
     } else if (response.statusCode == 401) {
       await storage.delete(key: 'authToken');
-      throw AuthenticationException('');
+      throw AuthenticationException('Token authentication error');
     } else if (response.statusCode >= 500) {
-      throw InternalServerErrorException('Internal server error');
+      throw ServerException('Internal server error');
     } else {
       throw HttpException('Unexpected status code: ${response.statusCode}');
     }

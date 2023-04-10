@@ -158,7 +158,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       } catch (e) {
                         setState(() {
                           if (e is AuthenticationException) {
-                            errorMessage = e.message;
+                            errorMessage =
+                                'Email or password are incorrect, please try a different email or sign up for a new account.';
                           } else if (e is NotFoundException) {
                             errorMessage = 'Email not found, try to sign up.';
                           } else if (e is UnprocessableEntityException) {
@@ -166,13 +167,13 @@ class _LoginScreenState extends State<LoginScreen> {
                                 'Invalid input data. Please follow instructions.';
                           } else if (e is NetworkException) {
                             errorMessage =
-                                'Network error. Please check your internet connection.';
+                                'Network error has occured. Please check your internet connection.';
                           } else if (e is ServerException) {
                             errorMessage =
-                                'Server error. Please try again later.';
+                                'There was an error on the server side, try again later.';
                           } else if (e is HttpException) {
                             errorMessage =
-                                'HTTP error. Please try again later.';
+                                'There was an error on the server side, try again later.';
                           } else {
                             errorMessage =
                                 'An unexpected error occurred. Please try again later.';
