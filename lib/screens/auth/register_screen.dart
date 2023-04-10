@@ -158,6 +158,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         setState(() {
                           if (e is RegistrationException) {
                             errorMessage = e.message;
+                          } else if (e is UnprocessableEntityException) {
+                            errorMessage =
+                                'Invalid input data. Please follow instructions.';
                           } else if (e is NetworkException) {
                             errorMessage =
                                 'Network error. Please check your internet connection.';

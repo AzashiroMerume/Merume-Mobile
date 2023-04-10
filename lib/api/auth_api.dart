@@ -30,6 +30,8 @@ Future<void> register(String nickname, String email, String password) async {
     } else if (response.statusCode == 400) {
       final responseData = json.decode(response.body);
       throw RegistrationException(responseData['error_message']);
+    } else if (response.statusCode == 422) {
+      throw UnprocessableEntityException('Invalid input data');
     } else if (response.statusCode >= 500) {
       throw ServerException('Internal server error');
     } else {
@@ -63,6 +65,8 @@ Future<void> login(String email, String password) async {
       throw AuthenticationException('Invalid email or password');
     } else if (response.statusCode == 404) {
       throw NotFoundException('Email not found');
+    } else if (response.statusCode == 422) {
+      throw UnprocessableEntityException('Invalid input data');
     } else if (response.statusCode >= 500) {
       throw ServerException('Internal server error');
     } else {

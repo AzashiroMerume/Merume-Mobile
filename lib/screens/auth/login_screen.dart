@@ -161,6 +161,9 @@ class _LoginScreenState extends State<LoginScreen> {
                             errorMessage = e.message;
                           } else if (e is NotFoundException) {
                             errorMessage = 'Email not found, try to sign up.';
+                          } else if (e is UnprocessableEntityException) {
+                            errorMessage =
+                                'Invalid input data. Please follow instructions.';
                           } else if (e is NetworkException) {
                             errorMessage =
                                 'Network error. Please check your internet connection.';
