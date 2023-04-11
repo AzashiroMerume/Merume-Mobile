@@ -168,10 +168,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           } else if (e is NetworkException) {
                             errorMessage =
                                 'Network error has occured. Please check your internet connection.';
-                          } else if (e is ServerException) {
-                            errorMessage =
-                                'There was an error on the server side, try again later.';
-                          } else if (e is HttpException) {
+                          } else if (e is ServerException ||
+                              e is HttpException ||
+                              e is TokenAuthException) {
                             errorMessage =
                                 'There was an error on the server side, try again later.';
                           } else {

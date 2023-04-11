@@ -91,7 +91,7 @@ Future<bool> verifyAuth() async {
       return true;
     } else if (response.statusCode == 401) {
       await storage.delete(key: 'authToken');
-      throw AuthenticationException('Token authentication error');
+      throw TokenAuthException('Token authentication error');
     } else if (response.statusCode >= 500) {
       throw ServerException('Internal server error');
     } else {

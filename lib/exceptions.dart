@@ -1,3 +1,9 @@
+class TokenAuthException implements Exception {
+  final String message;
+
+  TokenAuthException(this.message);
+}
+
 class AuthenticationException implements Exception {
   final String message;
 
