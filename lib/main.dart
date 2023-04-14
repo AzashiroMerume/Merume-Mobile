@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:merume_mobile/screens/auth/login_screen.dart';
 import 'package:merume_mobile/screens/auth/register_screen.dart';
 import 'package:merume_mobile/screens/main/main_screen.dart';
+import 'package:merume_mobile/screens/settings/preferences_screen.dart';
 import 'package:merume_mobile/api/auth_api.dart';
 
 void main() async {
@@ -39,6 +40,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/login': (context) => const LoginScreen(),
         '/register': (context) => const RegisterScreen(),
+        '/preferences': (context) => const PreferencesScreen(),
         '/main': (context) => const MainScreen(),
       },
     );
