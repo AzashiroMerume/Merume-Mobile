@@ -17,7 +17,7 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.only(top: 75.0, bottom: 75.0),
+          padding: const EdgeInsets.only(top: 70.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -27,10 +27,11 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
                 child: Text(
                   'Please select preferences',
                   style: TextStyle(
-                      fontFamily: 'Poppins',
-                      fontWeight: FontWeight.w500,
-                      fontSize: 24,
-                      color: littleLight),
+                    fontFamily: 'Poppins',
+                    fontWeight: FontWeight.w500,
+                    fontSize: 24,
+                    color: littleLight,
+                  ),
                 ),
               ),
               const SizedBox(height: 24.0),
@@ -39,37 +40,57 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
                     List.generate((categories.length / 3).ceil(), (index) {
                   int startIndex = index * 3;
                   return Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: List.generate(3, (rowIndex) {
                       int categoryIndex = startIndex + rowIndex;
                       if (categoryIndex >= categories.length) {
                         return const SizedBox();
                       }
-                      return GestureDetector(
-                        onTap: () {
-                          print("tapped");
-                        },
-                        child: Container(
-                          height: 150,
-                          width: MediaQuery.of(context).size.width / 3,
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.black12, width: 1),
-                            image: DecorationImage(
-                              image: AssetImage(
-                                  categories.values.toList()[categoryIndex]),
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                          child: Center(
-                            child:
-                                Text(categories.keys.toList()[categoryIndex]),
+                      return Expanded(
+                        child: GestureDetector(
+                          onTap: () {
+                            print("tapped");
+                          },
+                          child: Column(
+                            children: [
+                              Container(
+                                height: 150,
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                      color: Colors.black12, width: 1),
+                                ),
+                                child: Align(
+                                  alignment: Alignment.topCenter,
+                                  child: Image.asset(
+                                    categories.values.toList()[categoryIndex],
+                                    fit: BoxFit.cover,
+                                    height: 150,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 50,
+                                child: Center(
+                                  child: Text(
+                                    categories.keys.toList()[categoryIndex],
+                                    style: TextStyle(
+                                      fontFamily: 'WorkSans',
+                                      fontSize: 15,
+                                      color: littleLight,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       );
                     }),
                   );
                 }),
-              )
+              ),
             ],
           ),
         ),

@@ -66,6 +66,13 @@ flutter:
     - assets/images/categoryImages/engineering.webp
     - assets/images/categoryImages/drawing.jpg
     - assets/images/categoryImages/singing.jpg
+    - assets/images/categoryImages/workout.jpg
+    - assets/images/categoryImages/programming.jpg
+    - assets/images/categoryImages/cooking.jpg
+    - assets/images/categoryImages/language-learning.jpg
+    - assets/images/categoryImages/personal-finance.jpg
+    - assets/images/categoryImages/art-design.jpg
+    - assets/images/categoryImages/writing.jpg
 
     # An image asset can refer to one or more resolution-specific "variants", see
     # https://flutter.dev/assets-and-images/#resolution-aware
