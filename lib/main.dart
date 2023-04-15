@@ -32,6 +32,7 @@ class MyApp extends StatelessWidget {
         ),
         scaffoldBackgroundColor: Colors.black,
       ),
+      initialRoute: '/preferences',
       home: errorMessage != null
           ? LoginScreen(errorMessage: errorMessage!)
           : isAuthenticated!
