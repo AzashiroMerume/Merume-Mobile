@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:merume_mobile/exceptions.dart';
 import 'components/categories.dart';
+
+import '../../api/user_preferences_api.dart';
 
 class PreferencesScreen extends StatefulWidget {
   const PreferencesScreen({super.key});
@@ -11,6 +14,8 @@ class PreferencesScreen extends StatefulWidget {
 class _PreferencesScreenState extends State<PreferencesScreen> {
   Color littleLight = const Color(0xFFF3FFAB);
   Color purpleBeaty = const Color(0xFF8E05C2);
+
+  List<String> selected = [];
 
   @override
   void initState() {
@@ -42,9 +47,16 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: List.generate(categories.length, (index) {
+                      bool isSelected = selected.contains(categories[index]);
                       return GestureDetector(
                         onTap: () {
-                          print(categories[index]);
+                          setState(() {
+                            if (isSelected) {
+                              selected.remove(categories[index]);
+                            } else {
+                              selected.add(categories[index]);
+                            }
+                          });
                         },
                         child: Container(
                           width: double.infinity,
@@ -62,7 +74,8 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
                                 offset: const Offset(0, 2),
                               ),
                             ],
-                            color: Colors.grey.shade900,
+                            color:
+                                isSelected ? purpleBeaty : Colors.grey.shade900,
                           ),
                           child: Text(
                             categories[index],
@@ -82,6 +95,48 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
             ],
           ),
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: const Text("Are you sure?"),
+                content: const Text("Do you want to save your preferences?"),
+                actions: [
+                  TextButton(
+                    child: const Text("CANCEL"),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  TextButton(
+                    child: const Text("SAVE"),
+                    onPressed: () async {
+                      try {
+                        NavigatorState state = Navigator.of(context);
+
+                        await savePreferences(selected);
+
+                        state.pushNamedAndRemoveUntil(
+                          '/main',
+                          (Route<dynamic> route) => false,
+                        );
+                      } catch (e) {
+                        if (e is HttpException) {
+                          print(e.message);
+                        }
+                      }
+                    },
+                  ),
+                ],
+              );
+            },
+          );
+        },
+        backgroundColor: purpleBeaty,
+        child: const Icon(Icons.check),
       ),
     );
   }

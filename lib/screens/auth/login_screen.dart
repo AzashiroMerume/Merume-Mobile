@@ -5,9 +5,7 @@ import '../../api/auth_api.dart';
 import '../../exceptions.dart';
 
 class LoginScreen extends StatefulWidget {
-  final String? errorMessage;
-
-  const LoginScreen({super.key, this.errorMessage});
+  const LoginScreen({super.key});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -29,12 +27,6 @@ class _LoginScreenState extends State<LoginScreen> {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    errorMessage = widget.errorMessage ?? '';
   }
 
   Map<String, String> errors = {};

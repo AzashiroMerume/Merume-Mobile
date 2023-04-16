@@ -150,9 +150,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                         await register(nickname, email, password);
 
-                        state.pushNamedAndRemoveUntil(
+                        state.pushReplacementNamed(
                           '/preferences',
-                          (Route<dynamic> route) => false,
                         );
                       } catch (e) {
                         setState(() {
