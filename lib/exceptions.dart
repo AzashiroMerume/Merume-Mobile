@@ -45,3 +45,9 @@ class UnprocessableEntityException implements Exception {
 
   UnprocessableEntityException(this.message);
 }
+
+class ContentTooLargeException implements Exception {
+  final String message;
+
+  ContentTooLargeException(this.message);
+}

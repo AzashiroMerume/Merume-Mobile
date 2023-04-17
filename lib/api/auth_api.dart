@@ -29,6 +29,8 @@ Future<void> register(String nickname, String email, String password) async {
       }
     } else if (response.statusCode == 400) {
       throw RegistrationException('Email already in use');
+    } else if (response.statusCode == 413) {
+      throw ContentTooLargeException('Content too large');
     } else if (response.statusCode == 422) {
       throw UnprocessableEntityException('Invalid input data');
     } else if (response.statusCode >= 500) {
@@ -60,6 +62,8 @@ Future<void> login(String email, String password) async {
       throw AuthenticationException('Credentials do not match.');
     } else if (response.statusCode == 404) {
       throw NotFoundException('Email not found');
+    } else if (response.statusCode == 413) {
+      throw ContentTooLargeException('Content too large');
     } else if (response.statusCode == 422) {
       throw UnprocessableEntityException('Invalid input data');
     } else if (response.statusCode >= 500) {

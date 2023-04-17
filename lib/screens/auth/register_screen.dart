@@ -158,6 +158,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           if (e is RegistrationException) {
                             errorMessage =
                                 'Email already in use. Please try to sign in.';
+                          } else if (e is ContentTooLargeException) {
+                            errorMessage =
+                                'The entered content is too large. Please follow the requirements.';
                           } else if (e is UnprocessableEntityException) {
                             errorMessage =
                                 'Invalid input data. Please fill in all required fields.';
