@@ -13,14 +13,14 @@ void main() async {
     runApp(MyApp(isAuthenticated: isAuthenticated));
   } catch (e) {
     print(e);
-    runApp(const MyApp());
+    runApp(const MyApp(isAuthenticated: false));
   }
 }
 
 class MyApp extends StatelessWidget {
-  final bool? isAuthenticated;
+  final bool isAuthenticated;
 
-  const MyApp({super.key, this.isAuthenticated});
+  const MyApp({super.key, required this.isAuthenticated});
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: Colors.black,
       ),
       // initialRoute: '/preferences',
-      home: isAuthenticated! ? const MainScreen() : const LoginScreen(),
+      home: isAuthenticated ? const MainScreen() : const LoginScreen(),
       routes: {
         '/login': (context) => const LoginScreen(),
         '/register': (context) => const RegisterScreen(),
