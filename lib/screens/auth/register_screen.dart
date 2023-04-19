@@ -156,8 +156,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       } catch (e) {
                         setState(() {
                           if (e is RegistrationException) {
-                            errorMessage =
-                                'Email already in use. Please try to sign in.';
+                            errorMessage = e.message;
                           } else if (e is ContentTooLargeException) {
                             errorMessage =
                                 'The entered content is too large. Please follow the requirements.';

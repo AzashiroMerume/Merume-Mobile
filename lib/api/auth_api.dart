@@ -28,7 +28,8 @@ Future<void> register(String nickname, String email, String password) async {
         await storage.write(key: 'authToken', value: responseData['data'][0]);
       }
     } else if (response.statusCode == 400) {
-      throw RegistrationException('Email already in use');
+      final responseData = json.decode(response.body);
+      throw RegistrationException(responseData['error_message']);
     } else if (response.statusCode == 413) {
       throw ContentTooLargeException('Content too large');
     } else if (response.statusCode == 422) {
