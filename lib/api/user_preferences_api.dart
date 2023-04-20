@@ -30,6 +30,8 @@ Future<bool> savePreferences(List<String> preferences) async {
     } else if (response.statusCode == 401) {
       await storage.delete(key: 'authToken');
       throw TokenAuthException('Token authentication error');
+    } else if (response.statusCode == 413) {
+      throw ContentTooLargeException('Content too large');
     } else if (response.statusCode == 422) {
       throw UnprocessableEntityException('Invalid input data');
     } else if (response.statusCode >= 500) {

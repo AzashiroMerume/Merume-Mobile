@@ -17,6 +17,8 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
 
   List<String> selected = [];
 
+  String errorMessage = '';
+
   @override
   void initState() {
     categories.sort();
@@ -115,6 +117,11 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
                     child: const Text("SAVE"),
                     onPressed: () async {
                       try {
+                        if (selected.isEmpty) {
+                          throw UnprocessableEntityException(
+                              'Invalid input data');
+                        }
+
                         NavigatorState state = Navigator.of(context);
 
                         await savePreferences(selected);
@@ -124,9 +131,43 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
                           (Route<dynamic> route) => false,
                         );
                       } catch (e) {
-                        if (e is HttpException) {
-                          print(e.message);
-                        }
+                        //close the alertDialog if error encountered
+                        Navigator.of(context).pop();
+
+                        setState(() {
+                          if (e is TokenAuthException) {
+                            errorMessage =
+                                'There is an error with authentication. Please try to re-login.';
+                          } else if (e is UnprocessableEntityException) {
+                            errorMessage = 'Please choose at least one element';
+                          } else if (e is NetworkException) {
+                            errorMessage =
+                                'Network error has occured. Please check your internet connection.';
+                          } else if (e is ServerException ||
+                              e is HttpException) {
+                            errorMessage =
+                                'There was an error on the server side, try again later.';
+                          } else {
+                            errorMessage =
+                                'An unexpected error occurred. Please try again later.';
+                          }
+                        });
+
+                        //show the errors
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              errorMessage,
+                              style: const TextStyle(
+                                fontFamily: 'WorkSans',
+                                fontSize: 15,
+                                color: Colors.white,
+                              ),
+                            ),
+                            duration: const Duration(seconds: 10),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
                       }
                     },
                   ),
