@@ -15,9 +15,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Color littleLight = const Color(0xFFF3FFAB);
   Color purpleBeaty = const Color(0xFF8E05C2);
 
+  final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _nicknameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  String username = '';
   String nickname = '';
   String email = '';
   String password = '';
@@ -26,6 +28,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   void dispose() {
+    _usernameController.dispose();
     _nicknameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
@@ -34,9 +37,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   Map<String, String> errors = {};
 
-  void validateFields(String nickname, String email, String password) {
+  void validateFields(
+      String username, String nickname, String email, String password) {
     // Clear previous errors
     errors.clear();
+
+    //check username
+    if (username.isEmpty) {
+      errors['username'] = 'Username is requred';
+    }
 
     // Check nickname
     if (nickname.isEmpty) {
@@ -63,8 +72,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return Scaffold(
       body: SafeArea(
           child: Padding(
-        padding: const EdgeInsets.only(
-            top: 100.0, bottom: 100.0, right: 47.0, left: 47.0),
+        padding: const EdgeInsets.only(right: 47.0, left: 47.0),
         child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -91,6 +99,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       fontFamily: 'WorkSans', fontSize: 16, color: Colors.red),
                 ),
               if (errorMessage.isNotEmpty) const SizedBox(height: 24.0),
+              TextField(
+                controller: _usernameController,
+                decoration: InputDecoration(
+                  hintText: 'Username',
+                  fillColor: Colors.white,
+                  filled: true,
+                  errorText: errors.containsKey('username')
+                      ? errors['username']
+                      : null,
+                ),
+                onChanged: (value) {
+                  username = value;
+                },
+              ),
+              const SizedBox(height: 50.0),
               TextField(
                 controller: _nicknameController,
                 decoration: InputDecoration(
@@ -139,16 +162,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
               Center(
                 child: ElevatedButton(
                   onPressed: () async {
-                    validateFields(nickname, email, password);
+                    validateFields(username, nickname, email, password);
 
                     setState(() {
                       errorMessage = '';
                     });
+
                     if (errors.isEmpty) {
                       try {
                         NavigatorState state = Navigator.of(context);
 
-                        await register(nickname, email, password);
+                        await register(username, nickname, email, password);
 
                         state.pushReplacementNamed(
                           '/preferences',
@@ -176,8 +200,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           }
                         });
                       }
-                    } else {
-                      setState(() {});
                     }
                   },
                   style: ElevatedButton.styleFrom(

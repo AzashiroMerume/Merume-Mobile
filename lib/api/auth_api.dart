@@ -8,11 +8,13 @@ import '../exceptions.dart';
 
 const storage = FlutterSecureStorage();
 
-Future<void> register(String nickname, String email, String password) async {
+Future<void> register(
+    String username, String nickname, String email, String password) async {
   try {
     final response = await http.post(
       Uri.parse('http://localhost:8081/auth/register'),
       body: json.encode({
+        'username': username,
         'nickname': nickname,
         'email': email,
         'password': password,
@@ -33,6 +35,8 @@ Future<void> register(String nickname, String email, String password) async {
     } else if (response.statusCode == 413) {
       throw ContentTooLargeException('Content too large');
     } else if (response.statusCode == 422) {
+      final responseData = json.decode(response.body);
+      print(responseData['error_message']);
       throw UnprocessableEntityException('Invalid input data');
     } else if (response.statusCode >= 500) {
       throw ServerException('Internal server error');

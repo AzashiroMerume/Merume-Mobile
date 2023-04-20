@@ -133,10 +133,12 @@ class _LoginScreenState extends State<LoginScreen> {
               Center(
                 child: ElevatedButton(
                   onPressed: () async {
-                    // validateFields(email, password);
+                    validateFields(email, password);
+
                     setState(() {
                       errorMessage = '';
                     });
+
                     if (errors.isEmpty) {
                       try {
                         NavigatorState state = Navigator.of(context);
@@ -164,8 +166,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             errorMessage =
                                 'Network error has occured. Please check your internet connection.';
                           } else if (e is ServerException ||
-                              e is HttpException ||
-                              e is TokenAuthException) {
+                              e is HttpException) {
                             errorMessage =
                                 'There was an error on the server side, try again later.';
                           } else {
@@ -174,8 +175,6 @@ class _LoginScreenState extends State<LoginScreen> {
                           }
                         });
                       }
-                    } else {
-                      setState(() {});
                     }
                   },
                   style: ElevatedButton.styleFrom(
