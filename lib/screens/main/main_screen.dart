@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:merume_mobile/screens/main/tab_bar_screens/account_screen.dart';
 import 'package:merume_mobile/screens/main/tab_bar_screens/created_channels_screen.dart';
 import 'package:merume_mobile/screens/main/tab_bar_screens/subscriptions_channels_screen.dart';
 import 'package:merume_mobile/screens/main/tab_bar_screens/recomendation_screen.dart';
@@ -20,6 +21,7 @@ class _MainScreenState extends State<MainScreen> {
     const RecomendationScreen(),
     const CreatedChannelsScreen(),
     const SubscriptionChannelsScreen(),
+    const AccountScreen(),
   ];
 
   Icon customIcon = const Icon(Icons.search);
@@ -81,6 +83,7 @@ class _MainScreenState extends State<MainScreen> {
           ),
         ),
         child: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
           currentIndex: _currentIndex,
           onTap: (index) => setState(() => _currentIndex = index),
           backgroundColor: Colors.black,
@@ -90,8 +93,12 @@ class _MainScreenState extends State<MainScreen> {
               label: 'Home',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.subscriptions, color: Colors.deepPurpleAccent),
+              icon: Icon(Icons.favorite, color: Colors.deepPurpleAccent),
               label: 'Owned',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.subscriptions, color: Colors.deepPurpleAccent),
+              label: 'Favorite',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.person, color: Colors.deepPurpleAccent),

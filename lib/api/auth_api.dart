@@ -24,6 +24,8 @@ Future<void> register(
       },
     );
 
+    print(response.statusCode);
+
     if (response.statusCode == 201) {
       final responseData = json.decode(response.body);
       if (responseData['success'] == true) {
@@ -35,8 +37,6 @@ Future<void> register(
     } else if (response.statusCode == 413) {
       throw ContentTooLargeException('Content too large');
     } else if (response.statusCode == 422) {
-      final responseData = json.decode(response.body);
-      print(responseData['error_message']);
       throw UnprocessableEntityException('Invalid input data');
     } else if (response.statusCode >= 500) {
       throw ServerException('Internal server error');

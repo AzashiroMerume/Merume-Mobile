@@ -156,7 +156,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                 'Email or password are incorrect, please try a different email or sign up for a new account.';
                           } else if (e is NotFoundException) {
                             errorMessage = 'Email not found, try to sign up.';
-                          } else if (e is UnprocessableEntityException || e is ContentTooLargeException) {
+                          } else if (e is UnprocessableEntityException ||
+                              e is ContentTooLargeException) {
                             errorMessage =
                                 'Invalid input data. Please follow the requirements.';
                           } else if (e is NetworkException) {
