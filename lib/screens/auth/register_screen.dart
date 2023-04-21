@@ -45,11 +45,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
     //check username
     if (username.isEmpty) {
       errors['username'] = 'Username is requred';
+    } else if (username.length > 255) {
+      errors['username'] = 'Username must contain no more than 255 characters';
     }
 
     // Check nickname
     if (nickname.isEmpty) {
       errors['nickname'] = 'Nickname is required';
+    } else if (nickname.length < 6) {
+      errors['nickname'] = 'Nickname must be at least 6 characters long';
+    } else if (nickname.length > 20) {
+      errors['nickname'] = 'Nickname must contain no more than 20 characters';
     }
 
     // Check email
