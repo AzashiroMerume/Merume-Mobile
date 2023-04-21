@@ -187,12 +187,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         setState(() {
                           if (e is RegistrationException) {
                             errorMessage = e.message;
-                          } else if (e is ContentTooLargeException) {
+                          } else if (e is UnprocessableEntityException || e is ContentTooLargeException) {
                             errorMessage =
-                                'The entered content is too large. Please follow the requirements.';
-                          } else if (e is UnprocessableEntityException) {
-                            errorMessage =
-                                'Invalid input data. Please fill in all required fields.';
+                                'Invalid input data. Please follow the requirements.';
                           } else if (e is NetworkException) {
                             errorMessage =
                                 'Network error has occured. Please check your internet connection.';
