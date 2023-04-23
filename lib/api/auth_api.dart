@@ -24,7 +24,7 @@ Future<void> register(
       },
     );
 
-    print(response.statusCode);
+    print("Status code: ${response.statusCode}");
 
     if (response.statusCode == 201) {
       final responseData = json.decode(response.body);
@@ -57,6 +57,8 @@ Future<void> login(String email, String password) async {
         'Content-Type': 'application/json',
       },
     );
+
+    print("Status code: ${response.statusCode}");
 
     if (response.statusCode == 200) {
       final responseData = json.decode(response.body);
@@ -95,6 +97,8 @@ Future<bool> verifyAuth() async {
         'Authorization': authToken,
       },
     );
+
+    print("Status code: ${response.statusCode}");
 
     if (response.statusCode == 200) {
       return true;

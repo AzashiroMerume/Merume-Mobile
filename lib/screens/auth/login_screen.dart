@@ -55,8 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.only(
-              top: 100.0, bottom: 100.0, right: 47.0, left: 47.0),
+          padding: const EdgeInsets.only(right: 47.0, left: 47.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -77,12 +76,37 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               const SizedBox(height: 50.0),
               if (errorMessage.isNotEmpty)
-                Text(
-                  'Error: $errorMessage',
-                  style: const TextStyle(
-                      fontFamily: 'WorkSans', fontSize: 16, color: Colors.red),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 12.0, horizontal: 16.0),
+                  decoration: BoxDecoration(
+                    color: Colors.red.withOpacity(0.8),
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(
+                        Icons.error_outline,
+                        color: Colors.white,
+                        size: 20.0,
+                      ),
+                      const SizedBox(width: 12.0),
+                      Expanded(
+                        child: Text(
+                          'Error: $errorMessage',
+                          style: const TextStyle(
+                            fontFamily: 'WorkSans',
+                            fontSize: 14.0,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            height: 1.5,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              if (errorMessage.isNotEmpty) const SizedBox(height: 24.0),
+              if (errorMessage.isNotEmpty) const SizedBox(height: 16.0),
               TextField(
                 controller: _emailController,
                 decoration: InputDecoration(

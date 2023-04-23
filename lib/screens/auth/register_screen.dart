@@ -99,12 +99,37 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
               const SizedBox(height: 50.0),
               if (errorMessage.isNotEmpty)
-                Text(
-                  'Error: $errorMessage',
-                  style: const TextStyle(
-                      fontFamily: 'WorkSans', fontSize: 16, color: Colors.red),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 12.0, horizontal: 16.0),
+                  decoration: BoxDecoration(
+                    color: Colors.red.withOpacity(0.8),
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(
+                        Icons.error_outline,
+                        color: Colors.white,
+                        size: 20.0,
+                      ),
+                      const SizedBox(width: 12.0),
+                      Expanded(
+                        child: Text(
+                          'Error: $errorMessage',
+                          style: const TextStyle(
+                            fontFamily: 'WorkSans',
+                            fontSize: 14.0,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            height: 1.5,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              if (errorMessage.isNotEmpty) const SizedBox(height: 24.0),
+              if (errorMessage.isNotEmpty) const SizedBox(height: 16.0),
               TextField(
                 controller: _usernameController,
                 decoration: InputDecoration(
@@ -187,7 +212,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         setState(() {
                           if (e is RegistrationException) {
                             errorMessage = e.message;
-                          } else if (e is UnprocessableEntityException || e is ContentTooLargeException) {
+                          } else if (e is UnprocessableEntityException ||
+                              e is ContentTooLargeException) {
                             errorMessage =
                                 'Invalid input data. Please follow the requirements.';
                           } else if (e is NetworkException) {
