@@ -64,7 +64,7 @@ class _StartScreenState extends State<StartScreen> {
                   ])),
             ),
             const Positioned(
-              top: 70,
+              top: 50,
               left: 35,
               child: Text(
                 'Merume',
