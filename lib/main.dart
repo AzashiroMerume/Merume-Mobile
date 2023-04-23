@@ -11,10 +11,18 @@ void main() async {
 
   try {
     final isAuthenticated = await verifyAuth();
-    runApp(MyApp(
-      isAuthenticated: isAuthenticated,
-      shouldbeStartScreen: true,
-    ));
+
+    if (isAuthenticated) {
+      runApp(MyApp(
+        isAuthenticated: isAuthenticated,
+        shouldbeStartScreen: false,
+      ));
+    } else {
+      runApp(MyApp(
+        isAuthenticated: isAuthenticated,
+        shouldbeStartScreen: true,
+      ));
+    }
   } catch (e) {
     runApp(const MyApp(
       isAuthenticated: false,
