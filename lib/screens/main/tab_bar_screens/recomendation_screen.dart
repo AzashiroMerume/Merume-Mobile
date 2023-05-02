@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class RecomendationScreen extends StatefulWidget {
-  const RecomendationScreen({super.key});
+  const RecomendationScreen({Key? key});
 
   @override
   State<RecomendationScreen> createState() => _RecomendationScreenState();
@@ -13,6 +13,7 @@ class _RecomendationScreenState extends State<RecomendationScreen> {
 
   String currentPressedFilter = 'All';
   List<String> filterOptions = ['All', 'Trending', 'Videos', 'Posts'];
+  // ignore: prefer_final_fields
   List<bool> _isSelected = [true, false, false, false];
 
   void _onFilterButtonPressed(int index) {
@@ -80,6 +81,11 @@ class _RecomendationScreenState extends State<RecomendationScreen> {
                   children: filterButtons,
                 ),
               ),
+              // Expanded(
+              //   child: SingleChildScrollView(
+              //     child: /* Your content goes here */,
+              //   ),
+              // ),
             ],
           ),
         ),
