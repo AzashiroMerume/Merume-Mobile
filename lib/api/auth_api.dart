@@ -43,8 +43,16 @@ Future<void> register(
     } else {
       throw HttpException('Unexpected status code: ${response.statusCode}');
     }
-  } on SocketException {
-    throw NetworkException('Network error');
+  } catch (e) {
+    if (e is SocketException) {
+      throw NetworkException('Network error');
+    } else if (e is TimeoutException) {
+      throw TimeoutException('Slow internet connection');
+    } else if (e is http.ClientException) {
+      throw NetworkException('Network error');
+    } else {
+      throw http.ClientException;
+    }
   }
 }
 
@@ -78,8 +86,16 @@ Future<void> login(String email, String password) async {
     } else {
       throw HttpException('Unexpected status code: ${response.statusCode}');
     }
-  } on SocketException {
-    throw NetworkException('Network error');
+  } catch (e) {
+    if (e is SocketException) {
+      throw NetworkException('Network error');
+    } else if (e is TimeoutException) {
+      throw TimeoutException('Slow internet connection');
+    } else if (e is http.ClientException) {
+      throw NetworkException('Network error');
+    } else {
+      throw http.ClientException;
+    }
   }
 }
 
@@ -110,7 +126,15 @@ Future<bool> verifyAuth() async {
     } else {
       throw HttpException('Unexpected status code: ${response.statusCode}');
     }
-  } on SocketException {
-    throw NetworkException('Network error');
+  } catch (e) {
+    if (e is SocketException) {
+      throw NetworkException('Network error');
+    } else if (e is TimeoutException) {
+      throw TimeoutException('Slow internet connection');
+    } else if (e is http.ClientException) {
+      throw NetworkException('Network error');
+    } else {
+      throw http.ClientException;
+    }
   }
 }

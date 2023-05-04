@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 
@@ -19,7 +21,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _nicknameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  
+
   String username = '';
   String nickname = '';
   String email = '';
@@ -224,6 +226,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               e is HttpException) {
                             errorMessage =
                                 'There was an error on the server side, try again later.';
+                          } else if (e is TimeoutException) {
+                            errorMessage =
+                                'Network connection is poor, try again later.';
                           } else {
                             errorMessage =
                                 'An unexpected error occurred. Please try again later.';

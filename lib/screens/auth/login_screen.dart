@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 
@@ -17,7 +20,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  
+
   String email = '';
   String password = '';
 
@@ -192,6 +195,9 @@ class _LoginScreenState extends State<LoginScreen> {
                               e is HttpException) {
                             errorMessage =
                                 'There was an error on the server side, try again later.';
+                          } else if (e is TimeoutException) {
+                            errorMessage =
+                                'Network connection is poor, try again later.';
                           } else {
                             errorMessage =
                                 'An unexpected error occurred. Please try again later.';
