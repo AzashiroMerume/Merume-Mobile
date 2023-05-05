@@ -26,33 +26,32 @@ Future<void> register(
 
     print("Status code: ${response.statusCode}");
 
-    if (response.statusCode == 201) {
-      final responseData = json.decode(response.body);
-      if (responseData['success'] == true) {
-        await storage.write(key: 'authToken', value: responseData['data'][0]);
-      }
-    } else if (response.statusCode == 400) {
-      final responseData = json.decode(response.body);
-      throw RegistrationException(responseData['error_message']);
-    } else if (response.statusCode == 413) {
-      throw ContentTooLargeException('Content too large');
-    } else if (response.statusCode == 422) {
-      throw UnprocessableEntityException('Invalid input data');
-    } else if (response.statusCode >= 500) {
-      throw ServerException('Internal server error');
-    } else {
-      throw HttpException('Unexpected status code: ${response.statusCode}');
+    switch (response.statusCode) {
+      case HttpStatus.created:
+        final responseData = json.decode(response.body);
+        if (responseData['success'] == true) {
+          await storage.write(key: 'authToken', value: responseData['data'][0]);
+        }
+        break;
+      case HttpStatus.badRequest:
+        final responseData = json.decode(response.body);
+        throw RegistrationException(responseData['error_message']);
+      case HttpStatus.requestEntityTooLarge:
+        throw ContentTooLargeException('The request payload is too large');
+      case HttpStatus.unprocessableEntity:
+        throw UnprocessableEntityException('The request data is invalid');
+      case HttpStatus.internalServerError:
+        throw ServerException('The server encountered an unexpected error');
+      default:
+        throw HttpException(
+            'Received unexpected status code: ${response.statusCode}');
     }
+  } on SocketException {
+    throw NetworkException('Unable to connect to server');
+  } on TimeoutException {
+    throw TimeoutException('The server is taking too long to respond');
   } catch (e) {
-    if (e is SocketException) {
-      throw NetworkException('Network error');
-    } else if (e is TimeoutException) {
-      throw TimeoutException('Slow internet connection');
-    } else if (e is http.ClientException) {
-      throw NetworkException('Network error');
-    } else {
-      throw http.ClientException;
-    }
+    rethrow;
   }
 }
 
@@ -68,23 +67,21 @@ Future<void> login(String email, String password) async {
 
     print("Status code: ${response.statusCode}");
 
-    if (response.statusCode == 200) {
-      final responseData = json.decode(response.body);
-      if (responseData['success'] == true) {
-        await storage.write(key: 'authToken', value: responseData['data'][0]);
-      }
-    } else if (response.statusCode == 401) {
-      throw AuthenticationException('Credentials do not match.');
-    } else if (response.statusCode == 404) {
-      throw NotFoundException('Email not found');
-    } else if (response.statusCode == 413) {
-      throw ContentTooLargeException('Content too large');
-    } else if (response.statusCode == 422) {
-      throw UnprocessableEntityException('Invalid input data');
-    } else if (response.statusCode >= 500) {
-      throw ServerException('Internal server error');
-    } else {
-      throw HttpException('Unexpected status code: ${response.statusCode}');
+    switch (response.statusCode) {
+      case HttpStatus.ok:
+        final responseData = json.decode(response.body);
+        if (responseData['success'] == true) {
+          await storage.write(key: 'authToken', value: responseData['data'][0]);
+        }
+        break;
+      case HttpStatus.unauthorized:
+        throw AuthenticationException('The email or password is incorrect');
+      case HttpStatus.notFound:
+        throw NotFoundException('The specified email address was not found');
+      case HttpStatus.internalServerError:
+        throw ServerException('The server encountered an unexpected error');
+      default:
+        throw HttpException('Unexpected status code: ${response.statusCode}');
     }
   } catch (e) {
     if (e is SocketException) {
@@ -93,11 +90,10 @@ Future<void> login(String email, String password) async {
       throw TimeoutException('Slow internet connection');
     } else if (e is http.ClientException) {
       throw NetworkException('Network error');
-    } else {
-      throw http.ClientException;
     }
   }
 }
+
 
 Future<bool> verifyAuth() async {
   final authToken = await storage.read(key: 'authToken');
@@ -116,22 +112,19 @@ Future<bool> verifyAuth() async {
 
     print("Status code: ${response.statusCode}");
 
-    if (response.statusCode == 200) {
-      return true;
-    } else if (response.statusCode == 401) {
-      await storage.delete(key: 'authToken');
-      throw TokenAuthException('Token authentication error');
-    } else if (response.statusCode >= 500) {
-      throw ServerException('Internal server error');
-    } else {
-      throw HttpException('Unexpected status code: ${response.statusCode}');
+    switch (response.statusCode) {
+      case HttpStatus.ok:
+        return true;
+      case HttpStatus.unauthorized:
+        await storage.delete(key: 'authToken');
+        throw TokenAuthException('Token authentication error');
+      case HttpStatus.internalServerError:
+        throw ServerException('Internal server error');
+      default:
+        throw HttpException('Unexpected status code: ${response.statusCode}');
     }
   } catch (e) {
-    if (e is SocketException) {
-      throw NetworkException('Network error');
-    } else if (e is TimeoutException) {
-      throw TimeoutException('Slow internet connection');
-    } else if (e is http.ClientException) {
+    if (e is SocketException || e is TimeoutException || e is http.ClientException) {
       throw NetworkException('Network error');
     } else {
       throw http.ClientException;
