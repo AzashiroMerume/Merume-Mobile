@@ -27,20 +27,20 @@ Future<void> register(
     print("Status code: ${response.statusCode}");
 
     switch (response.statusCode) {
-      case HttpStatus.created:
+      case 201:
         final responseData = json.decode(response.body);
         if (responseData['success'] == true) {
-          await storage.write(key: 'authToken', value: responseData['data'][0]);
+          await storage.write(key: 'authToken', value: responseData['token']);
         }
         break;
-      case HttpStatus.badRequest:
+      case 400:
         final responseData = json.decode(response.body);
         throw RegistrationException(responseData['error_message']);
-      case HttpStatus.requestEntityTooLarge:
+      case 413:
         throw ContentTooLargeException('The request payload is too large');
-      case HttpStatus.unprocessableEntity:
+      case 422:
         throw UnprocessableEntityException('The request data is invalid');
-      case HttpStatus.internalServerError:
+      case 500:
         throw ServerException('The server encountered an unexpected error');
       default:
         throw HttpException(
@@ -68,17 +68,15 @@ Future<void> login(String email, String password) async {
     print("Status code: ${response.statusCode}");
 
     switch (response.statusCode) {
-      case HttpStatus.ok:
+      case 200:
         final responseData = json.decode(response.body);
-        if (responseData['success'] == true) {
-          await storage.write(key: 'authToken', value: responseData['data'][0]);
-        }
+        await storage.write(key: 'authToken', value: responseData['token']);
         break;
-      case HttpStatus.unauthorized:
+      case 401:
         throw AuthenticationException('The email or password is incorrect');
-      case HttpStatus.notFound:
+      case 404:
         throw NotFoundException('The specified email address was not found');
-      case HttpStatus.internalServerError:
+      case 500:
         throw ServerException('The server encountered an unexpected error');
       default:
         throw HttpException('Unexpected status code: ${response.statusCode}');
@@ -93,7 +91,6 @@ Future<void> login(String email, String password) async {
     }
   }
 }
-
 
 Future<bool> verifyAuth() async {
   final authToken = await storage.read(key: 'authToken');
@@ -113,18 +110,20 @@ Future<bool> verifyAuth() async {
     print("Status code: ${response.statusCode}");
 
     switch (response.statusCode) {
-      case HttpStatus.ok:
+      case 200:
         return true;
-      case HttpStatus.unauthorized:
+      case 401:
         await storage.delete(key: 'authToken');
         throw TokenAuthException('Token authentication error');
-      case HttpStatus.internalServerError:
+      case 500:
         throw ServerException('Internal server error');
       default:
         throw HttpException('Unexpected status code: ${response.statusCode}');
     }
   } catch (e) {
-    if (e is SocketException || e is TimeoutException || e is http.ClientException) {
+    if (e is SocketException ||
+        e is TimeoutException ||
+        e is http.ClientException) {
       throw NetworkException('Network error');
     } else {
       throw http.ClientException;
