@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
 
-class RecomendationScreen extends StatefulWidget {
-  const RecomendationScreen({Key? key});
+import '../../../api/user_channels_api.dart';
+import '../../../api/recommendations_api.dart';
+
+class RecommendationScreen extends StatefulWidget {
+  const RecommendationScreen({super.key});
 
   @override
-  State<RecomendationScreen> createState() => _RecomendationScreenState();
+  State<RecommendationScreen> createState() => _RecommendationScreenState();
 }
 
-class _RecomendationScreenState extends State<RecomendationScreen> {
+class _RecommendationScreenState extends State<RecommendationScreen> {
   Color littleLight = const Color(0xFFF3FFAB);
   Color purpleBeaty = const Color(0xFF8E05C2);
 
   String currentPressedFilter = 'All';
-  List<String> filterOptions = ['All', 'Trending', 'Videos', 'Posts'];
+  List<String> filterOptions = ['All', 'Trending', 'Videos'];
   // ignore: prefer_final_fields
   List<bool> _isSelected = [true, false, false, false];
 
@@ -81,11 +84,49 @@ class _RecomendationScreenState extends State<RecomendationScreen> {
                   children: filterButtons,
                 ),
               ),
-              // Expanded(
-              //   child: SingleChildScrollView(
-              //     child: /* Your content goes here */,
-              //   ),
-              // ),
+              Expanded(
+                child: StreamBuilder<List<Channel>>(
+                  stream: fetchOwnChannels(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      final channels = snapshot.data!;
+                      return ListView.builder(
+                        itemCount: channels.length,
+                        itemBuilder: (_, index) => Container(
+                          margin: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 5,
+                          ),
+                          padding: const EdgeInsets.all(20.0),
+                          decoration: BoxDecoration(
+                            color: const Color(0xff97FFFF),
+                            borderRadius: BorderRadius.circular(15.0),
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                channels[index].name,
+                                style: const TextStyle(
+                                  fontSize: 18.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                              Text(channels[index].description),
+                            ],
+                          ),
+                        ),
+                      );
+                    } else if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    } else {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                  },
+                ),
+              ),
             ],
           ),
         ),
