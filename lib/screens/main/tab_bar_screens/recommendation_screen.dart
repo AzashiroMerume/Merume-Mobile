@@ -15,7 +15,7 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
   Color purpleBeaty = const Color(0xFF8E05C2);
 
   String currentPressedFilter = 'All';
-  List<String> filterOptions = ['All', 'Trending', 'Videos'];
+  List<String> filterOptions = ['All', 'Trending'];
   // ignore: prefer_final_fields
   List<bool> _isSelected = [true, false, false, false];
 
