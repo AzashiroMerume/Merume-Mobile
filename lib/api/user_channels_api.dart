@@ -1,13 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 
-// import 'package:http/http.dart' as http;
 import 'package:web_socket_channel/io.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:web_socket_channel/web_socket_channel.dart';
-
-import '../exceptions.dart';
+import '../models/channel_model.dart';
 
 const storage = FlutterSecureStorage();
 
@@ -56,31 +52,5 @@ Stream<List<Channel>> fetchOwnChannels() async* {
     //   throw NetworkException('Unexpected error: ${e.toString()}');
   } finally {
     await channel.sink.close();
-  }
-}
-
-class Channel {
-  final String id;
-  final String ownerId;
-  final String name;
-  final String description;
-  final String baseImage;
-
-  const Channel({
-    required this.id,
-    required this.ownerId,
-    required this.name,
-    required this.description,
-    required this.baseImage,
-  });
-
-  factory Channel.fromJson(Map<String, dynamic> json) {
-    return Channel(
-      id: json['_id']['\$oid'],
-      ownerId: json['owner_id']['\$oid'],
-      name: json['name'],
-      description: json['description'],
-      baseImage: json['base_image'] ?? '',
-    );
   }
 }

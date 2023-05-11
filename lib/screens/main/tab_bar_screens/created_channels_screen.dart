@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../api/user_channels_api.dart';
+import '../../../models/channel_model.dart';
 
 class CreatedChannelsScreen extends StatefulWidget {
   const CreatedChannelsScreen({super.key});

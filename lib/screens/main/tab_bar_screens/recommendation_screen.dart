@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../../api/user_channels_api.dart';
 import '../../../api/recommendations_api.dart';
+import '../../../models/channel_model.dart';
+import '../../../models/post_model.dart';
 
 class RecommendationScreen extends StatefulWidget {
   const RecommendationScreen({super.key});
@@ -88,39 +89,50 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
                 ),
               ),
               Expanded(
-                child: StreamBuilder<List<Channel>>(
-                  stream: fetchOwnChannels(),
+                child: FutureBuilder<Map<Channel, Post>>(
+                  future: fetchRecommendations(),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
-                      final channels = snapshot.data!;
+                      final channelPostMap = snapshot.data!;
+                      final channels = channelPostMap.keys.toList();
                       return ListView.builder(
                         itemCount: channels.length,
-                        itemBuilder: (_, index) => Container(
-                          margin: const EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 5,
-                          ),
-                          padding: const EdgeInsets.all(20.0),
-                          decoration: BoxDecoration(
-                            color: const Color(0xff97FFFF),
-                            borderRadius: BorderRadius.circular(15.0),
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                channels[index].name,
-                                style: const TextStyle(
-                                  fontSize: 18.0,
-                                  fontWeight: FontWeight.bold,
+                        itemBuilder: (_, index) {
+                          final channel = channels[index];
+                          final post = channelPostMap[channel]!;
+                          return Container(
+                            margin: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 5,
+                            ),
+                            padding: const EdgeInsets.all(20.0),
+                            decoration: BoxDecoration(
+                              color: const Color(0xff97FFFF),
+                              borderRadius: BorderRadius.circular(15.0),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                // Channel information
+                                Text(
+                                  'Channel Name: ${channel.name}',
+                                  style: const TextStyle(
+                                    fontSize: 18.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(height: 10),
-                              Text(channels[index].description),
-                            ],
-                          ),
-                        ),
+                                Text(
+                                    'Subscriptions: ${channel.subscriptions.currentSubscriptions}'),
+                                Text('Author: ${post.ownerId}'),
+                                const SizedBox(height: 10),
+
+                                // Post content
+                                Text(post.body),
+                              ],
+                            ),
+                          );
+                        },
                       );
                     } else if (snapshot.hasError) {
                       return Text('Error: ${snapshot.error}');

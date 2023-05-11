@@ -29,9 +29,7 @@ Future<void> register(
     switch (response.statusCode) {
       case 201:
         final responseData = json.decode(response.body);
-        if (responseData['success'] == true) {
-          await storage.write(key: 'authToken', value: responseData['token']);
-        }
+        await storage.write(key: 'authToken', value: responseData['token']);
         break;
       case 400:
         final responseData = json.decode(response.body);
@@ -46,12 +44,16 @@ Future<void> register(
         throw HttpException(
             'Received unexpected status code: ${response.statusCode}');
     }
-  } on SocketException {
-    throw NetworkException('Unable to connect to server');
-  } on TimeoutException {
-    throw TimeoutException('The server is taking too long to respond');
   } catch (e) {
-    rethrow;
+    if (e is SocketException) {
+      throw NetworkException('Network error');
+    } else if (e is TimeoutException) {
+      throw TimeoutException('Slow internet connection');
+    } else if (e is http.ClientException) {
+      throw NetworkException('Network error');
+    } else {
+      rethrow; // Rethrow the caught exception
+    }
   }
 }
 
@@ -88,6 +90,8 @@ Future<void> login(String email, String password) async {
       throw TimeoutException('Slow internet connection');
     } else if (e is http.ClientException) {
       throw NetworkException('Network error');
+    } else {
+      rethrow; // Rethrow the caught exception
     }
   }
 }
@@ -120,13 +124,11 @@ Future<bool> verifyAuth() async {
       default:
         throw HttpException('Unexpected status code: ${response.statusCode}');
     }
+  } on SocketException {
+    throw NetworkException('Network error');
+  } on TimeoutException {
+    throw NetworkException('Request timed out');
   } catch (e) {
-    if (e is SocketException ||
-        e is TimeoutException ||
-        e is http.ClientException) {
-      throw NetworkException('Network error');
-    } else {
-      throw http.ClientException;
-    }
+    rethrow;
   }
 }

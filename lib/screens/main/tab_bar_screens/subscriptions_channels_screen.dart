@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../api/user_channels_api.dart';
+import '../../../models/channel_model.dart';
 
 class SubscriptionChannelsScreen extends StatefulWidget {
   const SubscriptionChannelsScreen({super.key});

@@ -25,8 +25,6 @@ Future<bool> savePreferences(List<String> preferences) async {
       },
     );
 
-    print(response.statusCode);
-
     if (response.statusCode == 200) {
       return true;
     } else if (response.statusCode == 401) {
