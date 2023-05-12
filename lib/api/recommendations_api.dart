@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -10,10 +11,10 @@ import '../models/post_model.dart';
 
 const storage = FlutterSecureStorage();
 
-Future<Map<Channel, Post>> fetchRecommendations() async {
+Future<Map<Channel, Post>> fetchRecommendations(int page,
+    {int limit = 20}) async {
   const channelUrl = 'http://localhost:8081/users/recommendations';
   final authToken = await storage.read(key: 'authToken');
-  print(authToken);
   final headers = {'Authorization': '$authToken'};
 
   if (authToken == null) {
@@ -48,13 +49,13 @@ Future<Map<Channel, Post>> fetchRecommendations() async {
       default:
         throw HttpException('Unexpected status code: ${response.statusCode}');
     }
+  } on SocketException {
+    throw NetworkException('Network error');
+  } on TimeoutException {
+    throw NetworkException('Request timeout');
+  } on http.ClientException {
+    throw NetworkException('HTTP client error');
   } catch (e) {
-    if (e is SocketException ||
-        e is TimeoutException ||
-        e is http.ClientException) {
-      throw NetworkException('Network error');
-    } else {
-      throw http.ClientException;
-    }
+    throw Exception('Unknown error occurred: $e');
   }
 }
