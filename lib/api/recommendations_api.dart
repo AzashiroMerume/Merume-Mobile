@@ -31,11 +31,12 @@ Future<Map<Channel, Post>> fetchRecommendations(int page,
 
     switch (response.statusCode) {
       case 200:
-        final data = jsonDecode(response.body) as List<dynamic>;
+        final responseData = jsonDecode(response.body) as Map<String, dynamic>;
+        final data = responseData['data'] as List<dynamic>;
         final channelPostMap = <Channel, Post>{};
-        for (final channelJson in data) {
-          final channelData = channelJson['data'] as Map<String, dynamic>;
-          final postJson = channelJson['page'] as Map<String, dynamic>;
+        for (var channelPostData in data) {
+          final channelData = channelPostData[0] as Map<String, dynamic>;
+          final postJson = channelPostData[1] as Map<String, dynamic>;
           final post = Post.fromJson(postJson);
           final channel = Channel.fromJson(channelData);
           channelPostMap[channel] = post;
@@ -49,13 +50,18 @@ Future<Map<Channel, Post>> fetchRecommendations(int page,
       default:
         throw HttpException('Unexpected status code: ${response.statusCode}');
     }
-  } on SocketException {
-    throw NetworkException('Network error');
-  } on TimeoutException {
-    throw NetworkException('Request timeout');
-  } on http.ClientException {
-    throw NetworkException('HTTP client error');
-  } catch (e) {
-    throw Exception('Unknown error occurred: $e');
+  } catch (e, stackTrace) {
+    print('Exception: $e');
+    print('Stack trace:\n$stackTrace');
+
+    if (e is SocketException) {
+      throw NetworkException('Network error');
+    } else if (e is TimeoutException) {
+      throw TimeoutException('Slow internet connection');
+    } else if (e is http.ClientException) {
+      throw NetworkException('Network error');
+    } else {
+      rethrow; // Rethrow the caught exception
+    }
   }
 }

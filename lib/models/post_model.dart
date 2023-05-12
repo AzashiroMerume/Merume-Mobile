@@ -27,7 +27,7 @@ class Post {
     return Post(
       id: json['_id']['\$oid'],
       ownerId: json['owner_id']['\$oid'],
-      channelId: json['channel_id'],
+      channelId: json['channel_id']['\$oid'],
       body: json['body'],
       images: json['images'],
       writtenChallengeDay: json['written_challenge_day'],

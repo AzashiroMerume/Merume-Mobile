@@ -89,57 +89,61 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
                 ),
               ),
               Expanded(
-                child: FutureBuilder<Map<Channel, Post>>(
-                  future: fetchRecommendations(),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      final channelPostMap = snapshot.data!;
-                      final channels = channelPostMap.keys.toList();
-                      return ListView.builder(
-                        itemCount: channels.length,
-                        itemBuilder: (_, index) {
-                          final channel = channels[index];
-                          final post = channelPostMap[channel]!;
-                          return Container(
-                            margin: const EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 5,
-                            ),
-                            padding: const EdgeInsets.all(20.0),
-                            decoration: BoxDecoration(
-                              color: const Color(0xff97FFFF),
-                              borderRadius: BorderRadius.circular(15.0),
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                // Channel information
-                                Text(
-                                  'Channel Name: ${channel.name}',
-                                  style: const TextStyle(
-                                    fontSize: 18.0,
-                                    fontWeight: FontWeight.bold,
+                child: Container(
+                  margin: const EdgeInsets.only(
+                      top: 10), // Adjust the top margin value as needed
+                  child: FutureBuilder<Map<Channel, Post>>(
+                    future: fetchRecommendations(0),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        final channelPostMap = snapshot.data!;
+                        final channels = channelPostMap.keys.toList();
+                        return ListView.builder(
+                          itemCount: channels.length,
+                          itemBuilder: (_, index) {
+                            final channel = channels[index];
+                            final post = channelPostMap[channel]!;
+                            return Container(
+                              margin: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                                vertical: 5,
+                              ),
+                              padding: const EdgeInsets.all(20.0),
+                              decoration: BoxDecoration(
+                                color: const Color(0xff97FFFF),
+                                borderRadius: BorderRadius.circular(15.0),
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  // Channel information
+                                  Text(
+                                    'Channel Name: ${channel.name}',
+                                    style: const TextStyle(
+                                      fontSize: 18.0,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
-                                ),
-                                Text(
-                                    'Subscriptions: ${channel.subscriptions.currentSubscriptions}'),
-                                Text('Author: ${post.ownerId}'),
-                                const SizedBox(height: 10),
+                                  Text(
+                                      'Subscriptions: ${channel.subscriptions.currentSubscriptions}'),
+                                  Text('Author: ${post.ownerId}'),
+                                  const SizedBox(height: 10),
 
-                                // Post content
-                                Text(post.body),
-                              ],
-                            ),
-                          );
-                        },
-                      );
-                    } else if (snapshot.hasError) {
-                      return Text('Error: ${snapshot.error}');
-                    } else {
-                      return const Center(child: CircularProgressIndicator());
-                    }
-                  },
+                                  // Post content
+                                  Text(post.body),
+                                ],
+                              ),
+                            );
+                          },
+                        );
+                      } else if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      } else {
+                        return const Center(child: CircularProgressIndicator());
+                      }
+                    },
+                  ),
                 ),
               ),
             ],
