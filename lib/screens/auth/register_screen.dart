@@ -100,7 +100,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 style: TextStyle(
                     fontFamily: 'WorkSans', fontSize: 16, color: Colors.white),
               ),
-              const SizedBox(height: 50.0),
+              const SizedBox(height: 40.0),
               if (errorMessage.isNotEmpty)
                 Container(
                   padding: const EdgeInsets.symmetric(
@@ -147,7 +147,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   username = value;
                 },
               ),
-              const SizedBox(height: 50.0),
+              const SizedBox(height: 40.0),
               TextField(
                 controller: _nicknameController,
                 decoration: InputDecoration(
@@ -162,7 +162,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   nickname = value;
                 },
               ),
-              const SizedBox(height: 50.0),
+              const SizedBox(height: 40.0),
               TextField(
                 controller: _emailController,
                 decoration: InputDecoration(
@@ -176,7 +176,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   email = value;
                 },
               ),
-              const SizedBox(height: 50.0),
+              const SizedBox(height: 40.0),
               TextField(
                 controller: _passwordController,
                 obscureText: true,
@@ -192,7 +192,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   password = value;
                 },
               ),
-              const SizedBox(height: 50.0),
+              const SizedBox(height: 40.0),
               Center(
                 child: ElevatedButton(
                   onPressed: () async {
