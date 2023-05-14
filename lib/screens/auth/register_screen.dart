@@ -151,7 +151,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               TextField(
                 controller: _nicknameController,
                 decoration: InputDecoration(
-                  hintText: 'Nickname',
+                  hintText: 'Unique Nickname',
                   fillColor: Colors.white,
                   filled: true,
                   errorText: errors.containsKey('nickname')
