@@ -31,7 +31,7 @@ Future<void> register(
         final responseData = json.decode(response.body);
         await storage.write(key: 'authToken', value: responseData['token']);
         break;
-      case 400:
+      case 409:
         final responseData = json.decode(response.body);
         throw RegistrationException(responseData['error_message']);
       case 413:
