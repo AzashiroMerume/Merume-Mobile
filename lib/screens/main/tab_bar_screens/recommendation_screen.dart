@@ -37,6 +37,27 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
     });
   }
 
+  Map<Channel, Post>? recommendations;
+
+  @override
+  initState() {
+    super.initState();
+    // Fetch recommendations when the page is entered
+    initRecommendations();
+  }
+
+  Future<void> initRecommendations() async {
+    final response = await fetchRecommendations(0);
+    recommendations = response;
+  }
+
+  Future<void> refreshRecommendations() async {
+    final response = await fetchRecommendations(0);
+    setState(() {
+      recommendations = response;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     List<Widget> filterButtons = [];
@@ -73,7 +94,7 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.only(
-              top: 22.0, bottom: 0.0, right: 30.0, left: 30.0),
+              top: 20.0, bottom: 0.0, right: 30.0, left: 30.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -89,63 +110,40 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
                 ),
               ),
               Expanded(
-                child: Container(
-                  margin: const EdgeInsets.only(
-                      top: 10), // Adjust the top margin value as needed
-                  child: FutureBuilder<Map<Channel, Post>>(
-                    future: fetchRecommendations(0),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        final channelPostMap = snapshot.data!;
-                        final channels = channelPostMap.keys.toList();
-                        return ListView.builder(
-                          itemCount: channels.length,
-                          itemBuilder: (_, index) {
-                            final channel = channels[index];
-                            final post = channelPostMap[channel]!;
-                            return Container(
-                              margin: const EdgeInsets.symmetric(
-                                horizontal: 10,
-                                vertical: 5,
+                child: RefreshIndicator(
+                  onRefresh: refreshRecommendations,
+                  child: Container(
+                    margin: const EdgeInsets.only(
+                      top: 10,
+                    ),
+                    child: ListView.builder(
+                      itemCount: recommendations?.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        final channels = recommendations?.keys.toList();
+                        final latestPosts = recommendations?.values.toList();
+                        final channel = channels?[index];
+                        final post = latestPosts?[index];
+                        return Column(
+                          children: [
+                            Container(
+                              height: 200,
+                              width: double.infinity,
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 30.0),
+                              child: Text(
+                                channel!.name,
+                                style: TextStyle(
+                                  color: littleLight,
+                                ),
                               ),
-                              padding: const EdgeInsets.all(20.0),
-                              decoration: BoxDecoration(
-                                color: const Color(0xff97FFFF),
-                                borderRadius: BorderRadius.circular(15.0),
-                              ),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  // Channel information
-                                  Text(
-                                    'Channel Name: ${channel.name}',
-                                    style: const TextStyle(
-                                      fontSize: 18.0,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  Text(
-                                      'Subscriptions: ${channel.subscriptions.currentSubscriptions}'),
-                                  Text('Author: ${post.ownerId}'),
-                                  const SizedBox(height: 10),
-
-                                  // Post content
-                                  Text(post.body),
-                                ],
-                              ),
-                            );
-                          },
+                            ),
+                          ],
                         );
-                      } else if (snapshot.hasError) {
-                        return Text('Error: ${snapshot.error}');
-                      } else {
-                        return const Center(child: CircularProgressIndicator());
-                      }
-                    },
+                      },
+                    ),
                   ),
                 ),
-              ),
+              )
             ],
           ),
         ),
