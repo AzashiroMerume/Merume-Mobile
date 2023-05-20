@@ -46,18 +46,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
     errors.clear();
 
     //check username
-    if (username.isEmpty) {
+    if (username.trim().isEmpty) {
       errors['username'] = 'Username is requred';
-    } else if (username.length > 255) {
+    } else if (username.trim().length > 255) {
       errors['username'] = 'Username must contain no more than 255 characters';
     }
 
     // Check nickname
-    if (nickname.isEmpty) {
+    if (nickname.trim().isEmpty) {
       errors['nickname'] = 'Nickname is required';
-    } else if (nickname.length < 6) {
+    } else if (RegExp(r"\s").hasMatch(nickname.trim())) {
+      errors['nickname'] = 'Nickname must be a non-conjoint string';
+    } else if (nickname.trim().length < 6) {
       errors['nickname'] = 'Nickname must be at least 6 characters long';
-    } else if (nickname.length > 20) {
+    } else if (nickname.trim().length > 20) {
       errors['nickname'] = 'Nickname must contain no more than 20 characters';
     }
 
@@ -69,9 +71,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
 
     // Check password
-    if (password.isEmpty) {
+    if (password.trim().isEmpty) {
       errors['password'] = 'Password is required';
-    } else if (password.length < 8) {
+    } else if (password.trim().length < 8) {
       errors['password'] = 'Password must be at least 8 characters long';
     }
   }

@@ -57,11 +57,12 @@ Future<void> register(
   }
 }
 
-Future<void> login(String email, String password) async {
+Future<void> login(String email, String password, bool byEmail) async {
   try {
     final response = await http.post(
       Uri.parse('http://localhost:8081/auth/login'),
-      body: json.encode({'email': email, 'password': password}),
+      body: json.encode(
+          {'identifier': email, 'password': password, 'byEmail': byEmail}),
       headers: {
         'Content-Type': 'application/json',
       },
