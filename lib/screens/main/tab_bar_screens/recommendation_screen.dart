@@ -90,6 +90,7 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
         ),
       ));
     }
+
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -113,37 +114,50 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
                 child: RefreshIndicator(
                   onRefresh: refreshRecommendations,
                   child: Container(
-                    margin: const EdgeInsets.only(
-                      top: 10,
-                    ),
-                    child: ListView.builder(
-                      itemCount: recommendations?.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        final channels = recommendations?.keys.toList();
-                        final latestPosts = recommendations?.values.toList();
-                        final channel = channels?[index];
-                        final post = latestPosts?[index];
-                        return Column(
-                          children: [
-                            Container(
-                              height: 200,
-                              width: double.infinity,
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 30.0),
-                              child: Text(
-                                channel!.name,
-                                style: TextStyle(
-                                  color: littleLight,
-                                ),
+                    // margin: const EdgeInsets.only(
+                    //   top: 10,
+                    // ),
+                    child: recommendations == null || recommendations!.isEmpty
+                        ? Center(
+                            child: Text(
+                              "No content yet",
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.normal,
+                                color: littleLight,
                               ),
                             ),
-                          ],
-                        );
-                      },
-                    ),
+                          )
+                        : ListView.builder(
+                            itemCount: recommendations!.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              final channels = recommendations!.keys.toList();
+                              final latestPosts =
+                                  recommendations!.values.toList();
+                              final channel = channels[index];
+                              final post = latestPosts[index];
+
+                              return Column(
+                                children: [
+                                  Container(
+                                    height: 200,
+                                    width: double.infinity,
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 30.0),
+                                    child: Text(
+                                      channel.name,
+                                      style: TextStyle(
+                                        color: littleLight,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                          ),
                   ),
                 ),
-              )
+              ),
             ],
           ),
         ),
