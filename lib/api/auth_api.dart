@@ -57,12 +57,15 @@ Future<void> register(
   }
 }
 
-Future<void> login(String email, String password, bool byEmail) async {
+Future<void> login(String identifier, String password, bool byEmail) async {
   try {
     final response = await http.post(
       Uri.parse('http://localhost:8081/auth/login'),
-      body: json.encode(
-          {'identifier': email, 'password': password, 'byEmail': byEmail}),
+      body: json.encode({
+        'identifier': identifier,
+        'password': password,
+        'by_email': byEmail
+      }),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -79,6 +82,8 @@ Future<void> login(String email, String password, bool byEmail) async {
         throw AuthenticationException('The email or password is incorrect');
       case 404:
         throw NotFoundException('The specified email address was not found');
+      case 422:
+        throw UnprocessableEntityException('The request data is invalid');
       case 500:
         throw ServerException('The server encountered an unexpected error');
       default:

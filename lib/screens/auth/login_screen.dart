@@ -291,7 +291,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       });
                     },
                     child: Text(
-                      useEmailLogin ? 'Email' : 'Nickname',
+                      useEmailLogin ? 'Nickname' : 'Email',
                       style: TextStyle(
                         fontFamily: 'WorkSans',
                         fontSize: 16,
