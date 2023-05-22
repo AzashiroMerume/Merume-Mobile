@@ -79,9 +79,11 @@ Future<void> login(String identifier, String password, bool byEmail) async {
         await storage.write(key: 'authToken', value: responseData['token']);
         break;
       case 401:
-        throw AuthenticationException('The email or password is incorrect');
+        throw AuthenticationException(
+            'The identifier or password is incorrect');
       case 404:
-        throw NotFoundException('The specified email address was not found');
+        throw NotFoundException(
+            'The specified identifier address was not found');
       case 422:
         throw UnprocessableEntityException('The request data is invalid');
       case 500:
