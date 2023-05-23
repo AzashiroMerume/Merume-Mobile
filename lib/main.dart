@@ -6,40 +6,43 @@ import 'package:merume_mobile/screens/on_boarding/start_screen.dart';
 import 'package:merume_mobile/screens/settings/preferences_screen.dart';
 import 'package:merume_mobile/api/auth_api.dart';
 
+import 'exceptions.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  try {
-    final isAuthenticated = await verifyAuth();
+  bool isAuthenticated = false;
+  String errorMessage = '';
 
-    if (isAuthenticated) {
-      runApp(MyApp(
-        isAuthenticated: isAuthenticated,
-        shouldbeStartScreen: false,
-      ));
-    } else {
-      runApp(MyApp(
-        isAuthenticated: isAuthenticated,
-        shouldbeStartScreen: true,
-      ));
-    }
-  } catch (e) {
+  try {
+    isAuthenticated = await verifyAuth();
+  } on PreferencesUnsetException {
     runApp(const MyApp(
-      isAuthenticated: false,
-      shouldbeStartScreen: false,
+      isAuthenticated: true,
+      navigateToPreferences: true,
     ));
+    return;
+  } catch (e) {
+    errorMessage = 'There was an error on the server side';
   }
+
+  runApp(MyApp(
+    isAuthenticated: isAuthenticated,
+    errorMessage: errorMessage,
+  ));
 }
 
 class MyApp extends StatelessWidget {
   final bool isAuthenticated;
-  final bool shouldbeStartScreen;
+  final bool navigateToPreferences;
+  final String errorMessage;
 
-  const MyApp(
-      {Key? key,
-      required this.isAuthenticated,
-      required this.shouldbeStartScreen})
-      : super(key: key);
+  const MyApp({
+    Key? key,
+    required this.isAuthenticated,
+    this.navigateToPreferences = false,
+    this.errorMessage = '',
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -51,17 +54,39 @@ class MyApp extends StatelessWidget {
         ),
         scaffoldBackgroundColor: Colors.black,
       ),
-      home: shouldbeStartScreen
-          ? const StartScreen()
-          : isAuthenticated
-              ? const MainScreen()
-              : const LoginScreen(),
+      home: Scaffold(
+        body: navigateToPreferences
+            ? const PreferencesScreen()
+            : isAuthenticated
+                ? const MainScreen()
+                : const StartScreen(),
+        bottomNavigationBar: errorMessage.isNotEmpty
+            ? SnackbarWidget(message: errorMessage)
+            : null,
+      ),
       routes: {
         '/login': (context) => const LoginScreen(),
         '/register': (context) => const RegisterScreen(),
         '/preferences': (context) => const PreferencesScreen(),
         '/main': (context) => const MainScreen(),
       },
+    );
+  }
+}
+
+class SnackbarWidget extends StatelessWidget {
+  final String message;
+
+  const SnackbarWidget({Key? key, required this.message}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      alignment: Alignment.bottomCenter,
+      child: SnackBar(
+        content: Text(message),
+        duration: const Duration(seconds: 2),
+      ),
     );
   }
 }

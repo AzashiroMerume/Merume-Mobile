@@ -10,6 +10,12 @@ class AuthenticationException implements Exception {
   AuthenticationException(this.message);
 }
 
+class PreferencesUnsetException implements Exception {
+  final String message;
+
+  PreferencesUnsetException(this.message);
+}
+
 class NotFoundException implements Exception {
   final String message;
 
