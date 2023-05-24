@@ -181,9 +181,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     });
 
                     if (errors.isEmpty) {
+                      NavigatorState state = Navigator.of(context);
                       try {
-                        NavigatorState state = Navigator.of(context);
-
                         await login(identifier, password, useEmailLogin);
 
                         state.pushNamedAndRemoveUntil(
@@ -191,6 +190,12 @@ class _LoginScreenState extends State<LoginScreen> {
                           (Route<dynamic> route) => false,
                         );
                       } catch (e) {
+                        if (e is PreferencesUnsetException) {
+                          state.pushNamedAndRemoveUntil(
+                            '/preferences',
+                            (Route<dynamic> route) => false,
+                          );
+                        }
                         setState(() {
                           if (e is AuthenticationException) {
                             if (useEmailLogin) {
