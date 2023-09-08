@@ -83,7 +83,7 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
                             categories[index],
                             style: const TextStyle(
                               fontFamily: 'WorkSans',
-                              fontSize: 18,
+                              fontSize: 15,
                               color: Colors.white,
                             ),
                             textAlign: TextAlign.start,

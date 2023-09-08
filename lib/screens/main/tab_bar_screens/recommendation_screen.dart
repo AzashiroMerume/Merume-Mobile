@@ -16,9 +16,9 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
 
   String currentPressedFilter = 'All';
   List<String> filterOptions = ['All', 'Trending'];
-  List<bool> _isSelected = [true, false, false, false];
+  final List<bool> _isSelected = [true, false, false, false];
 
-  ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollController = ScrollController();
   Map<Channel, Post>? recommendations;
   int pageNumber = 0;
 
