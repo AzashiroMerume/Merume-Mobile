@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -146,4 +147,11 @@ Future<bool> verifyAuth() async {
   } catch (e) {
     rethrow;
   }
+}
+
+Future<bool> logout() async {
+  await storage.delete(key: 'authToken');
+  final checkToken = await storage.read(key: 'authToken');
+
+  return checkToken == null;
 }
