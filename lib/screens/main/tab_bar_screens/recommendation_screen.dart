@@ -16,7 +16,7 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
 
   String currentPressedFilter = 'All';
   List<String> filterOptions = ['All', 'Trending'];
-  final List<bool> _isSelected = [true, false, false, false];
+  final List<bool> _isSelected = [true, false];
 
   final ScrollController _scrollController = ScrollController();
   Map<Channel, Post>? recommendations;
@@ -136,47 +136,34 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
               Expanded(
                 child: RefreshIndicator(
                   onRefresh: refreshRecommendations,
-                  child: Container(
-                    child: recommendations == null || recommendations!.isEmpty
-                        ? Center(
-                            child: Text(
-                              "No content yet",
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.normal,
-                                color: littleLight,
-                              ),
+                  child: recommendations == null || recommendations!.isEmpty
+                      ? Center(
+                          child: Text(
+                            "No content yet",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.normal,
+                              color: littleLight,
                             ),
-                          )
-                        : ListView.builder(
-                            controller: _scrollController,
-                            itemCount: recommendations!.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              final channels = recommendations!.keys.toList();
-                              final latestPosts =
-                                  recommendations!.values.toList();
-                              final channel = channels[index];
-                              final post = latestPosts[index];
-
-                              return Column(
-                                children: [
-                                  Container(
-                                    height: 200,
-                                    width: double.infinity,
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 30.0),
-                                    child: Text(
-                                      channel.name,
-                                      style: TextStyle(
-                                        color: littleLight,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              );
-                            },
                           ),
-                  ),
+                        )
+                      : ListView(
+                          controller: _scrollController,
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          children: [
+                            for (int index = 0;
+                                index < recommendations!.length;
+                                index++)
+                              ListTile(
+                                title: Text(
+                                  recommendations!.keys.toList()[index].name,
+                                  style: TextStyle(
+                                    color: littleLight,
+                                  ),
+                                ),
+                              ),
+                          ],
+                        ),
                 ),
               ),
             ],
