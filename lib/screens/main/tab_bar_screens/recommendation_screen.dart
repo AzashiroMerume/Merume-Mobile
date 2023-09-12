@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../api/recommendations_api.dart';
 import '../../../models/channel_model.dart';
 import '../../../models/post_model.dart';
+import '../components/post_widget.dart';
 
 class RecommendationScreen extends StatefulWidget {
   const RecommendationScreen({Key? key}) : super(key: key);
@@ -133,9 +134,13 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
                   ),
                 ),
               ),
+              const SizedBox(height: 16),
               Expanded(
                 child: RefreshIndicator(
                   onRefresh: refreshRecommendations,
+                  displacement: 1,
+                  color: Colors.white,
+                  backgroundColor: purpleBeaty,
                   child: recommendations == null || recommendations!.isEmpty
                       ? Center(
                           child: Text(
@@ -151,17 +156,8 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
                           controller: _scrollController,
                           physics: const AlwaysScrollableScrollPhysics(),
                           children: [
-                            for (int index = 0;
-                                index < recommendations!.length;
-                                index++)
-                              ListTile(
-                                title: Text(
-                                  recommendations!.keys.toList()[index].name,
-                                  style: TextStyle(
-                                    color: littleLight,
-                                  ),
-                                ),
-                              ),
+                            for (var entry in recommendations!.entries)
+                              PostWidget(channel: entry.key, post: entry.value),
                           ],
                         ),
                 ),
