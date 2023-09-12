@@ -83,10 +83,12 @@ class SnackbarWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       alignment: Alignment.bottomCenter,
-      child: SnackBar(
-        content: Text(message),
-        duration: const Duration(seconds: 2),
-      ),
+      child: message.isNotEmpty
+          ? SnackBar(
+              content: Text(message),
+              duration: const Duration(seconds: 2),
+            )
+          : Container(),
     );
   }
 }
