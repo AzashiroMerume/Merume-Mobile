@@ -14,7 +14,8 @@ class PostWidget extends StatelessWidget {
     Color littleLight = const Color(0xFFF3FFAB);
 
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.symmetric(vertical: 20),
+      height: 300.0,
       decoration: const BoxDecoration(
         border: Border(bottom: BorderSide(color: Colors.grey)),
       ),
@@ -33,7 +34,8 @@ class PostWidget extends StatelessWidget {
           Text(
             post.body, // Use the post content here
             style: const TextStyle(
-              color: Colors.black,
+              fontFamily: 'WorkSans',
+              color: Colors.white,
               fontSize: 14,
             ),
           ),

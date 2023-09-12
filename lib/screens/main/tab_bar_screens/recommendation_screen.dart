@@ -146,6 +146,7 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
                           child: Text(
                             "No content yet",
                             style: TextStyle(
+                              fontFamily: 'WorkSans',
                               fontSize: 18,
                               fontWeight: FontWeight.normal,
                               color: littleLight,
