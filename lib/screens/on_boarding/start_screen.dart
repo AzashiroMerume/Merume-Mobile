@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:merume_mobile/colors.dart';
 
 class StartScreen extends StatefulWidget {
   const StartScreen({super.key});
@@ -8,9 +9,6 @@ class StartScreen extends StatefulWidget {
 }
 
 class _StartScreenState extends State<StartScreen> {
-  Color littleLight = const Color(0xFFF3FFAB);
-  Color purpleBeaty = const Color(0xFF8E05C2);
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,13 +32,13 @@ class _StartScreenState extends State<StartScreen> {
                     ),
                     Container(
                       margin: const EdgeInsets.only(top: 50.0),
-                      child: Text(
+                      child: const Text(
                         '1000 Days To Perfection',
                         overflow: TextOverflow.clip,
                         textAlign: TextAlign.center,
                         maxLines: null,
                         style: TextStyle(
-                            color: littleLight,
+                            color: AppColors.mellowLemon,
                             fontSize: 40,
                             fontFamily: 'Poppins',
                             fontWeight: FontWeight.w500,
@@ -84,7 +82,7 @@ class _StartScreenState extends State<StartScreen> {
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                       fixedSize: const Size(178, 38),
-                      backgroundColor: purpleBeaty,
+                      backgroundColor: AppColors.royalPurple,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(50))),
                   onPressed: (() => Navigator.of(context).pushNamed('/login')),

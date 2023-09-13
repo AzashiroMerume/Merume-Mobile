@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../api/user_channels_api.dart';
-import '../../../models/channel_model.dart';
+import '../../../../api/user_channels_api.dart';
+import '../../../../models/channel_model.dart';
 
 class SubscriptionChannelsScreen extends StatefulWidget {
   const SubscriptionChannelsScreen({super.key});
@@ -12,9 +12,6 @@ class SubscriptionChannelsScreen extends StatefulWidget {
 
 class _SubscriptionChannelsScreenState
     extends State<SubscriptionChannelsScreen> {
-  Color littleLight = const Color(0xFFF3FFAB);
-  Color purpleBeaty = const Color(0xFF8E05C2);
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:merume_mobile/colors.dart';
 import 'package:merume_mobile/models/channel_model.dart';
 
 class ChannelWidget extends StatelessWidget {
@@ -8,8 +9,6 @@ class ChannelWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color littleLight = const Color(0xFFF3FFAB);
-
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 20),
       height: 300.0,
@@ -21,8 +20,8 @@ class ChannelWidget extends StatelessWidget {
         children: [
           Text(
             channel.name, // Use the channel's name or relevant property here
-            style: TextStyle(
-              color: littleLight,
+            style: const TextStyle(
+              color: AppColors.mellowLemon,
               fontWeight: FontWeight.bold,
               fontSize: 16,
             ),

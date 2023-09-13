@@ -5,11 +5,14 @@ import 'package:merume_mobile/screens/main/main_screen.dart';
 import 'package:merume_mobile/screens/on_boarding/start_screen.dart';
 import 'package:merume_mobile/screens/settings/preferences_screen.dart';
 import 'package:merume_mobile/api/auth_api.dart';
+// import 'package:flutter/services.dart';
 
 import 'exceptions.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+  //     overlays: [SystemUiOverlay.top]);
 
   bool isAuthenticated = false;
   String errorMessage = '';

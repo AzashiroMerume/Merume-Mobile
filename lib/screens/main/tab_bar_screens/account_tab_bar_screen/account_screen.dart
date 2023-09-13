@@ -23,7 +23,7 @@ class _AccountScreenState extends State<AccountScreen> {
                     .pushNamedAndRemoveUntil('/login', (route) => false);
               }
             },
-            child: Text("Log out"),
+            child: const Text("Log out"),
           ),
         ),
       ),

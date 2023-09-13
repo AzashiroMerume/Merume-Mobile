@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:merume_mobile/screens/main/tab_bar_screens/account_screen.dart';
-import 'package:merume_mobile/screens/main/tab_bar_screens/created_channels_screen.dart';
-import 'package:merume_mobile/screens/main/tab_bar_screens/subscriptions_channels_screen.dart';
+import 'package:merume_mobile/colors.dart';
+
+import 'package:merume_mobile/screens/main/tab_bar_screens/account_tab_bar_screen/account_screen.dart';
+import 'package:merume_mobile/screens/main/tab_bar_screens/created_channels_tab_bar_screen/created_channels_screen.dart';
+import 'package:merume_mobile/screens/main/tab_bar_screens/subscriptions_channels_tab_bar_screen/subscriptions_channels_screen.dart';
 // import 'package:merume_mobile/screens/main/tab_bar_screens/recommendation_screen.dart';
 
 class MainScreen extends StatefulWidget {
@@ -12,15 +14,11 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  Color littleLight = const Color(0xFFF3FFAB);
-  Color purpleBeaty = const Color(0xFF8E05C2);
-
   int _currentIndex = 0;
 
   final List<Widget> _screens = [
-    const SubscriptionChannelsScreen(),
     const CreatedChannelsScreen(),
-    // const RecommendationScreen(),
+    const SubscriptionChannelsScreen(),
     const AccountScreen(),
   ];
 
@@ -73,31 +71,35 @@ class _MainScreenState extends State<MainScreen> {
       ),
       body: _screens[_currentIndex],
       bottomNavigationBar: Container(
+        padding: const EdgeInsets.symmetric(vertical: 5.0),
         decoration: BoxDecoration(
-          color: Colors.white,
           border: Border(
             top: BorderSide(
-              color: littleLight.withOpacity(0.5),
+              color: Colors.blueGrey.withOpacity(0.5),
               width: 1.0,
             ),
           ),
         ),
         child: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
+          selectedFontSize: 12.0,
+          selectedIconTheme: const IconThemeData(color: AppColors.lavenderHaze),
+          selectedItemColor: AppColors.lavenderHaze,
+          unselectedIconTheme: const IconThemeData(color: Colors.white),
           currentIndex: _currentIndex,
           onTap: (index) => setState(() => _currentIndex = index),
           backgroundColor: Colors.black,
           items: const [
             BottomNavigationBarItem(
-              icon: Icon(Icons.home, color: Colors.deepPurpleAccent),
+              icon: Icon(Icons.home),
               label: 'Home',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.subscriptions, color: Colors.deepPurpleAccent),
-              label: 'Favorite',
+              icon: Icon(Icons.subscriptions),
+              label: 'Subscriptions',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.person, color: Colors.deepPurpleAccent),
+              icon: Icon(Icons.person),
               label: 'Profile',
             ),
             // other bottom tab bar items here

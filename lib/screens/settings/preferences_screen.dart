@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:merume_mobile/colors.dart';
 import 'package:merume_mobile/exceptions.dart';
 import 'components/categories.dart';
 
@@ -12,9 +13,6 @@ class PreferencesScreen extends StatefulWidget {
 }
 
 class _PreferencesScreenState extends State<PreferencesScreen> {
-  Color littleLight = const Color(0xFFF3FFAB);
-  Color purpleBeaty = const Color(0xFF8E05C2);
-
   List<String> selected = [];
 
   String errorMessage = '';
@@ -35,12 +33,12 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
+              const Text(
                 'Please select preferences',
                 style: TextStyle(
                   fontFamily: 'Poppins',
                   fontSize: 24,
-                  color: littleLight,
+                  color: AppColors.mellowLemon,
                 ),
               ),
               const SizedBox(height: 24.0),
@@ -76,8 +74,9 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
                                 offset: const Offset(0, 2),
                               ),
                             ],
-                            color:
-                                isSelected ? purpleBeaty : Colors.grey.shade900,
+                            color: isSelected
+                                ? AppColors.mellowLemon
+                                : Colors.grey.shade900,
                           ),
                           child: Text(
                             categories[index],
@@ -176,7 +175,7 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
             },
           );
         },
-        backgroundColor: purpleBeaty,
+        backgroundColor: AppColors.royalPurple,
         child: const Icon(Icons.check),
       ),
     );

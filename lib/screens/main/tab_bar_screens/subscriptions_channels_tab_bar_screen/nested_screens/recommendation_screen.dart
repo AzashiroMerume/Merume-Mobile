@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:merume_mobile/colors.dart';
 import 'package:merume_mobile/screens/main/components/channel_widget.dart';
-import '../../../api/recommendations_api.dart';
-import '../../../models/channel_model.dart';
+import '../../../../../api/recommendations_api.dart';
+import '../../../../../models/channel_model.dart';
 
 class RecommendationScreen extends StatefulWidget {
   const RecommendationScreen({Key? key}) : super(key: key);
@@ -11,9 +12,6 @@ class RecommendationScreen extends StatefulWidget {
 }
 
 class _RecommendationScreenState extends State<RecommendationScreen> {
-  Color littleLight = const Color(0xFFF3FFAB);
-  Color purpleBeaty = const Color(0xFF8E05C2);
-
   String currentPressedFilter = 'All';
   List<String> filterOptions = ['All', 'Trending'];
   final List<bool> _isSelected = [true, false];
@@ -91,11 +89,14 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
             onPressed: () => _onFilterButtonPressed(i),
             style: ElevatedButton.styleFrom(
               fixedSize: const Size(100, 35),
-              backgroundColor: _isSelected[i] ? littleLight : Colors.black,
+              backgroundColor:
+                  _isSelected[i] ? AppColors.mellowLemon : Colors.black,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
                 side: BorderSide(
-                  color: _isSelected[i] ? littleLight : purpleBeaty,
+                  color: _isSelected[i]
+                      ? AppColors.mellowLemon
+                      : AppColors.royalPurple,
                   width: 1,
                 ),
               ),
@@ -139,16 +140,16 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
                   onRefresh: refreshRecommendations,
                   displacement: 1,
                   color: Colors.white,
-                  backgroundColor: purpleBeaty,
+                  backgroundColor: AppColors.royalPurple,
                   child: recommendations == null || recommendations!.isEmpty
-                      ? Center(
+                      ? const Center(
                           child: Text(
                             "No content yet",
                             style: TextStyle(
                               fontFamily: 'WorkSans',
                               fontSize: 18,
                               fontWeight: FontWeight.normal,
-                              color: littleLight,
+                              color: AppColors.mellowLemon,
                             ),
                           ),
                         )
