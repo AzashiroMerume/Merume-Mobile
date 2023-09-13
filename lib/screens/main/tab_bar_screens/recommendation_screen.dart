@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:merume_mobile/screens/main/components/channel_widget.dart';
 import '../../../api/recommendations_api.dart';
 import '../../../models/channel_model.dart';
-import '../../../models/post_model.dart';
-import '../components/post_widget.dart';
 
 class RecommendationScreen extends StatefulWidget {
   const RecommendationScreen({Key? key}) : super(key: key);
@@ -20,7 +19,7 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
   final List<bool> _isSelected = [true, false];
 
   final ScrollController _scrollController = ScrollController();
-  Map<Channel, Post>? recommendations;
+  List<Channel>? recommendations;
   int pageNumber = 0;
 
   @override
@@ -153,13 +152,14 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
                             ),
                           ),
                         )
-                      : ListView(
+                      : ListView.builder(
                           controller: _scrollController,
                           physics: const AlwaysScrollableScrollPhysics(),
-                          children: [
-                            for (var entry in recommendations!.entries)
-                              PostWidget(channel: entry.key, post: entry.value),
-                          ],
+                          itemCount: recommendations!.length,
+                          itemBuilder: (context, index) {
+                            final channel = recommendations![index];
+                            return ChannelWidget(channel: channel);
+                          },
                         ),
                 ),
               ),

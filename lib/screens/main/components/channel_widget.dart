@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:merume_mobile/models/channel_model.dart';
-import 'package:merume_mobile/models/post_model.dart';
 
-class PostWidget extends StatelessWidget {
+class ChannelWidget extends StatelessWidget {
   final Channel channel;
-  final Post post;
 
-  const PostWidget({Key? key, required this.channel, required this.post})
-      : super(key: key);
+  const ChannelWidget({Key? key, required this.channel}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -30,16 +27,6 @@ class PostWidget extends StatelessWidget {
               fontSize: 16,
             ),
           ),
-          const SizedBox(height: 8),
-          Text(
-            post.body, // Use the post content here
-            style: const TextStyle(
-              fontFamily: 'WorkSans',
-              color: Colors.white,
-              fontSize: 14,
-            ),
-          ),
-          // You can add more widgets here for likes, comments, and other actions
         ],
       ),
     );
