@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:merume_mobile/screens/main/tab_bar_screens/account_screen.dart';
 import 'package:merume_mobile/screens/main/tab_bar_screens/created_channels_screen.dart';
 import 'package:merume_mobile/screens/main/tab_bar_screens/subscriptions_channels_screen.dart';
-import 'package:merume_mobile/screens/main/tab_bar_screens/recommendation_screen.dart';
+// import 'package:merume_mobile/screens/main/tab_bar_screens/recommendation_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -18,9 +18,9 @@ class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 0;
 
   final List<Widget> _screens = [
-    const RecommendationScreen(),
-    const CreatedChannelsScreen(),
     const SubscriptionChannelsScreen(),
+    const CreatedChannelsScreen(),
+    // const RecommendationScreen(),
     const AccountScreen(),
   ];
 
@@ -91,10 +91,6 @@ class _MainScreenState extends State<MainScreen> {
             BottomNavigationBarItem(
               icon: Icon(Icons.home, color: Colors.deepPurpleAccent),
               label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.favorite, color: Colors.deepPurpleAccent),
-              label: 'Owned',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.subscriptions, color: Colors.deepPurpleAccent),
