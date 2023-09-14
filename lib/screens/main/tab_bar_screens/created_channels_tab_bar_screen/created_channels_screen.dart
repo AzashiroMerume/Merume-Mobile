@@ -19,12 +19,11 @@ class _CreatedChannelsScreenState extends State<CreatedChannelsScreen> {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.only(
-              top: 22.0, bottom: 0.0, right: 30.0, left: 30.0),
+              top: 20.0, bottom: 0.0, right: 30.0, left: 30.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const SizedBox(height: 16),
               Expanded(
                 child: StreamBuilder<List<Channel>>(
                   stream: fetchOwnChannels(),
