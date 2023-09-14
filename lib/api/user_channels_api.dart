@@ -11,15 +11,28 @@ Stream<List<Channel>> fetchSubscriptions() async* {
   const channelUrl = 'ws://localhost:8081/users/channels/subscriptions';
   final authToken = await storage.read(key: 'authToken');
   final headers = {'Authorization': '$authToken'};
-  final channel =
-      IOWebSocketChannel.connect(Uri.parse(channelUrl), headers: headers);
 
-  // Listen to incoming data from the WebSocket
-  await for (var data in channel.stream) {
-    final List<dynamic> channelsJson = json.decode(data);
-    final channels =
-        channelsJson.map((json) => Channel.fromJson(json)).toList();
-    yield channels;
+  while (true) {
+    try {
+      final channel =
+          IOWebSocketChannel.connect(Uri.parse(channelUrl), headers: headers);
+
+      // Listen to incoming data from the WebSocket
+      await for (var data in channel.stream) {
+        final List<dynamic> channelsJson = json.decode(data);
+        final channels =
+            channelsJson.map((json) => Channel.fromJson(json)).toList();
+        yield channels;
+      }
+
+      // The WebSocket connection was closed, attempt to reconnect
+      await channel.sink.close();
+    } catch (e) {
+      // Handle any exceptions that occur during the WebSocket connection
+      print('WebSocket error: $e');
+      // You can implement a delay here before attempting to reconnect
+      await Future.delayed(const Duration(seconds: 5));
+    }
   }
 }
 
@@ -27,30 +40,27 @@ Stream<List<Channel>> fetchOwnChannels() async* {
   const channelUrl = 'ws://localhost:8081/users/channels/created';
   final authToken = await storage.read(key: 'authToken');
   final headers = {'Authorization': '$authToken'};
-  final channel =
-      IOWebSocketChannel.connect(Uri.parse(channelUrl), headers: headers);
 
-  try {
-    // Listen to incoming data from the WebSocket
-    await for (var data in channel.stream) {
-      final List<dynamic> channelsJson = json.decode(data);
-      final channels =
-          channelsJson.map((json) => Channel.fromJson(json)).toList();
-      yield channels;
+  while (true) {
+    try {
+      final channel =
+          IOWebSocketChannel.connect(Uri.parse(channelUrl), headers: headers);
+
+      // Listen to incoming data from the WebSocket
+      await for (var data in channel.stream) {
+        final List<dynamic> channelsJson = json.decode(data);
+        final channels =
+            channelsJson.map((json) => Channel.fromJson(json)).toList();
+        yield channels;
+      }
+
+      // The WebSocket connection was closed, attempt to reconnect
+      await channel.sink.close();
+    } catch (e) {
+      // Handle any exceptions that occur during the WebSocket connection
+      print('WebSocket error: $e');
+      // You can implement a delay here before attempting to reconnect
+      await Future.delayed(const Duration(seconds: 5));
     }
-    //TODO(): IMPROVE FUCKING EXCEPTION HANDLING HERE
-    // } on HttpException catch (e) {
-    //   throw NetworkException('HTTP error: ${e.message}');
-    // } on WebSocketChannelException catch (e) {
-    //   throw NetworkException('WebSocket channel error: ${e.message}');
-    // } on SocketException catch (e) {
-    //   throw NetworkException('Socket error: ${e.message}');
-    // } on FormatException {
-    //   throw const FormatException(
-    //       'Received invalid JSON data from the WebSocket');
-    // } on Exception catch (e) {
-    //   throw NetworkException('Unexpected error: ${e.toString()}');
-  } finally {
-    await channel.sink.close();
   }
 }
