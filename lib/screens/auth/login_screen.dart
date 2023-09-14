@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:merume_mobile/colors.dart';
 
 import '../../api/auth_api.dart';
 import '../../exceptions.dart';
@@ -13,9 +14,6 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  Color littleLight = const Color(0xFFF3FFAB);
-  Color purpleBeauty = const Color(0xFF8E05C2);
-
   final TextEditingController _identifierController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -72,13 +70,13 @@ class _LoginScreenState extends State<LoginScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
+              const Text(
                 'Sign in now',
                 style: TextStyle(
                   fontFamily: 'Poppins',
                   fontWeight: FontWeight.w500,
                   fontSize: 32,
-                  color: littleLight,
+                  color: AppColors.mellowLemon,
                 ),
               ),
               const SizedBox(height: 24.0),
@@ -160,10 +158,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 alignment: Alignment.bottomRight,
                 child: TextButton(
                   onPressed: () {},
-                  child: Text(
+                  child: const Text(
                     'Forgot password?',
                     style: TextStyle(
-                      color: littleLight,
+                      color: AppColors.mellowLemon,
                       fontFamily: 'WorkSans',
                       fontSize: 15,
                     ),
@@ -236,7 +234,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   },
                   style: ElevatedButton.styleFrom(
                     fixedSize: const Size(178, 38),
-                    backgroundColor: purpleBeauty,
+                    backgroundColor: AppColors.royalPurple,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(50),
                     ),
@@ -255,10 +253,10 @@ class _LoginScreenState extends State<LoginScreen> {
               TextButton(
                 onPressed: () =>
                     Navigator.of(context).pushReplacementNamed('/register'),
-                child: Row(
+                child: const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text(
+                    Text(
                       'I don\'t have an account ',
                       style: TextStyle(
                         fontFamily: 'WorkSans',
@@ -271,7 +269,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       style: TextStyle(
                         fontFamily: 'WorkSans',
                         fontSize: 16,
-                        color: littleLight,
+                        color: AppColors.mellowLemon,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -297,10 +295,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     },
                     child: Text(
                       useEmailLogin ? 'Nickname' : 'Email',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontFamily: 'WorkSans',
                         fontSize: 16,
-                        color: littleLight,
+                        color: AppColors.mellowLemon,
                         fontWeight: FontWeight.bold,
                       ),
                     ),

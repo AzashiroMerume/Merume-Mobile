@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:merume_mobile/colors.dart';
 
 import '../../api/auth_api.dart';
 import '../../exceptions.dart';
@@ -14,9 +15,6 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  Color littleLight = const Color(0xFFF3FFAB);
-  Color purpleBeaty = const Color(0xFF8E05C2);
-
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _nicknameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
@@ -88,13 +86,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
+              const Text(
                 'Sign up now',
                 style: TextStyle(
                     fontFamily: 'Poppins',
                     fontWeight: FontWeight.w500,
                     fontSize: 32,
-                    color: littleLight),
+                    color: AppColors.mellowLemon),
               ),
               const SizedBox(height: 24.0),
               const Text(
@@ -241,7 +239,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   },
                   style: ElevatedButton.styleFrom(
                       fixedSize: const Size(178, 38),
-                      backgroundColor: purpleBeaty,
+                      backgroundColor: AppColors.royalPurple,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(50))),
                   child: const Text(
@@ -258,10 +256,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
               TextButton(
                 onPressed: (() =>
                     Navigator.of(context).pushReplacementNamed('/login')),
-                child: Row(
+                child: const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text(
+                    Text(
                       'I already have an account ',
                       style: TextStyle(
                         fontFamily: 'WorkSans',
@@ -274,7 +272,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       style: TextStyle(
                         fontFamily: 'WorkSans',
                         fontSize: 16,
-                        color: littleLight,
+                        color: AppColors.mellowLemon,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
