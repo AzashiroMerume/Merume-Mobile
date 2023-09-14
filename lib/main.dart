@@ -63,9 +63,8 @@ class MyApp extends StatelessWidget {
             : isAuthenticated
                 ? const MainScreen()
                 : const StartScreen(),
-        bottomNavigationBar: errorMessage.isNotEmpty
-            ? SnackbarWidget(message: errorMessage)
-            : null,
+        bottomNavigationBar:
+            errorMessage != '' ? SnackbarWidget(message: errorMessage) : null,
       ),
       routes: {
         '/login': (context) => const LoginScreen(),
@@ -85,13 +84,10 @@ class SnackbarWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      alignment: Alignment.bottomCenter,
-      child: message.isNotEmpty
-          ? SnackBar(
-              content: Text(message),
-              duration: const Duration(seconds: 2),
-            )
-          : Container(),
-    );
+        alignment: Alignment.bottomCenter,
+        child: SnackBar(
+          content: Text(message),
+          duration: const Duration(seconds: 2),
+        ));
   }
 }
