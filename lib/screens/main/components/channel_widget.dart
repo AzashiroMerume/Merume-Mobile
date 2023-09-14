@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:merume_mobile/colors.dart';
+
 import 'package:merume_mobile/models/channel_model.dart';
 
 class ChannelWidget extends StatelessWidget {
@@ -10,22 +11,46 @@ class ChannelWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 20),
-      height: 300.0,
-      decoration: const BoxDecoration(
-        border: Border(bottom: BorderSide(color: Colors.grey)),
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      height: 100.0,
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(color: AppColors.lavenderHaze.withOpacity(0.5)),
+        ),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Text(
-            channel.name, // Use the channel's name or relevant property here
-            style: const TextStyle(
-              color: AppColors.mellowLemon,
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-            ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircleAvatar(
+                radius: 30.0,
+                child: ClipOval(
+                  child: Image.asset(
+                    'assets/images/isagi.jpg',
+                    height: 60.0,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              )
+            ],
           ),
+          const SizedBox(width: 20),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                channel.name,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontFamily: 'Poppins',
+                  fontSize: 15,
+                ),
+              ),
+            ],
+          )
         ],
       ),
     );
