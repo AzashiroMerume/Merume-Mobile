@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:merume_mobile/colors.dart';
-import 'package:merume_mobile/screens/main/components/channel_widget.dart';
-import '../../../../../api/recommendations_api.dart';
-import '../../../../../models/channel_model.dart';
+
+import 'package:merume_mobile/models/channel_model.dart';
+import 'package:merume_mobile/api/recommendations_api.dart';
+import 'package:merume_mobile/screens/main/components/channel_in_list_widget.dart';
 
 class RecommendationScreen extends StatefulWidget {
   const RecommendationScreen({Key? key}) : super(key: key);
@@ -159,7 +160,7 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
                           itemCount: recommendations!.length,
                           itemBuilder: (context, index) {
                             final channel = recommendations![index];
-                            return ChannelWidget(channel: channel);
+                            return ChannelInListWidget(channel: channel);
                           },
                         ),
                 ),
