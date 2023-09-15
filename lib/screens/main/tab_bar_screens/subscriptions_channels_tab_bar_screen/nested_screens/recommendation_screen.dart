@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:merume_mobile/colors.dart';
 
 import 'package:merume_mobile/models/channel_model.dart';
-import 'package:merume_mobile/api/recommendations_api.dart';
+import 'package:merume_mobile/api/recommendations_api/recommendations_api.dart';
 import 'package:merume_mobile/screens/main/components/channel_in_list_widget.dart';
 
 class RecommendationScreen extends StatefulWidget {

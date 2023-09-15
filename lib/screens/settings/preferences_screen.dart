@@ -3,7 +3,7 @@ import 'package:merume_mobile/colors.dart';
 import 'package:merume_mobile/exceptions.dart';
 import 'components/categories.dart';
 
-import '../../api/user_preferences_api.dart';
+import '../../api/user_preferences_api/user_preferences_api.dart';
 
 class PreferencesScreen extends StatefulWidget {
   const PreferencesScreen({super.key});

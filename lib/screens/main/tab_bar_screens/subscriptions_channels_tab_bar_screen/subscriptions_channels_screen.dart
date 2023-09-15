@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:merume_mobile/api/user_channels_api.dart';
+import 'package:merume_mobile/api/user_channels_api/user_channels_api.dart';
 import 'package:merume_mobile/models/channel_model.dart';
 
 class SubscriptionChannelsScreen extends StatefulWidget {

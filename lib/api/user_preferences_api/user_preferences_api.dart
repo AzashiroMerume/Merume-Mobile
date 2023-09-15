@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-import '../exceptions.dart';
+import '../../exceptions.dart';
 
 const storage = FlutterSecureStorage();
 

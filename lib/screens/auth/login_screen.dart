@@ -3,7 +3,7 @@ import 'package:merume_mobile/colors.dart';
 
 import 'dart:async';
 import 'package:email_validator/email_validator.dart';
-import 'package:merume_mobile/api/auth_api.dart';
+import 'package:merume_mobile/api/auth_api/login.dart';
 import 'package:merume_mobile/exceptions.dart';
 
 class LoginScreen extends StatefulWidget {

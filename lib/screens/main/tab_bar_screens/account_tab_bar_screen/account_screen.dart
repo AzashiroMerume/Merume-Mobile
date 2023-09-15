@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:merume_mobile/api/auth_api.dart';
+import 'package:merume_mobile/api/auth_api/logout.dart';
 
 class AccountScreen extends StatefulWidget {
   const AccountScreen({super.key});

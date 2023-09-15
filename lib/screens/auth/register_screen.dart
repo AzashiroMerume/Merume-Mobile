@@ -4,7 +4,7 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:merume_mobile/colors.dart';
 
-import 'package:merume_mobile/api/auth_api.dart';
+import 'package:merume_mobile/api/auth_api/register.dart';
 import 'package:merume_mobile/exceptions.dart';
 
 class RegisterScreen extends StatefulWidget {

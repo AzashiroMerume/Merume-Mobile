@@ -5,8 +5,8 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-import '../exceptions.dart';
-import '../models/channel_model.dart';
+import '../../exceptions.dart';
+import '../../models/channel_model.dart';
 
 const storage = FlutterSecureStorage();
 

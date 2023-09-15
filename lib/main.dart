@@ -4,7 +4,7 @@ import 'package:merume_mobile/screens/auth/register_screen.dart';
 import 'package:merume_mobile/screens/main/main_tab_bar_screen.dart';
 import 'package:merume_mobile/screens/on_boarding/start_screen.dart';
 import 'package:merume_mobile/screens/settings/preferences_screen.dart';
-import 'package:merume_mobile/api/auth_api.dart';
+import 'package:merume_mobile/api/auth_api/verify_auth.dart';
 // import 'package:flutter/services.dart';
 
 import 'exceptions.dart';
