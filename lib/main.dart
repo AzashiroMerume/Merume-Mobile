@@ -5,17 +5,12 @@ import 'package:merume_mobile/screens/main/main_tab_bar_screen.dart';
 import 'package:merume_mobile/screens/on_boarding/start_screen.dart';
 import 'package:merume_mobile/screens/settings/preferences_screen.dart';
 import 'package:merume_mobile/api/auth_api/verify_auth.dart';
-// import 'package:flutter/services.dart';
-
 import 'exceptions.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
-  //     overlays: [SystemUiOverlay.top]);
 
   bool isAuthenticated = false;
-  String errorMessage = '';
 
   try {
     isAuthenticated = await verifyAuth();
@@ -25,26 +20,21 @@ void main() async {
       navigateToPreferences: true,
     ));
     return;
-  } catch (e) {
-    errorMessage = 'There was an error on the server side';
   }
 
   runApp(MyApp(
     isAuthenticated: isAuthenticated,
-    errorMessage: errorMessage,
   ));
 }
 
 class MyApp extends StatelessWidget {
   final bool isAuthenticated;
   final bool navigateToPreferences;
-  final String errorMessage;
 
   const MyApp({
     Key? key,
     required this.isAuthenticated,
     this.navigateToPreferences = false,
-    this.errorMessage = '',
   }) : super(key: key);
 
   @override
@@ -61,33 +51,15 @@ class MyApp extends StatelessWidget {
         body: navigateToPreferences
             ? const PreferencesScreen()
             : isAuthenticated
-                ? const MainScreen()
+                ? const MainTabBarScreen()
                 : const StartScreen(),
-        bottomNavigationBar:
-            errorMessage != '' ? SnackbarWidget(message: errorMessage) : null,
       ),
       routes: {
         '/login': (context) => const LoginScreen(),
         '/register': (context) => const RegisterScreen(),
         '/preferences': (context) => const PreferencesScreen(),
-        '/main': (context) => const MainScreen(),
+        '/main': (context) => const MainTabBarScreen(),
       },
     );
-  }
-}
-
-class SnackbarWidget extends StatelessWidget {
-  final String message;
-
-  const SnackbarWidget({Key? key, required this.message}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-        alignment: Alignment.bottomCenter,
-        child: SnackBar(
-          content: Text(message),
-          duration: const Duration(seconds: 2),
-        ));
   }
 }
