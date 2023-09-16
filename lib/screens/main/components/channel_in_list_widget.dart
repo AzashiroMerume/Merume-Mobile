@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:merume_mobile/colors.dart';
 import 'package:merume_mobile/models/channel_model.dart';
+import 'package:merume_mobile/screens/main/components/channel_widget.dart';
 
 class ChannelInListWidget extends StatelessWidget {
   final Channel channel;
@@ -11,7 +12,14 @@ class ChannelInListWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ChannelWidget(channel: channel),
+          ),
+        );
+      },
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 10),
         height: 100.0,
