@@ -18,8 +18,7 @@ class _CreatedChannelsScreenState extends State<CreatedChannelsScreen> {
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.only(
-              top: 20.0, bottom: 0.0, right: 30.0, left: 30.0),
+          padding: const EdgeInsets.only(top: 20.0, right: 30.0, left: 30.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,

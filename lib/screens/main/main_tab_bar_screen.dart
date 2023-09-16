@@ -6,14 +6,14 @@ import 'package:merume_mobile/screens/main/tab_bar_screens/created_channels_tab_
 import 'package:merume_mobile/screens/main/tab_bar_screens/subscriptions_channels_tab_bar_screen/subscriptions_channels_screen.dart';
 // import 'package:merume_mobile/screens/main/tab_bar_screens/recommendation_screen.dart';
 
-class MainScreen extends StatefulWidget {
-  const MainScreen({super.key});
+class MainTabBarScreen extends StatefulWidget {
+  const MainTabBarScreen({super.key});
 
   @override
-  State<MainScreen> createState() => _MainScreenState();
+  State<MainTabBarScreen> createState() => _MainTabBarScreenState();
 }
 
-class _MainScreenState extends State<MainScreen> {
+class _MainTabBarScreenState extends State<MainTabBarScreen> {
   int _currentIndex = 0;
 
   final List<Widget> _screens = [
