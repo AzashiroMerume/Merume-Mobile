@@ -188,12 +188,6 @@ class _LoginScreenState extends State<LoginScreen> {
                           (Route<dynamic> route) => false,
                         );
                       } catch (e) {
-                        if (e is PreferencesUnsetException) {
-                          state.pushNamedAndRemoveUntil(
-                            '/preferences',
-                            (Route<dynamic> route) => false,
-                          );
-                        }
                         setState(() {
                           if (e is AuthenticationException) {
                             if (useEmailLogin) {

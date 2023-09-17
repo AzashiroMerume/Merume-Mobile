@@ -11,31 +11,33 @@ class ChannelWidget extends StatefulWidget {
 }
 
 class _ChannelWidgetState extends State<ChannelWidget> {
-  @override
-  void initState() {
-    super.initState();
+  void _handleAppBarPress() {
+    print("Hello, world!");
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(56), // Set the height of the AppBar
-        child: Container(
-          decoration: BoxDecoration(
-            border: Border(
-              bottom: BorderSide(
-                color: Colors.blueGrey.withOpacity(0.5),
-                width: 1.0,
+        preferredSize: const Size.fromHeight(60),
+        child: GestureDetector(
+          onTap: _handleAppBarPress,
+          child: Container(
+            decoration: BoxDecoration(
+              border: Border(
+                bottom: BorderSide(
+                  color: Colors.blueGrey.withOpacity(0.5),
+                  width: 1.0,
+                ),
               ),
             ),
-          ),
-          child: AppBar(
-            title: Container(
-              padding: const EdgeInsets.only(left: 20.0),
-              child: Text(widget.channel.name),
+            child: AppBar(
+              title: Container(
+                padding: const EdgeInsets.only(left: 20.0),
+                child: Text(widget.channel.name),
+              ),
+              automaticallyImplyLeading: false,
             ),
-            automaticallyImplyLeading: false,
           ),
         ),
       ),

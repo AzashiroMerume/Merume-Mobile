@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -13,6 +13,11 @@ Future<bool> verifyAuth() async {
 
   if (authToken == null) {
     return false;
+  }
+
+  final connectivityResult = await Connectivity().checkConnectivity();
+  if (connectivityResult == ConnectivityResult.none) {
+    throw NetworkException('No internet connection');
   }
 
   try {
@@ -40,8 +45,6 @@ Future<bool> verifyAuth() async {
       default:
         throw HttpException('Unexpected status code: ${response.statusCode}');
     }
-  } on SocketException {
-    throw NetworkException('Network error');
   } on TimeoutException {
     throw NetworkException('Request timed out');
   } catch (e) {
