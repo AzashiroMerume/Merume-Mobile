@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:merume_mobile/colors.dart';
 import 'package:merume_mobile/screens/auth/login_screen.dart';
 import 'package:merume_mobile/screens/auth/register_screen.dart';
 import 'package:merume_mobile/screens/main/main_tab_bar_screen.dart';
@@ -42,8 +43,14 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Merume',
       theme: ThemeData(
-        appBarTheme: const AppBarTheme(
-          color: Colors.transparent,
+        appBarTheme: AppBarTheme(
+          color: Colors.black,
+          shape: Border(
+            bottom: BorderSide(
+              color: AppColors.lavenderHaze.withOpacity(0.5),
+              width: 1.0,
+            ),
+          ),
         ),
         scaffoldBackgroundColor: Colors.black,
       ),

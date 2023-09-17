@@ -75,7 +75,7 @@ class _MainTabBarScreenState extends State<MainTabBarScreen> {
         decoration: BoxDecoration(
           border: Border(
             top: BorderSide(
-              color: Colors.blueGrey.withOpacity(0.5),
+              color: AppColors.lavenderHaze.withOpacity(0.5),
               width: 1.0,
             ),
           ),
