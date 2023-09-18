@@ -16,8 +16,7 @@ void main() async {
   try {
     isAuthenticated = await verifyAuth();
   } catch (e) {
-    // Handle other exceptions
-    errorMessage = 'An error occurred. Please try again later';
+    errorMessage = 'There was an error on server side';
   }
 
   runApp(MyApp(
