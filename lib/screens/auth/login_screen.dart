@@ -136,6 +136,16 @@ class _LoginScreenState extends State<LoginScreen> {
                       : null,
                 ),
                 onChanged: (value) {
+                  if (!useEmailLogin) {
+                    value = value.toLowerCase();
+                    _identifierController.value =
+                        _identifierController.value.copyWith(
+                      text: value,
+                      selection: TextSelection.fromPosition(
+                        TextPosition(offset: value.length),
+                      ),
+                    );
+                  }
                   identifier = value;
                 },
               ),

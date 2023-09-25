@@ -161,6 +161,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       : null,
                 ),
                 onChanged: (value) {
+                  // Convert the input to lowercase
+                  value = value.toLowerCase();
+                  _nicknameController.value =
+                      _nicknameController.value.copyWith(
+                    text: value,
+                    selection: TextSelection.fromPosition(
+                      TextPosition(offset: value.length),
+                    ),
+                  );
+
                   nickname = value;
                 },
               ),
