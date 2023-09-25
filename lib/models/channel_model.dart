@@ -1,6 +1,7 @@
 class Channel {
   final String id;
   final String ownerId;
+  final String ownerNickname;
   final String name;
   final String channelType;
   final String description;
@@ -13,6 +14,7 @@ class Channel {
   const Channel({
     required this.id,
     required this.ownerId,
+    required this.ownerNickname,
     required this.name,
     required this.channelType,
     required this.description,
@@ -27,6 +29,7 @@ class Channel {
     return Channel(
       id: json['_id']['\$oid'],
       ownerId: json['owner_id']['\$oid'],
+      ownerNickname: json['owner_nickname'],
       name: json['name'],
       channelType: json['channel_type'],
       description: json['description'],

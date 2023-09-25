@@ -57,6 +57,8 @@ class _LoginScreenState extends State<LoginScreen> {
       errors['password'] = 'Password is required';
     } else if (password.length < 8) {
       errors['password'] = 'Password must be at least 8 characters long';
+    } else if (password.length > 50) {
+      errors['password'] = 'Password must contain no more than 50 characters';
     }
   }
 

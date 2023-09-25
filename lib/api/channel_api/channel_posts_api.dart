@@ -1,14 +1,14 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:merume_mobile/models/channel_model.dart';
+import 'package:merume_mobile/models/post_model.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 const storage = FlutterSecureStorage();
 
-Stream<List<Channel>> fetchOwnChannels() async* {
-  const channelUrl = 'ws://localhost:8081/users/channels/created';
+Stream<List<Post>> fetchChannelPosts(String channelId) async* {
+  String channelUrl = "ws://localhost:8081/channels/$channelId/content";
   final authToken = await storage.read(key: 'authToken');
   final headers = {'Authorization': '$authToken'};
 
@@ -19,10 +19,9 @@ Stream<List<Channel>> fetchOwnChannels() async* {
 
       // Listen to incoming data from the WebSocket
       await for (var data in channel.stream) {
-        final List<dynamic> channelsJson = json.decode(data);
-        final channels =
-            channelsJson.map((json) => Channel.fromJson(json)).toList();
-        yield channels;
+        final List<dynamic> postsJson = json.decode(data);
+        final posts = postsJson.map((json) => Post.fromJson(json)).toList();
+        yield posts;
       }
 
       await channel.sink.close();

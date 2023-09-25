@@ -57,3 +57,9 @@ class ContentTooLargeException implements Exception {
 
   ContentTooLargeException(this.message);
 }
+
+class PostAuthorConflictException implements Exception {
+  final String message;
+
+  PostAuthorConflictException(this.message);
+}

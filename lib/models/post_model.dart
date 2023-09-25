@@ -1,9 +1,10 @@
 class Post {
   final String id;
   final String ownerId;
+  final String ownerNickname;
   final String channelId;
   final String body;
-  final String? images;
+  final List<String>? images;
   final int writtenChallengeDay;
   final int likes;
   final int dislikes;
@@ -13,6 +14,7 @@ class Post {
   const Post({
     required this.id,
     required this.ownerId,
+    required this.ownerNickname,
     required this.channelId,
     required this.body,
     this.images,
@@ -27,9 +29,10 @@ class Post {
     return Post(
       id: json['_id']['\$oid'],
       ownerId: json['owner_id']['\$oid'],
+      ownerNickname: json['owner_nickname'],
       channelId: json['channel_id']['\$oid'],
       body: json['body'],
-      images: json['images'],
+      images: (json['images'] as List<dynamic>?)?.cast<String>(),
       writtenChallengeDay: json['written_challenge_day'],
       likes: json['likes'],
       dislikes: json['dislikes'],

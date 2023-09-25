@@ -1,5 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:merume_mobile/api/channel_api/channel_posts_api.dart';
+import 'package:merume_mobile/api/posts_api/create_post_api.dart';
+import 'package:merume_mobile/colors.dart';
 import 'package:merume_mobile/models/channel_model.dart';
+import 'package:merume_mobile/models/post_model.dart';
+import 'package:merume_mobile/screens/main/components/post_in_list_widget.dart';
+
+//PostChecked contains isError field that used to separate
+//posts that already in db and the posts which sending was failed
+class PostChecked {
+  final Post post;
+  final bool isError;
+
+  PostChecked({
+    required this.post,
+    required this.isError,
+  });
+}
 
 class ChannelWidget extends StatefulWidget {
   final Channel channel;
@@ -11,6 +28,13 @@ class ChannelWidget extends StatefulWidget {
 }
 
 class _ChannelWidgetState extends State<ChannelWidget> {
+  TextEditingController textEditingController = TextEditingController();
+
+  List<PostChecked> posts = [];
+
+  String postBody = '';
+  List<String> postImages = [];
+
   void _handleAppBarPress() {
     print("Hello, world!");
   }
@@ -26,7 +50,7 @@ class _ChannelWidgetState extends State<ChannelWidget> {
             decoration: BoxDecoration(
               border: Border(
                 bottom: BorderSide(
-                  color: Colors.blueGrey.withOpacity(0.5),
+                  color: AppColors.lavenderHaze.withOpacity(0.5),
                   width: 1.0,
                 ),
               ),
@@ -41,15 +65,109 @@ class _ChannelWidgetState extends State<ChannelWidget> {
           ),
         ),
       ),
-      body: const SafeArea(
+      body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.only(top: 20.0, right: 30.0, left: 30.0),
+          padding: const EdgeInsets.only(top: 20.0, right: 30.0, left: 30.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
-            children: [],
+            children: [
+              Expanded(
+                child: StreamBuilder<List<Post>>(
+                  stream: fetchChannelPosts(widget.channel.id),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      posts = snapshot.data!
+                          .map(
+                              (post) => PostChecked(post: post, isError: false))
+                          .toList();
+                      return ListView.builder(
+                        itemCount: posts.length,
+                        itemBuilder: (_, index) => PostInListWidget(
+                            post: posts[index].post,
+                            isError: posts[index].isError),
+                      );
+                    } else if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    } else {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                  },
+                ),
+              ),
+              _buildChatInputBox(),
+            ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildChatInputBox() {
+    return Container(
+      padding: const EdgeInsets.all(10.0),
+      decoration: BoxDecoration(
+        border: Border(
+          top: BorderSide(
+            color: AppColors.lavenderHaze.withOpacity(0.5),
+            width: 1.0,
+          ),
+        ),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: TextField(
+              controller: textEditingController,
+              decoration: const InputDecoration(
+                hintText: 'Share progress...',
+                hintStyle: TextStyle(color: AppColors.mellowLemon),
+              ),
+              style: const TextStyle(color: AppColors.lavenderHaze),
+              onChanged: (value) {
+                postBody = value;
+                //add postImages/Files
+              },
+            ),
+          ),
+          IconButton(
+            icon: const Icon(
+              Icons.send,
+              color: AppColors.mellowLemon,
+            ),
+            onPressed: () async {
+              try {
+                await createPost(widget.channel.id, postBody, postImages);
+                textEditingController.clear();
+              } catch (e) {
+                print("Error occurred: $e");
+
+                // Create a new post to add to the list only.
+                //Just to show post that is not sended in listview builder
+                Post errorPost = Post(
+                  id: '0',
+                  ownerId: widget.channel.ownerId,
+                  ownerNickname: widget.channel.ownerNickname,
+                  channelId: widget.channel.id,
+                  body: postBody,
+                  images: postImages,
+                  writtenChallengeDay: 0,
+                  likes: 0,
+                  dislikes: 0,
+                  createdAt: DateTime.now(),
+                  updatedAt: DateTime.now(),
+                );
+
+                // Add the error post to the list
+                setState(() {
+                  posts.add(PostChecked(post: errorPost, isError: true));
+                });
+
+                textEditingController.clear();
+              }
+            },
+          ),
+        ],
       ),
     );
   }
