@@ -6,6 +6,8 @@ import 'package:merume_mobile/screens/auth/register_screen.dart';
 import 'package:merume_mobile/screens/main/main_tab_bar_screen.dart';
 import 'package:merume_mobile/screens/on_boarding/start_screen.dart';
 import 'package:merume_mobile/api/auth_api/verify_auth.dart';
+import 'package:merume_mobile/user_info.dart';
+import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,13 +18,18 @@ void main() async {
   try {
     isAuthenticated = await verifyAuth();
   } catch (e) {
-    errorMessage = 'There was an error on server side';
+    errorMessage = 'There was an error on the server side';
   }
 
-  runApp(MyApp(
-    isAuthenticated: isAuthenticated,
-    errorMessage: errorMessage,
-  ));
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => UserInfoProvider(),
+      child: MyApp(
+        isAuthenticated: isAuthenticated,
+        errorMessage: errorMessage,
+      ),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -59,5 +66,17 @@ class MyApp extends StatelessWidget {
         '/main': (context) => const MainTabBarScreen(),
       },
     );
+  }
+}
+
+//class for provider
+class UserInfoProvider extends ChangeNotifier {
+  UserInfo? _userInfo;
+
+  UserInfo? get userInfo => _userInfo;
+
+  void setUserInfo(UserInfo user) {
+    _userInfo = user;
+    notifyListeners();
   }
 }
