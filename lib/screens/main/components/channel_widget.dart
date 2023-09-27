@@ -6,13 +6,11 @@ import 'package:merume_mobile/models/channel_model.dart';
 import 'package:merume_mobile/models/post_model.dart';
 import 'package:merume_mobile/screens/main/components/post_in_list_widget.dart';
 
-//PostChecked contains isError field that used to separate
-//posts that already in db and the posts which sending was failed
-class PostChecked {
+class PostSent {
   final Post post;
-  final bool isError;
+  bool isError = false;
 
-  PostChecked({
+  PostSent({
     required this.post,
     required this.isError,
   });
@@ -30,7 +28,8 @@ class ChannelWidget extends StatefulWidget {
 class _ChannelWidgetState extends State<ChannelWidget> {
   TextEditingController textEditingController = TextEditingController();
 
-  List<PostChecked> posts = [];
+  List<PostSent> posts = [];
+  List<PostSent> errorPosts = [];
 
   String postBody = '';
   List<String> postImages = [];
@@ -77,20 +76,29 @@ class _ChannelWidgetState extends State<ChannelWidget> {
                   stream: fetchChannelPosts(widget.channel.id),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
-                      posts = snapshot.data!
-                          .map(
-                              (post) => PostChecked(post: post, isError: false))
-                          .toList();
+                      // Combine regular posts and error posts into a single list
+                      List<PostSent> allPosts = [
+                        ...snapshot.data!.map(
+                            (post) => PostSent(post: post, isError: false)),
+                        ...errorPosts,
+                      ];
+
+                      // Sort allPosts by createdAt in ascending order (oldest to newest)
+                      allPosts.sort((a, b) =>
+                          a.post.createdAt.compareTo(b.post.createdAt));
+
                       return ListView.builder(
-                        itemCount: posts.length,
-                        itemBuilder: (_, index) => PostInListWidget(
-                            post: posts[index].post,
-                            isError: posts[index].isError),
+                        itemCount: allPosts.length,
+                        itemBuilder: (_, index) {
+                          // Display posts (both regular and error posts) sorted by createdAt
+                          return PostInListWidget(
+                            post: allPosts[index].post,
+                            isError: allPosts[index].isError,
+                          );
+                        },
                       );
-                    } else if (snapshot.hasError) {
-                      return Text('Error: ${snapshot.error}');
                     } else {
-                      return const Center(child: CircularProgressIndicator());
+                      return const CircularProgressIndicator();
                     }
                   },
                 ),
@@ -126,7 +134,7 @@ class _ChannelWidgetState extends State<ChannelWidget> {
               style: const TextStyle(color: AppColors.lavenderHaze),
               onChanged: (value) {
                 postBody = value;
-                //add postImages/Files
+                // Add postImages/Files
               },
             ),
           ),
@@ -142,8 +150,7 @@ class _ChannelWidgetState extends State<ChannelWidget> {
               } catch (e) {
                 print("Error occurred: $e");
 
-                // Create a new post to add to the list only.
-                //Just to show post that is not sended in listview builder
+                // Create a new post to add to the errorPosts list
                 Post errorPost = Post(
                   id: '0',
                   ownerId: widget.channel.ownerId,
@@ -158,9 +165,10 @@ class _ChannelWidgetState extends State<ChannelWidget> {
                   updatedAt: DateTime.now(),
                 );
 
-                // Add the error post to the list
+                // Add the error post to the errorPosts list
                 setState(() {
-                  posts.add(PostChecked(post: errorPost, isError: true));
+                  print("Error happened");
+                  errorPosts.add(PostSent(post: errorPost, isError: true));
                 });
 
                 textEditingController.clear();

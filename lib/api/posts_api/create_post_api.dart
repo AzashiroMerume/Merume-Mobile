@@ -28,6 +28,8 @@ Future<void> createPost(
     print("Status code: ${response.statusCode}");
 
     switch (response.statusCode) {
+      case 201:
+        break;
       case 401:
         await storage.delete(key: 'authToken');
         throw TokenAuthException('Token authentication error');
