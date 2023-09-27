@@ -167,7 +167,6 @@ class _ChannelWidgetState extends State<ChannelWidget> {
 
                 // Add the error post to the errorPosts list
                 setState(() {
-                  print("Error happened");
                   errorPosts.add(PostSent(post: errorPost, isError: true));
                 });
 
