@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -32,10 +31,6 @@ Future<bool> verifyAuth() async {
 
     switch (response.statusCode) {
       case 200:
-        final responseData = json.decode(response.body);
-        if (responseData['error_message'] != null) {
-          throw PreferencesUnsetException('User has no preferences');
-        }
         return true;
       case 401:
         await storage.delete(key: 'authToken');
