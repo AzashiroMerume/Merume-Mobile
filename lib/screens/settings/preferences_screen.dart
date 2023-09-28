@@ -25,6 +25,8 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    NavigatorState state = Navigator.of(context);
+
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -121,8 +123,6 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
                               'Invalid input data');
                         }
 
-                        NavigatorState state = Navigator.of(context);
-
                         await savePreferences(selected);
 
                         state.pushNamedAndRemoveUntil(
@@ -131,7 +131,7 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
                         );
                       } catch (e) {
                         //close the alertDialog if error encountered
-                        Navigator.of(context).pop();
+                        state.pop();
 
                         setState(() {
                           if (e is TokenAuthException) {
