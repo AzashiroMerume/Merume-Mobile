@@ -8,7 +8,7 @@ import '../../exceptions.dart';
 
 const storage = FlutterSecureStorage();
 
-Future<void> register(
+Future<String> register(
     String username, String nickname, String email, String password) async {
   try {
     final response = await http.post(
@@ -30,7 +30,7 @@ Future<void> register(
       case 201:
         final responseData = json.decode(response.body);
         await storage.write(key: 'authToken', value: responseData['token']);
-        break;
+        return responseData['user_id']['\$oid'];
       case 409:
         final responseData = json.decode(response.body);
         throw RegistrationException(responseData['error_message']);

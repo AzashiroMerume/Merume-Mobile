@@ -12,18 +12,25 @@ import 'package:provider/provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  String? userId;
   bool isAuthenticated = false;
-  String errorMessage = ''; // Store the error message here
+  String errorMessage = '';
 
   try {
-    isAuthenticated = await verifyAuth();
+    userId = await verifyAuth();
+    isAuthenticated = userId != null;
   } catch (e) {
     errorMessage = 'There was an error on the server side';
   }
 
+  final userInfoProvider = UserInfoProvider();
+  if (userId != null) {
+    userInfoProvider.setUserInfo(UserInfo(id: userId));
+  }
+
   runApp(
-    ChangeNotifierProvider(
-      create: (_) => UserInfoProvider(),
+    ChangeNotifierProvider.value(
+      value: userInfoProvider,
       child: MyApp(
         isAuthenticated: isAuthenticated,
         errorMessage: errorMessage,
@@ -36,9 +43,11 @@ class MyApp extends StatelessWidget {
   final bool isAuthenticated;
   final String errorMessage;
 
-  const MyApp(
-      {Key? key, required this.isAuthenticated, required this.errorMessage})
-      : super(key: key);
+  const MyApp({
+    Key? key,
+    required this.isAuthenticated,
+    required this.errorMessage,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

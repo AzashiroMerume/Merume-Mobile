@@ -5,6 +5,8 @@ import 'dart:async';
 import 'package:email_validator/email_validator.dart';
 import 'package:merume_mobile/api/auth_api/login.dart';
 import 'package:merume_mobile/exceptions.dart';
+import 'package:merume_mobile/user_info.dart';
+import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -64,6 +66,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    NavigatorState state = Navigator.of(context);
+    final userInfoProvider =
+        Provider.of<UserInfoProvider>(context, listen: false);
+
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -191,9 +197,12 @@ class _LoginScreenState extends State<LoginScreen> {
                     });
 
                     if (errors.isEmpty) {
-                      NavigatorState state = Navigator.of(context);
                       try {
-                        await login(identifier, password, useEmailLogin);
+                        final userId =
+                            await login(identifier, password, useEmailLogin);
+
+                        final user = UserInfo(id: userId);
+                        userInfoProvider.setUserInfo(user);
 
                         state.pushNamedAndRemoveUntil(
                           '/main',
@@ -231,6 +240,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             errorMessage =
                                 'Network connection is poor. Please try again later.';
                           } else {
+                            print(e);
                             errorMessage =
                                 'An unexpected error occurred. Please try again later.';
                           }

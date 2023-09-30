@@ -1,11 +1,21 @@
+import 'package:flutter/material.dart';
+
 class UserInfo {
   final String id;
-  final String nickname;
-  final String email;
 
   UserInfo({
     required this.id,
-    required this.nickname,
-    required this.email,
   });
+}
+
+//class for provider
+class UserInfoProvider extends ChangeNotifier {
+  UserInfo? _userInfo;
+
+  UserInfo? get userInfo => _userInfo;
+
+  void setUserInfo(UserInfo user) {
+    _userInfo = user;
+    notifyListeners();
+  }
 }

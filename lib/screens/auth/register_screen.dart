@@ -6,6 +6,8 @@ import 'package:merume_mobile/colors.dart';
 
 import 'package:merume_mobile/api/auth_api/register.dart';
 import 'package:merume_mobile/exceptions.dart';
+import 'package:merume_mobile/user_info.dart';
+import 'package:provider/provider.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -80,6 +82,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    NavigatorState state = Navigator.of(context);
+    final userInfoProvider =
+        Provider.of<UserInfoProvider>(context, listen: false);
+
     return Scaffold(
       body: SafeArea(
           child: Padding(
@@ -216,9 +222,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                     if (errors.isEmpty) {
                       try {
-                        NavigatorState state = Navigator.of(context);
+                        final userId =
+                            await register(username, nickname, email, password);
 
-                        await register(username, nickname, email, password);
+                        final user = UserInfo(id: userId);
+                        userInfoProvider.setUserInfo(user);
 
                         state.pushNamedAndRemoveUntil(
                           '/main',

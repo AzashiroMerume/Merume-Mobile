@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -7,11 +8,11 @@ import '../../exceptions.dart';
 
 const storage = FlutterSecureStorage();
 
-Future<bool> verifyAuth() async {
+Future<String?> verifyAuth() async {
   final authToken = await storage.read(key: 'authToken');
 
   if (authToken == null) {
-    return false;
+    return null;
   }
 
   final connectivityResult = await Connectivity().checkConnectivity();
@@ -31,7 +32,8 @@ Future<bool> verifyAuth() async {
 
     switch (response.statusCode) {
       case 200:
-        return true;
+        final responseData = json.decode(response.body);
+        return responseData['user_id']['\$oid'];
       case 401:
         await storage.delete(key: 'authToken');
         throw TokenAuthException('Token authentication error');

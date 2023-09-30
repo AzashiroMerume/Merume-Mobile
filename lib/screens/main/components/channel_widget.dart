@@ -76,6 +76,20 @@ class _ChannelWidgetState extends State<ChannelWidget> {
                   stream: fetchChannelPosts(widget.channel.id),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
+                      if (snapshot.data!.isEmpty) {
+                        // If there are no posts, display the "No posts yet" message
+                        return const Center(
+                          child: Text(
+                            'There are no posts yet..',
+                            style: TextStyle(
+                              color: AppColors.mellowLemon,
+                              fontFamily: 'WorkSans',
+                              fontSize: 15,
+                            ),
+                          ),
+                        );
+                      }
+
                       // Combine regular posts and error posts into a single list
                       List<PostSent> allPosts = [
                         ...snapshot.data!.map(
@@ -97,8 +111,16 @@ class _ChannelWidgetState extends State<ChannelWidget> {
                           );
                         },
                       );
+                    } else if (snapshot.hasError) {
+                      // Handle the error state
+                      return const Center(
+                        child: Text('There is an error.. Try again later'),
+                      );
                     } else {
-                      return const CircularProgressIndicator();
+                      // Display the CircularProgressIndicator centered
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
                     }
                   },
                 ),

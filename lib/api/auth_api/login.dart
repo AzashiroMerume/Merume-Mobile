@@ -8,7 +8,7 @@ import '../../exceptions.dart';
 
 const storage = FlutterSecureStorage();
 
-Future<void> login(String identifier, String password, bool byEmail) async {
+Future<String> login(String identifier, String password, bool byEmail) async {
   try {
     final response = await http.post(
       Uri.parse('http://localhost:8081/auth/login'),
@@ -28,7 +28,7 @@ Future<void> login(String identifier, String password, bool byEmail) async {
       case 200:
         final responseData = json.decode(response.body);
         await storage.write(key: 'authToken', value: responseData['token']);
-        break;
+        return responseData['user_id']['\$oid'];
       case 401:
         throw AuthenticationException(
             'The identifier or password is incorrect');
