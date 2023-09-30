@@ -77,15 +77,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-//class for provider
-class UserInfoProvider extends ChangeNotifier {
-  UserInfo? _userInfo;
-
-  UserInfo? get userInfo => _userInfo;
-
-  void setUserInfo(UserInfo user) {
-    _userInfo = user;
-    notifyListeners();
-  }
-}
