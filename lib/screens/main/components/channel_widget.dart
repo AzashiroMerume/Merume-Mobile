@@ -5,6 +5,8 @@ import 'package:merume_mobile/colors.dart';
 import 'package:merume_mobile/models/channel_model.dart';
 import 'package:merume_mobile/models/post_model.dart';
 import 'package:merume_mobile/screens/main/components/post_in_list_widget.dart';
+import 'package:merume_mobile/user_info.dart';
+import 'package:provider/provider.dart';
 
 class PostSent {
   final Post post;
@@ -80,7 +82,7 @@ class _ChannelWidgetState extends State<ChannelWidget> {
                         // If there are no posts, display the "No posts yet" message
                         return const Center(
                           child: Text(
-                            'There are no posts yet..',
+                            'No posts yet..',
                             style: TextStyle(
                               color: AppColors.mellowLemon,
                               fontFamily: 'WorkSans',
@@ -134,70 +136,58 @@ class _ChannelWidgetState extends State<ChannelWidget> {
   }
 
   Widget _buildChatInputBox() {
-    return Container(
-      padding: const EdgeInsets.all(10.0),
-      decoration: BoxDecoration(
-        border: Border(
-          top: BorderSide(
-            color: AppColors.lavenderHaze.withOpacity(0.5),
-            width: 1.0,
-          ),
-        ),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: TextField(
-              controller: textEditingController,
-              decoration: const InputDecoration(
-                hintText: 'Share progress...',
-                hintStyle: TextStyle(color: AppColors.mellowLemon),
+    final userInfo =
+        Provider.of<UserInfoProvider>(context, listen: false).userInfo;
+
+    // Check if the user is the author of the channel
+    final isAuthor = userInfo != null && userInfo.id == widget.channel.ownerId;
+
+    // Render the input box only if the user is the author
+    return isAuthor
+        ? Container(
+            padding: const EdgeInsets.all(10.0),
+            decoration: BoxDecoration(
+              border: Border(
+                top: BorderSide(
+                  color: AppColors.lavenderHaze.withOpacity(0.5),
+                  width: 1.0,
+                ),
               ),
-              style: const TextStyle(color: AppColors.lavenderHaze),
-              onChanged: (value) {
-                postBody = value;
-                // Add postImages/Files
-              },
             ),
-          ),
-          IconButton(
-            icon: const Icon(
-              Icons.send,
-              color: AppColors.mellowLemon,
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: textEditingController,
+                    decoration: const InputDecoration(
+                      hintText: 'Share progress...',
+                      hintStyle: TextStyle(color: AppColors.mellowLemon),
+                    ),
+                    style: const TextStyle(color: AppColors.lavenderHaze),
+                    onChanged: (value) {
+                      postBody = value;
+                      // Add postImages/Files
+                    },
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(
+                    Icons.send,
+                    color: AppColors.mellowLemon,
+                  ),
+                  onPressed: () async {
+                    try {
+                      await createPost(widget.channel.id, postBody, postImages);
+                      textEditingController.clear();
+                    } catch (e) {
+                      print("Error occurred: $e");
+                      // Handle the error appropriately
+                    }
+                  },
+                ),
+              ],
             ),
-            onPressed: () async {
-              try {
-                await createPost(widget.channel.id, postBody, postImages);
-                textEditingController.clear();
-              } catch (e) {
-                print("Error occurred: $e");
-
-                // Create a new post to add to the errorPosts list
-                Post errorPost = Post(
-                  id: '0',
-                  ownerId: widget.channel.ownerId,
-                  ownerNickname: widget.channel.ownerNickname,
-                  channelId: widget.channel.id,
-                  body: postBody,
-                  images: postImages,
-                  writtenChallengeDay: 0,
-                  likes: 0,
-                  dislikes: 0,
-                  createdAt: DateTime.now(),
-                  updatedAt: DateTime.now(),
-                );
-
-                // Add the error post to the errorPosts list
-                setState(() {
-                  errorPosts.add(PostSent(post: errorPost, isError: true));
-                });
-
-                textEditingController.clear();
-              }
-            },
-          ),
-        ],
-      ),
-    );
+          )
+        : Container();
   }
 }

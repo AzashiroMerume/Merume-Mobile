@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:merume_mobile/colors.dart';
 
 import 'package:merume_mobile/models/channel_model.dart';
 import 'package:merume_mobile/api/user_channels_api/created_channels_api.dart/created_channels_api.dart';
@@ -27,6 +28,20 @@ class _CreatedChannelsScreenState extends State<CreatedChannelsScreen> {
                   stream: fetchOwnChannels(),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
+                      if (snapshot.data!.isEmpty) {
+                        // If there are no channels, display the "No channels yet" message
+                        return const Center(
+                          child: Text(
+                            'No hannels yet..',
+                            style: TextStyle(
+                              color: AppColors.mellowLemon,
+                              fontFamily: 'WorkSans',
+                              fontSize: 15,
+                            ),
+                          ),
+                        );
+                      }
+
                       final channels = snapshot.data!;
                       return ListView.builder(
                         itemCount: channels.length,
@@ -35,6 +50,7 @@ class _CreatedChannelsScreenState extends State<CreatedChannelsScreen> {
                         ),
                       );
                     } else if (snapshot.hasError) {
+                      //Handle err for user
                       return Text('Error: ${snapshot.error}');
                     } else {
                       return const Center(child: CircularProgressIndicator());

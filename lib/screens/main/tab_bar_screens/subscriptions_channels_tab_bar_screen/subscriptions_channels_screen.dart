@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:merume_mobile/api/user_channels_api/subscried_channels_api.dart/subscried_channels_api.dart';
+import 'package:merume_mobile/colors.dart';
 
 import 'package:merume_mobile/models/channel_model.dart';
+import 'package:merume_mobile/screens/main/components/channel_in_list_widget.dart';
 
 class SubscriptionChannelsScreen extends StatefulWidget {
   const SubscriptionChannelsScreen({super.key});
@@ -30,37 +32,29 @@ class _SubscriptionChannelsScreenState
                   stream: fetchSubscriptions(),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
+                      if (snapshot.data!.isEmpty) {
+                        // If there are no channels, display the "No channels yet" message
+                        return const Center(
+                          child: Text(
+                            'No hannels yet..',
+                            style: TextStyle(
+                              color: AppColors.mellowLemon,
+                              fontFamily: 'WorkSans',
+                              fontSize: 15,
+                            ),
+                          ),
+                        );
+                      }
+
                       final channels = snapshot.data!;
                       return ListView.builder(
                         itemCount: channels.length,
-                        itemBuilder: (_, index) => Container(
-                          margin: const EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 5,
-                          ),
-                          padding: const EdgeInsets.all(20.0),
-                          decoration: BoxDecoration(
-                            color: const Color(0xff97FFFF),
-                            borderRadius: BorderRadius.circular(15.0),
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                channels[index].name,
-                                style: const TextStyle(
-                                  fontSize: 18.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              const SizedBox(height: 10),
-                              Text(channels[index].description),
-                            ],
-                          ),
+                        itemBuilder: (_, index) => ChannelInListWidget(
+                          channel: channels[index],
                         ),
                       );
                     } else if (snapshot.hasError) {
+                      //Handle err for user
                       return Text('Error: ${snapshot.error}');
                     } else {
                       return const Center(child: CircularProgressIndicator());
