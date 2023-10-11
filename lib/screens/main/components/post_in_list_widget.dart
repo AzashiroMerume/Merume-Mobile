@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:merume_mobile/colors.dart';
+import 'package:merume_mobile/enums.dart';
 import 'package:merume_mobile/models/post_model.dart';
 
 class PostInListWidget extends StatelessWidget {
   final Post post;
-  final bool isError;
+  final MessageStatus status;
 
-  const PostInListWidget({Key? key, required this.post, required this.isError})
+  const PostInListWidget({Key? key, required this.post, required this.status})
       : super(key: key);
 
   @override
@@ -22,8 +23,7 @@ class PostInListWidget extends StatelessWidget {
                 const EdgeInsets.symmetric(vertical: 10.0, horizontal: 12.0),
             decoration: BoxDecoration(
               color: AppColors.postMain,
-              borderRadius: BorderRadius.circular(
-                  10.0), // Adjust the corner radius as needed
+              borderRadius: BorderRadius.circular(10.0),
             ),
             width: 300.0,
             child: Column(
@@ -48,11 +48,17 @@ class PostInListWidget extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    if (isError)
+                    if (status == MessageStatus.error)
                       const Icon(
                         Icons.error_outline_outlined,
                         color: Colors.red,
                         size: 20.0,
+                      )
+                    else if (status == MessageStatus.waiting)
+                      const CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                            AppColors.lavenderHaze),
+                        strokeWidth: 1.0,
                       )
                     else
                       const Icon(
