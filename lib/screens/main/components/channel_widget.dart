@@ -1,20 +1,23 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:merume_mobile/api/channel_api/channel_posts_api.dart';
 import 'package:merume_mobile/api/posts_api/create_post_api.dart';
 import 'package:merume_mobile/colors.dart';
+import 'package:merume_mobile/enums.dart';
 import 'package:merume_mobile/models/channel_model.dart';
 import 'package:merume_mobile/models/post_model.dart';
 import 'package:merume_mobile/screens/main/components/post_in_list_widget.dart';
 import 'package:merume_mobile/user_info.dart';
+import 'package:objectid/objectid.dart';
 import 'package:provider/provider.dart';
 
 class PostSent {
   final Post post;
-  bool isError = false;
+  MessageStatus status;
 
   PostSent({
     required this.post,
-    required this.isError,
+    required this.status,
   });
 }
 
@@ -28,16 +31,43 @@ class ChannelWidget extends StatefulWidget {
 }
 
 class _ChannelWidgetState extends State<ChannelWidget> {
+  final itemsController = StreamController<List<PostSent>>();
+
   TextEditingController textEditingController = TextEditingController();
 
   List<PostSent> posts = [];
-  List<PostSent> errorPosts = [];
+  // Key keyToRebuild = UniqueKey();
 
   String postBody = '';
   List<String> postImages = [];
 
   void _handleAppBarPress() {
     print("Hello, world!");
+  }
+
+  @override
+  void dispose() {
+    itemsController.close();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    final webSocketStream = fetchChannelPosts(widget.channel.id);
+    webSocketStream.listen((dynamic data) {
+      if (data is List<Post>) {
+        // Handle WebSocket data
+        posts = [
+          ...data
+              .map((post) => PostSent(post: post, status: MessageStatus.done)),
+          ...posts,
+        ];
+      }
+      // setState(() {
+      //   keyToRebuild = UniqueKey();
+      // });
+    });
   }
 
   @override
@@ -74,56 +104,20 @@ class _ChannelWidgetState extends State<ChannelWidget> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Expanded(
-                child: StreamBuilder<List<Post>>(
-                  stream: fetchChannelPosts(widget.channel.id),
+                child: StreamBuilder<List<PostSent>>(
+                  stream: itemsController.stream,
                   builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      if (snapshot.data!.isEmpty) {
-                        // If there are no posts, display the "No posts yet" message
-                        return const Center(
-                          child: Text(
-                            'No posts yet..',
-                            style: TextStyle(
-                              color: AppColors.mellowLemon,
-                              fontFamily: 'WorkSans',
-                              fontSize: 15,
-                            ),
-                          ),
+                    final allPosts = [...posts, ...(snapshot.data ?? [])];
+                    return ListView.builder(
+                      // key: keyToRebuild,
+                      itemCount: allPosts.length,
+                      itemBuilder: (_, index) {
+                        return PostInListWidget(
+                          post: allPosts[index].post,
+                          status: allPosts[index].status,
                         );
-                      }
-
-                      // Combine regular posts and error posts into a single list
-                      List<PostSent> allPosts = [
-                        ...snapshot.data!.map(
-                            (post) => PostSent(post: post, isError: false)),
-                        ...errorPosts,
-                      ];
-
-                      // Sort allPosts by createdAt in ascending order (oldest to newest)
-                      allPosts.sort((a, b) =>
-                          a.post.createdAt.compareTo(b.post.createdAt));
-
-                      return ListView.builder(
-                        itemCount: allPosts.length,
-                        itemBuilder: (_, index) {
-                          // Display posts (both regular and error posts) sorted by createdAt
-                          return PostInListWidget(
-                            post: allPosts[index].post,
-                            isError: allPosts[index].isError,
-                          );
-                        },
-                      );
-                    } else if (snapshot.hasError) {
-                      // Handle the error state
-                      return const Center(
-                        child: Text('There is an error.. Try again later'),
-                      );
-                    } else {
-                      // Display the CircularProgressIndicator centered
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    }
+                      },
+                    );
                   },
                 ),
               ),
@@ -176,12 +170,36 @@ class _ChannelWidgetState extends State<ChannelWidget> {
                     color: AppColors.mellowLemon,
                   ),
                   onPressed: () async {
+                    final String postId = ObjectId().hexString;
+
+                    textEditingController.clear();
+                    Post post = Post(
+                      id: postId,
+                      ownerId: widget.channel.ownerId,
+                      ownerNickname: widget.channel.ownerNickname,
+                      channelId: widget.channel.id,
+                      body: postBody,
+                      images: postImages,
+                      writtenChallengeDay: 0,
+                      likes: 0,
+                      dislikes: 0,
+                      createdAt: DateTime.now(),
+                      updatedAt: DateTime.now(),
+                    );
+
+                    // Set the status to waiting when a message is sent
+                    itemsController.add(
+                        [PostSent(post: post, status: MessageStatus.waiting)]);
+
                     try {
-                      await createPost(widget.channel.id, postBody, postImages);
-                      textEditingController.clear();
+                      await createPost(
+                          widget.channel.id, postId, postBody, postImages);
+
+                      itemsController.add(
+                          [PostSent(post: post, status: MessageStatus.done)]);
                     } catch (e) {
-                      print("Error occurred: $e");
-                      // Handle the error appropriately
+                      itemsController.add(
+                          [PostSent(post: post, status: MessageStatus.error)]);
                     }
                   },
                 ),
