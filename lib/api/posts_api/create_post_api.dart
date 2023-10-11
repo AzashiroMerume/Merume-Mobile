@@ -3,19 +3,21 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+// import 'package:objectid/objectid.dart';
 
 import '../../exceptions.dart';
 
 const storage = FlutterSecureStorage();
 
-Future<void> createPost(
-    String channelId, String postBody, List<String> postImages) async {
+Future<void> createPost(String channelId, String postId, String postBody,
+    List<String> postImages) async {
   final authToken = await storage.read(key: 'authToken');
 
   try {
     final response = await http.post(
-      Uri.parse('http://localhost:8081/channels/${channelId}/post'),
+      Uri.parse('http://localhost:8081/channels/$channelId/post'),
       body: json.encode({
+        'id': postId,
         'body': postBody,
         'images': postImages,
       }),
