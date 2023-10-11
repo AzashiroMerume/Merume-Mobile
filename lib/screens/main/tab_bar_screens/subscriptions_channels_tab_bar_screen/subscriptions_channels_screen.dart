@@ -36,7 +36,7 @@ class _SubscriptionChannelsScreenState
                         // If there are no channels, display the "No channels yet" message
                         return const Center(
                           child: Text(
-                            'No hannels yet..',
+                            'No channels yet..',
                             style: TextStyle(
                               color: AppColors.mellowLemon,
                               fontFamily: 'WorkSans',
