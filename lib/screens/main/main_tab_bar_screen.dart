@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:merume_mobile/colors.dart';
+import 'package:merume_mobile/screens/main/add_channel_screen.dart';
 
 import 'package:merume_mobile/screens/main/tab_bar_screens/account_tab_bar_screen/account_screen.dart';
 import 'package:merume_mobile/screens/main/tab_bar_screens/created_channels_tab_bar_screen/created_channels_screen.dart';
@@ -23,6 +24,7 @@ class _MainTabBarScreenState extends State<MainTabBarScreen> {
   ];
 
   Icon customIcon = const Icon(Icons.search);
+  Icon addIcon = const Icon(Icons.add);
   Widget customSearchBar = const Text('Merume');
 
   @override
@@ -57,7 +59,7 @@ class _MainTabBarScreenState extends State<MainTabBarScreen> {
                           border: InputBorder.none,
                         ),
                       ),
-                    ); // Perform set of instructions.
+                    );
                   } else {
                     customIcon = const Icon(Icons.search);
                     customSearchBar = const Text('Merume');
@@ -67,6 +69,23 @@ class _MainTabBarScreenState extends State<MainTabBarScreen> {
               icon: customIcon,
             ),
           ),
+          if (customIcon.icon ==
+              Icons
+                  .search) // Only show the "Add" icon when search is not active
+            Container(
+              padding: const EdgeInsets.only(right: 10.0),
+              child: IconButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const AddChallengeScreen(),
+                    ),
+                  );
+                },
+                icon: addIcon,
+              ),
+            ),
         ],
       ),
       body: _screens[_currentIndex],
