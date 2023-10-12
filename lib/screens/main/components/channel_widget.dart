@@ -133,6 +133,10 @@ class _ChannelWidgetState extends State<ChannelWidget> {
                         );
                       }
 
+                      // Sort allPosts by createdAt in ascending order (oldest to newest)
+                      posts.sort((a, b) =>
+                          a.post.createdAt.compareTo(b.post.createdAt));
+
                       return ListView.builder(
                         // key: keyToRebuild,
                         itemCount: posts.length,
