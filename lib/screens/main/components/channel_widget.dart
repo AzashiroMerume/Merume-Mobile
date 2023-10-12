@@ -58,15 +58,26 @@ class _ChannelWidgetState extends State<ChannelWidget> {
     webSocketStream.listen((dynamic data) {
       if (data is List<Post>) {
         // Handle WebSocket data
-        posts = [
-          ...data
-              .map((post) => PostSent(post: post, status: MessageStatus.done)),
-          ...posts,
-        ];
+        final List<PostSent> newPosts = data
+            .map((post) => PostSent(post: post, status: MessageStatus.done))
+            .toList();
+
+        // Update the existing posts list with the new posts
+        for (var newPost in newPosts) {
+          final existingPostIndex =
+              posts.indexWhere((post) => post.post.id == newPost.post.id);
+          if (existingPostIndex != -1) {
+            // If a post with the same ID already exists, replace it with the new one
+            posts[existingPostIndex] = newPost;
+          } else {
+            posts.insert(0, newPost);
+          }
+        }
+
+        if (!itemsController.isClosed) {
+          itemsController.add(posts);
+        }
       }
-      // setState(() {
-      //   keyToRebuild = UniqueKey();
-      // });
     });
   }
 
@@ -107,17 +118,42 @@ class _ChannelWidgetState extends State<ChannelWidget> {
                 child: StreamBuilder<List<PostSent>>(
                   stream: itemsController.stream,
                   builder: (context, snapshot) {
-                    final allPosts = [...posts, ...(snapshot.data ?? [])];
-                    return ListView.builder(
-                      // key: keyToRebuild,
-                      itemCount: allPosts.length,
-                      itemBuilder: (_, index) {
-                        return PostInListWidget(
-                          post: allPosts[index].post,
-                          status: allPosts[index].status,
+                    if (snapshot.hasData) {
+                      if (snapshot.data!.isEmpty) {
+                        // If there are no posts, display the "No posts yet" message
+                        return const Center(
+                          child: Text(
+                            'No posts yet..',
+                            style: TextStyle(
+                              color: AppColors.mellowLemon,
+                              fontFamily: 'WorkSans',
+                              fontSize: 15,
+                            ),
+                          ),
                         );
-                      },
-                    );
+                      }
+
+                      return ListView.builder(
+                        // key: keyToRebuild,
+                        itemCount: posts.length,
+                        itemBuilder: (_, index) {
+                          return PostInListWidget(
+                            post: posts[index].post,
+                            status: posts[index].status,
+                          );
+                        },
+                      );
+                    } else if (snapshot.hasError) {
+                      // Handle the error state
+                      return const Center(
+                        child: Text('There is an error.. Try again later'),
+                      );
+                    } else {
+                      // Display the CircularProgressIndicator centered
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
                   },
                 ),
               ),
@@ -188,18 +224,19 @@ class _ChannelWidgetState extends State<ChannelWidget> {
                     );
 
                     // Set the status to waiting when a message is sent
-                    itemsController.add(
-                        [PostSent(post: post, status: MessageStatus.waiting)]);
+                    setState(() {
+                      posts.add(
+                          PostSent(post: post, status: MessageStatus.waiting));
+                    });
 
                     try {
                       await createPost(
                           widget.channel.id, postId, postBody, postImages);
-
-                      itemsController.add(
-                          [PostSent(post: post, status: MessageStatus.done)]);
                     } catch (e) {
-                      itemsController.add(
-                          [PostSent(post: post, status: MessageStatus.error)]);
+                      setState(() {
+                        posts.add(
+                            PostSent(post: post, status: MessageStatus.error));
+                      });
                     }
                   },
                 ),
