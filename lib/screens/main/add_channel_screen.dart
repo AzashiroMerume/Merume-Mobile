@@ -48,7 +48,6 @@ class _AddChallengeScreenState extends State<AddChallengeScreen> {
               const SizedBox(height: 50.0),
               TextField(
                 controller: _challengeNameController,
-                obscureText: true,
                 decoration: InputDecoration(
                   hintText: 'Challenge name',
                   fillColor: Colors.white,
@@ -64,7 +63,6 @@ class _AddChallengeScreenState extends State<AddChallengeScreen> {
               const SizedBox(height: 32.0),
               TextField(
                 controller: _challengeDescriptionController,
-                obscureText: true,
                 decoration: InputDecoration(
                   hintText: 'Challenge description',
                   fillColor: Colors.white,
@@ -73,6 +71,8 @@ class _AddChallengeScreenState extends State<AddChallengeScreen> {
                       ? errors['challengeDescription']
                       : null,
                 ),
+                minLines: 1,
+                maxLines: 5,
                 onChanged: (value) {
                   challengeDescription = value;
                 },

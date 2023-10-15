@@ -1,20 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:merume_mobile/api/user_channels_api/subscried_channels_api.dart/subscried_channels_api.dart';
+import 'package:merume_mobile/api/user_channels_api/followed_channels_api.dart/followed_channels_api.dart';
 import 'package:merume_mobile/colors.dart';
 
 import 'package:merume_mobile/models/channel_model.dart';
 import 'package:merume_mobile/screens/main/components/channel_in_list_widget.dart';
 
-class SubscriptionChannelsScreen extends StatefulWidget {
-  const SubscriptionChannelsScreen({super.key});
+class FollowingChannelsScreen extends StatefulWidget {
+  const FollowingChannelsScreen({super.key});
 
   @override
-  State<SubscriptionChannelsScreen> createState() =>
-      _SubscriptionChannelsScreenState();
+  State<FollowingChannelsScreen> createState() =>
+      _FollowingChannelsScreenState();
 }
 
-class _SubscriptionChannelsScreenState
-    extends State<SubscriptionChannelsScreen> {
+class _FollowingChannelsScreenState extends State<FollowingChannelsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,7 +28,7 @@ class _SubscriptionChannelsScreenState
               const SizedBox(height: 16),
               Expanded(
                 child: StreamBuilder<List<Channel>>(
-                  stream: fetchSubscriptions(),
+                  stream: fetchFollowings(),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       if (snapshot.data!.isEmpty) {

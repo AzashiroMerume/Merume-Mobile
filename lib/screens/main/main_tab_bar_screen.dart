@@ -4,7 +4,7 @@ import 'package:merume_mobile/screens/main/add_channel_screen.dart';
 
 import 'package:merume_mobile/screens/main/tab_bar_screens/account_tab_bar_screen/account_screen.dart';
 import 'package:merume_mobile/screens/main/tab_bar_screens/created_channels_tab_bar_screen/created_channels_screen.dart';
-import 'package:merume_mobile/screens/main/tab_bar_screens/subscriptions_channels_tab_bar_screen/subscriptions_channels_screen.dart';
+import 'package:merume_mobile/screens/main/tab_bar_screens/followings_channels_tab_bar_screen/followings_channels_screen.dart';
 // import 'package:merume_mobile/screens/main/tab_bar_screens/recommendation_screen.dart';
 
 class MainTabBarScreen extends StatefulWidget {
@@ -19,7 +19,7 @@ class _MainTabBarScreenState extends State<MainTabBarScreen> {
 
   final List<Widget> _screens = [
     const CreatedChannelsScreen(),
-    const SubscriptionChannelsScreen(),
+    const FollowingChannelsScreen(),
     const AccountScreen(),
   ];
 

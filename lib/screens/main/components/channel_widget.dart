@@ -31,6 +31,8 @@ class ChannelWidget extends StatefulWidget {
 }
 
 class _ChannelWidgetState extends State<ChannelWidget> {
+  bool isAuthor = false;
+
   final itemsController = StreamController<List<PostSent>>();
 
   TextEditingController textEditingController = TextEditingController();
@@ -83,6 +85,12 @@ class _ChannelWidgetState extends State<ChannelWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final userInfo =
+        Provider.of<UserInfoProvider>(context, listen: false).userInfo;
+
+    // Check if the user is the author of the channel
+    isAuthor = userInfo != null && userInfo.id == widget.channel.ownerId;
+
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(60),
@@ -144,6 +152,7 @@ class _ChannelWidgetState extends State<ChannelWidget> {
                           return PostInListWidget(
                             post: posts[index].post,
                             status: posts[index].status,
+                            isAuthor: isAuthor,
                           );
                         },
                       );
@@ -170,12 +179,6 @@ class _ChannelWidgetState extends State<ChannelWidget> {
   }
 
   Widget _buildChatInputBox() {
-    final userInfo =
-        Provider.of<UserInfoProvider>(context, listen: false).userInfo;
-
-    // Check if the user is the author of the channel
-    final isAuthor = userInfo != null && userInfo.id == widget.channel.ownerId;
-
     // Render the input box only if the user is the author
     return isAuthor
         ? Container(
@@ -199,8 +202,9 @@ class _ChannelWidgetState extends State<ChannelWidget> {
                     ),
                     style: const TextStyle(color: AppColors.lavenderHaze),
                     onChanged: (value) {
-                      postBody = value;
-                      // Add postImages/Files
+                      setState(() {
+                        postBody = value;
+                      });
                     },
                   ),
                 ),
@@ -209,40 +213,51 @@ class _ChannelWidgetState extends State<ChannelWidget> {
                     Icons.send,
                     color: AppColors.mellowLemon,
                   ),
-                  onPressed: () async {
-                    final String postId = ObjectId().hexString;
+                  onPressed: postBody.isNotEmpty || postImages.isNotEmpty
+                      ? () async {
+                          final String postId = ObjectId().hexString;
 
-                    textEditingController.clear();
-                    Post post = Post(
-                      id: postId,
-                      ownerId: widget.channel.ownerId,
-                      ownerNickname: widget.channel.ownerNickname,
-                      channelId: widget.channel.id,
-                      body: postBody,
-                      images: postImages,
-                      writtenChallengeDay: 0,
-                      likes: 0,
-                      dislikes: 0,
-                      createdAt: DateTime.now(),
-                      updatedAt: DateTime.now(),
-                    );
+                          textEditingController.clear();
+                          Post post = Post(
+                            id: postId,
+                            ownerId: widget.channel.ownerId,
+                            ownerNickname: widget.channel.ownerNickname,
+                            channelId: widget.channel.id,
+                            body: postBody,
+                            images: postImages,
+                            writtenChallengeDay: 0,
+                            likes: 0,
+                            dislikes: 0,
+                            createdAt: DateTime.now(),
+                            updatedAt: DateTime.now(),
+                          );
 
-                    // Set the status to waiting when a message is sent
-                    setState(() {
-                      posts.add(
-                          PostSent(post: post, status: MessageStatus.waiting));
-                    });
+                          // Set the status to waiting when a message is sent
+                          setState(() {
+                            posts.add(PostSent(
+                                post: post, status: MessageStatus.waiting));
+                          });
 
-                    try {
-                      await createPost(
-                          widget.channel.id, postId, postBody, postImages);
-                    } catch (e) {
-                      setState(() {
-                        posts.add(
-                            PostSent(post: post, status: MessageStatus.error));
-                      });
-                    }
-                  },
+                          final tempPostBody = postBody;
+                          final tempPostImages = postImages;
+
+                          // Clear postBody and postImages after sending the message
+                          setState(() {
+                            postBody = '';
+                            postImages.clear();
+                          });
+
+                          try {
+                            await createPost(widget.channel.id, postId,
+                                tempPostBody, tempPostImages);
+                          } catch (e) {
+                            setState(() {
+                              posts.add(PostSent(
+                                  post: post, status: MessageStatus.error));
+                            });
+                          }
+                        }
+                      : null, // Disable the button when conditions are not met
                 ),
               ],
             ),
