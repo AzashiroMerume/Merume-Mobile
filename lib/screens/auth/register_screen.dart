@@ -40,8 +40,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   Map<String, String> errors = {};
 
-  void validateFields(
-      String username, String nickname, String email, String password) {
+  void validateFields() {
     // Clear previous errors
     errors.clear();
 
@@ -214,7 +213,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               Center(
                 child: ElevatedButton(
                   onPressed: () async {
-                    validateFields(username, nickname, email, password);
+                    validateFields();
 
                     setState(() {
                       errorMessage = '';

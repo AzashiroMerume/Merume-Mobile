@@ -35,7 +35,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Map<String, String> errors = {};
 
-  void validateFields(String identifier, String password) {
+  void validateFields() {
     // Clear previous errors
     errors.clear();
 
@@ -190,7 +190,7 @@ class _LoginScreenState extends State<LoginScreen> {
               Center(
                 child: ElevatedButton(
                   onPressed: () async {
-                    validateFields(identifier, password);
+                    validateFields();
 
                     setState(() {
                       errorMessage = '';
