@@ -6,7 +6,7 @@ class Channel {
   final String channelType;
   final String description;
   final List<String> categories;
-  final Subscriptions subscriptions;
+  final Followers followers;
   final int currentChallengeDay;
   final String? baseImage;
   final DateTime createdAt;
@@ -19,7 +19,7 @@ class Channel {
     required this.channelType,
     required this.description,
     required this.categories,
-    required this.subscriptions,
+    required this.followers,
     required this.currentChallengeDay,
     this.baseImage,
     required this.createdAt,
@@ -34,7 +34,7 @@ class Channel {
       channelType: json['channel_type'],
       description: json['description'],
       categories: List<String>.from(json['categories']),
-      subscriptions: Subscriptions.fromJson(json['subscriptions']),
+      followers: Followers.fromJson(json['followers']),
       currentChallengeDay: json['current_challenge_day'],
       baseImage: json['base_image'],
       createdAt: DateTime.parse(json['created_at']).toLocal(),
@@ -42,27 +42,27 @@ class Channel {
   }
 }
 
-class Subscriptions {
-  final int currentSubscriptions;
-  final List<int> monthlySubscribers;
-  final List<int> yearlySubscribers;
-  final List<int> twoWeekSubscribers;
+class Followers {
+  final int currentFollowing;
+  final List<int> monthlyFollowers;
+  final List<int> yearlyFollowers;
+  final List<int> twoWeekFollowers;
   final DateTime lastUpdated;
 
-  const Subscriptions({
-    required this.currentSubscriptions,
-    required this.monthlySubscribers,
-    required this.yearlySubscribers,
-    required this.twoWeekSubscribers,
+  const Followers({
+    required this.currentFollowing,
+    required this.monthlyFollowers,
+    required this.yearlyFollowers,
+    required this.twoWeekFollowers,
     required this.lastUpdated,
   });
 
-  factory Subscriptions.fromJson(Map<String, dynamic> json) {
-    return Subscriptions(
-      currentSubscriptions: json['current_subscriptions'],
-      monthlySubscribers: List<int>.from(json['monthly_subscribers']),
-      yearlySubscribers: List<int>.from(json['yearly_subscribers']),
-      twoWeekSubscribers: List<int>.from(json['two_week_subscribers']),
+  factory Followers.fromJson(Map<String, dynamic> json) {
+    return Followers(
+      currentFollowing: json['current_following'],
+      monthlyFollowers: List<int>.from(json['monthly_followers']),
+      yearlyFollowers: List<int>.from(json['yearly_followers']),
+      twoWeekFollowers: List<int>.from(json['two_week_followers']),
       lastUpdated: DateTime.parse(json['last_updated']).toLocal(),
     );
   }
