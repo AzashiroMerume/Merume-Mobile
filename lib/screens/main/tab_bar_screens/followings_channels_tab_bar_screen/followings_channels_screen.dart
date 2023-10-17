@@ -3,7 +3,7 @@ import 'package:merume_mobile/api/user_channels_api/followed_channels_api.dart/f
 import 'package:merume_mobile/colors.dart';
 
 import 'package:merume_mobile/models/channel_model.dart';
-import 'package:merume_mobile/screens/main/components/channel_in_list_widget.dart';
+import 'package:merume_mobile/screens/main/channel_screens/channel_in_list_widget.dart';
 
 class FollowingChannelsScreen extends StatefulWidget {
   const FollowingChannelsScreen({super.key});

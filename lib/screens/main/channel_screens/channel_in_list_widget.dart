@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:merume_mobile/colors.dart';
 import 'package:merume_mobile/models/channel_model.dart';
-import 'package:merume_mobile/screens/main/components/channel_widget.dart';
+import 'package:merume_mobile/screens/main/channel_screens/channel_widget.dart';
 
 class ChannelInListWidget extends StatelessWidget {
   final Channel channel;

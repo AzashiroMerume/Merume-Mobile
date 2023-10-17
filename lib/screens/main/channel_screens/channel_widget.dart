@@ -7,7 +7,7 @@ import 'package:merume_mobile/enums.dart';
 import 'package:merume_mobile/exceptions.dart';
 import 'package:merume_mobile/models/channel_model.dart';
 import 'package:merume_mobile/models/post_model.dart';
-import 'package:merume_mobile/screens/main/components/post_in_list_widget.dart';
+import 'package:merume_mobile/screens/main/channel_screens/posts_screens/post_in_list_widget.dart';
 import 'package:merume_mobile/user_info.dart';
 import 'package:objectid/objectid.dart';
 import 'package:provider/provider.dart';

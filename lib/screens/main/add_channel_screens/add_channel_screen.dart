@@ -1,10 +1,9 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:merume_mobile/api/user_channels_api/new_channel_api.dart';
 import 'package:merume_mobile/colors.dart';
 import 'package:merume_mobile/exceptions.dart';
-import 'package:merume_mobile/screens/main/components/category_popup_widget.dart';
+import 'package:merume_mobile/screens/main/add_channel_screens/category_popup_widget.dart';
 import 'package:merume_mobile/screens/settings/components/categories.dart';
 
 class AddChallengeScreen extends StatefulWidget {
