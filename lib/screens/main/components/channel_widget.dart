@@ -79,17 +79,23 @@ class _ChannelWidgetState extends State<ChannelWidget> {
     final webSocketStream = fetchChannelPosts(widget.channel.id);
     webSocketStream.listen((dynamic data) {
       if (data is List<Post>) {
-        // Handle WebSocket data
         final List<PostSent> newPosts = data
             .map((post) => PostSent(post: post, status: MessageStatus.done))
             .toList();
+
+        // Create a list of post IDs from the new posts
+        final List<String> newPostIds =
+            newPosts.map((post) => post.post.id).toList();
+
+        // Remove posts that no longer exist on the server
+        posts.removeWhere((postSent) => !newPostIds.contains(postSent.post.id));
 
         // Update the existing posts list with the new posts
         for (var newPost in newPosts) {
           final existingPostIndex =
               posts.indexWhere((post) => post.post.id == newPost.post.id);
-          if (existingPostIndex != -1) {
-            // If a post with the same ID already exists, replace it with the new one
+          if (existingPostIndex != -1 && posts[existingPostIndex] != newPost) {
+            // If a post with the same ID already exists and newPost is not equal to it, then replace it with the new one
             posts[existingPostIndex] = newPost;
           } else {
             posts.insert(0, newPost);
