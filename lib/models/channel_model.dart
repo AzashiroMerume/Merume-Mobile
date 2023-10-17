@@ -6,6 +6,7 @@ class Channel {
   final String channelType;
   final String description;
   final List<String> categories;
+  final List<String>? participants;
   final Followers followers;
   final int currentChallengeDay;
   final String? baseImage;
@@ -19,6 +20,7 @@ class Channel {
     required this.channelType,
     required this.description,
     required this.categories,
+    this.participants,
     required this.followers,
     required this.currentChallengeDay,
     this.baseImage,
@@ -34,6 +36,10 @@ class Channel {
       channelType: json['channel_type'],
       description: json['description'],
       categories: List<String>.from(json['categories']),
+      participants:
+          (json['participants'] != null && json['participants'] is List)
+              ? List<String>.from(json['participants'])
+              : null,
       followers: Followers.fromJson(json['followers']),
       currentChallengeDay: json['current_challenge_day'],
       baseImage: json['base_image'],
