@@ -4,6 +4,7 @@ import 'package:merume_mobile/api/channel_api/channel_posts_api.dart';
 import 'package:merume_mobile/api/posts_api/create_post_api.dart';
 import 'package:merume_mobile/colors.dart';
 import 'package:merume_mobile/enums.dart';
+import 'package:merume_mobile/exceptions.dart';
 import 'package:merume_mobile/models/channel_model.dart';
 import 'package:merume_mobile/models/post_model.dart';
 import 'package:merume_mobile/screens/main/components/post_in_list_widget.dart';
@@ -42,6 +43,25 @@ class _ChannelWidgetState extends State<ChannelWidget> {
 
   String postBody = '';
   List<String> postImages = [];
+
+  String errorMessage = '';
+
+  void showErrorSnackBar(String errorMessage) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          errorMessage,
+          style: const TextStyle(
+            fontFamily: 'WorkSans',
+            fontSize: 15,
+            color: Colors.white,
+          ),
+        ),
+        duration: const Duration(seconds: 10),
+        backgroundColor: Colors.red,
+      ),
+    );
+  }
 
   void _handleAppBarPress() {
     print("Hello, world!");
@@ -252,8 +272,46 @@ class _ChannelWidgetState extends State<ChannelWidget> {
                                 tempPostBody, tempPostImages);
                           } catch (e) {
                             setState(() {
-                              posts.add(PostSent(
-                                  post: post, status: MessageStatus.error));
+                              // Find the waiting post and update its status to "error"
+                              final waitingPostIndex = posts.indexWhere(
+                                (element) =>
+                                    element.status == MessageStatus.waiting &&
+                                    element.post.id == post.id,
+                              );
+                              if (waitingPostIndex != -1) {
+                                posts[waitingPostIndex].status =
+                                    MessageStatus.error;
+                              } else {
+                                // If waiting post not found, add a new error post
+                                posts.add(PostSent(
+                                    post: post, status: MessageStatus.error));
+                              }
+
+                              if (e is TokenAuthException) {
+                                errorMessage =
+                                    'Token authentication error. Please try to relogin.';
+                              } else if (e is NotFoundException) {
+                                errorMessage =
+                                    'Channel not found. Please try again later.';
+                              } else if (e is PostAuthorConflictException) {
+                                errorMessage =
+                                    'You have no rights to post here.';
+                              } else if (e is UnprocessableEntityException) {
+                                errorMessage =
+                                    'Invalid input data. Please follow the requirements.';
+                              } else if (e is ServerException ||
+                                  e is HttpException) {
+                                errorMessage =
+                                    'There was an error on the server side. Please try again later.';
+                              } else if (e is NetworkException) {
+                                errorMessage =
+                                    'A network error has occurred. Please check your internet connection.';
+                              } else if (e is TimeoutException) {
+                                errorMessage =
+                                    'Network connection is poor. Please try again later.';
+                              }
+
+                              showErrorSnackBar(errorMessage);
                             });
                           }
                         }
