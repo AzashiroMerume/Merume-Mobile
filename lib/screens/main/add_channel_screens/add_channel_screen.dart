@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:io';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:merume_mobile/api/user_channels_api/new_channel_api.dart';
 import 'package:merume_mobile/colors.dart';
@@ -27,18 +29,36 @@ class _AddChallengeScreenState extends State<AddChallengeScreen> {
   String challengeType = 'Public';
   List<String> challengeCategories = [];
 
-  String? channelProfilePicturePath;
-  String? uploadedImageUrl;
+  String? selectedImagePath;
   bool isImageSelected = false;
 
   String errorMessage = '';
 
   Map<String, String> errors = {};
 
-  void handleImageUpload(String? imageUrl) {
-    if (imageUrl != null) {
-      uploadedImageUrl = imageUrl;
+  void handleImageUpload(String? imagePath) {
+    if (imagePath != null) {
+      selectedImagePath = imagePath;
     }
+  }
+
+  Future<String?> _uploadImage(String? imagePath) async {
+    if (imagePath != null) {
+      final Reference storageReference =
+          FirebaseStorage.instance.ref().child('images').child(imagePath);
+      final UploadTask uploadTask = storageReference.putFile(File(imagePath));
+
+      // Wait for the upload to complete
+      await uploadTask.whenComplete(() {
+        print('Image uploaded to Firebase Storage');
+      });
+
+      // Get the download URL for the uploaded image
+      final String downloadURL = await storageReference.getDownloadURL();
+      return downloadURL;
+    }
+
+    return null; // Return null if no image was provided
   }
 
   @override
@@ -123,7 +143,9 @@ class _AddChallengeScreenState extends State<AddChallengeScreen> {
                   ),
                 ),
               if (errorMessage.isNotEmpty) const SizedBox(height: 16.0),
-              LoadImagesWidget(onImageUploaded: handleImageUpload),
+              LoadImagesWidget(
+                onImageSelected: handleImageUpload,
+              ),
               const SizedBox(height: 32.0),
               TextField(
                 controller: _challengeNameController,
@@ -246,6 +268,11 @@ class _AddChallengeScreenState extends State<AddChallengeScreen> {
 
                     if (errors.isEmpty) {
                       try {
+                        final uploadedImageUrl =
+                            await _uploadImage(selectedImagePath);
+
+                        print(uploadedImageUrl);
+
                         await newChannel(
                             challengeName,
                             challengeType,

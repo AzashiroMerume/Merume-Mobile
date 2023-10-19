@@ -9,7 +9,7 @@ import '../../exceptions.dart';
 const storage = FlutterSecureStorage();
 
 Future<void> newChannel(String name, String channelType, String description,
-    List<String> categories, String? baseImage) async {
+    List<String> categories, String? channel_profile_picture_url) async {
   final authToken = await storage.read(key: 'authToken');
 
   try {
@@ -20,7 +20,7 @@ Future<void> newChannel(String name, String channelType, String description,
         'channel_type': channelType,
         'description': description,
         'categories': categories,
-        'base_image': baseImage
+        'channel_profile_picture_url': channel_profile_picture_url
       }),
       headers: {
         'Content-Type': 'application/json',
