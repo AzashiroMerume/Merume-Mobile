@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:merume_mobile/api/user_channels_api/new_channel_api.dart';
 import 'package:merume_mobile/colors.dart';
 import 'package:merume_mobile/exceptions.dart';
-import 'package:merume_mobile/screens/main/add_channel_screens/category_popup_widget.dart';
+import 'package:merume_mobile/screens/components/load_images_widget.dart';
+import 'package:merume_mobile/screens/main/components/category_popup_widget.dart';
 import 'package:merume_mobile/screens/settings/components/categories.dart';
 
 class AddChallengeScreen extends StatefulWidget {
@@ -25,11 +26,20 @@ class _AddChallengeScreenState extends State<AddChallengeScreen> {
   String challengeDescription = '';
   String challengeType = 'Public';
   List<String> challengeCategories = [];
-  String? baseImage;
+
+  String? channelProfilePicturePath;
+  String? uploadedImageUrl;
+  bool isImageSelected = false;
 
   String errorMessage = '';
 
   Map<String, String> errors = {};
+
+  void handleImageUpload(String? imageUrl) {
+    if (imageUrl != null) {
+      uploadedImageUrl = imageUrl;
+    }
+  }
 
   @override
   void dispose() {
@@ -66,7 +76,7 @@ class _AddChallengeScreenState extends State<AddChallengeScreen> {
           padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 40.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(height: 32.0),
               const Text(
@@ -78,7 +88,7 @@ class _AddChallengeScreenState extends State<AddChallengeScreen> {
                   color: AppColors.mellowLemon,
                 ),
               ),
-              const SizedBox(height: 50.0),
+              const SizedBox(height: 32.0),
               if (errorMessage.isNotEmpty)
                 Container(
                   padding: const EdgeInsets.symmetric(
@@ -113,6 +123,8 @@ class _AddChallengeScreenState extends State<AddChallengeScreen> {
                   ),
                 ),
               if (errorMessage.isNotEmpty) const SizedBox(height: 16.0),
+              LoadImagesWidget(onImageUploaded: handleImageUpload),
+              const SizedBox(height: 32.0),
               TextField(
                 controller: _challengeNameController,
                 decoration: InputDecoration(
@@ -239,7 +251,7 @@ class _AddChallengeScreenState extends State<AddChallengeScreen> {
                             challengeType,
                             challengeDescription,
                             challengeCategories,
-                            baseImage);
+                            uploadedImageUrl);
 
                         state.pop(context);
                       } catch (e) {

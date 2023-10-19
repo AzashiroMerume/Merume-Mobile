@@ -9,7 +9,7 @@ class Channel {
   final List<String>? participants;
   final Followers followers;
   final int currentChallengeDay;
-  final String? baseImage;
+  final String? channelProfilePictureUrl;
   final DateTime createdAt;
 
   const Channel({
@@ -23,7 +23,7 @@ class Channel {
     this.participants,
     required this.followers,
     required this.currentChallengeDay,
-    this.baseImage,
+    this.channelProfilePictureUrl,
     required this.createdAt,
   });
 
@@ -42,7 +42,7 @@ class Channel {
               : null,
       followers: Followers.fromJson(json['followers']),
       currentChallengeDay: json['current_challenge_day'],
-      baseImage: json['base_image'],
+      channelProfilePictureUrl: json['channel_profile_picture_url'],
       createdAt: DateTime.parse(json['created_at']).toLocal(),
     );
   }

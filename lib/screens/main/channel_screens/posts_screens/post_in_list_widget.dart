@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:merume_mobile/colors.dart';
-import 'package:merume_mobile/enums.dart';
+import 'package:merume_mobile/screens/main/components/enums.dart';
 import 'package:intl/intl.dart';
 import 'package:merume_mobile/models/post_model.dart';
 import 'package:merume_mobile/screens/main/channel_screens/components/triangle.dart';

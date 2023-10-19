@@ -37,11 +37,19 @@ class ChannelInListWidget extends StatelessWidget {
                 CircleAvatar(
                   radius: 30.0,
                   child: ClipOval(
-                    child: Image.asset(
-                      'assets/images/isagi.jpg',
-                      height: 60.0,
-                      fit: BoxFit.cover,
-                    ),
+                    child: channel.channelProfilePictureUrl != null
+                        ? Image.network(
+                            channel.channelProfilePictureUrl!,
+                            height: 60.0,
+                            width: 60.0,
+                            fit: BoxFit.cover,
+                          )
+                        : Image.asset(
+                            'assets/images/isagi.jpg', // Provide a default image here
+                            height: 60.0,
+                            width: 60.0,
+                            fit: BoxFit.cover,
+                          ),
                   ),
                 )
               ],

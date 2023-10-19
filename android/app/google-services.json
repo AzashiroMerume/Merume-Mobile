@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "819211649625",
+    "project_id": "merumefiles",
+    "storage_bucket": "merumefiles.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:819211649625:android:8697ac991f1cc64f06e748",
+        "android_client_info": {
+          "package_name": "com.example.merume_mobile"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAnBj5ULnMqDRUv5vkaf2DiSg6EYOKXXQ0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

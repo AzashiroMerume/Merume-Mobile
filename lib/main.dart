@@ -1,6 +1,7 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:merume_mobile/colors.dart';
-
+import 'package:merume_mobile/firebase_options.dart';
 import 'package:merume_mobile/screens/auth/login_screen.dart';
 import 'package:merume_mobile/screens/auth/register_screen.dart';
 import 'package:merume_mobile/screens/main/main_tab_bar_screen.dart';
@@ -15,6 +16,10 @@ void main() async {
   String? userId;
   bool isAuthenticated = false;
   String errorMessage = '';
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
   try {
     userId = await verifyAuth();

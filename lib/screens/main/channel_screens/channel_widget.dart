@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:merume_mobile/api/channel_api/channel_posts_api.dart';
 import 'package:merume_mobile/api/posts_api/create_post_api.dart';
 import 'package:merume_mobile/colors.dart';
-import 'package:merume_mobile/enums.dart';
+import 'package:merume_mobile/screens/main/components/enums.dart';
 import 'package:merume_mobile/exceptions.dart';
 import 'package:merume_mobile/models/channel_model.dart';
 import 'package:merume_mobile/models/post_model.dart';
