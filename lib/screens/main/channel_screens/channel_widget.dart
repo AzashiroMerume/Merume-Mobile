@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:merume_mobile/api/channel_api/channel_posts_api.dart';
 import 'package:merume_mobile/api/posts_api/create_post_api.dart';
 import 'package:merume_mobile/colors.dart';
+import 'package:merume_mobile/models/author_model.dart';
 import 'package:merume_mobile/screens/main/components/enums.dart';
 import 'package:merume_mobile/exceptions.dart';
 import 'package:merume_mobile/models/channel_model.dart';
@@ -115,7 +116,7 @@ class _ChannelWidgetState extends State<ChannelWidget> {
         Provider.of<UserInfoProvider>(context, listen: false).userInfo;
 
     // Check if the user is the author of the channel
-    isAuthor = userInfo != null && userInfo.id == widget.channel.ownerId;
+    isAuthor = userInfo != null && userInfo.id == widget.channel.author.id;
 
     return Scaffold(
       appBar: PreferredSize(
@@ -244,16 +245,21 @@ class _ChannelWidgetState extends State<ChannelWidget> {
                           final String postId = ObjectId().hexString;
 
                           textEditingController.clear();
+
+                          Author author = Author(
+                              id: widget.channel.author.id,
+                              nickname: widget.channel.author.nickname);
+
                           Post post = Post(
                             id: postId,
-                            ownerId: widget.channel.ownerId,
-                            ownerNickname: widget.channel.ownerNickname,
+                            author: author,
                             channelId: widget.channel.id,
                             body: postBody,
                             images: postImages,
                             writtenChallengeDay: 0,
                             likes: 0,
                             dislikes: 0,
+                            alreadyChanged: false,
                             createdAt: DateTime.now(),
                             updatedAt: DateTime.now(),
                           );

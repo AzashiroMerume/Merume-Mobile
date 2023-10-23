@@ -1,26 +1,28 @@
+import 'package:merume_mobile/models/author_model.dart';
+
 class Post {
   final String id;
-  final String ownerId;
-  final String ownerNickname;
+  final Author author;
   final String channelId;
-  final String body;
+  final String? body;
   final List<String>? images;
   final int writtenChallengeDay;
   final int likes;
   final int dislikes;
+  final bool alreadyChanged;
   final DateTime createdAt;
   final DateTime updatedAt;
 
-  const Post({
+  Post({
     required this.id,
-    required this.ownerId,
-    required this.ownerNickname,
+    required this.author,
     required this.channelId,
-    required this.body,
+    this.body,
     this.images,
     required this.writtenChallengeDay,
     required this.likes,
     required this.dislikes,
+    required this.alreadyChanged,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -28,14 +30,16 @@ class Post {
   factory Post.fromJson(Map<String, dynamic> json) {
     return Post(
       id: json['_id']['\$oid'],
-      ownerId: json['owner_id']['\$oid'],
-      ownerNickname: json['owner_nickname'],
+      author: Author.fromJson(json['author']),
       channelId: json['channel_id']['\$oid'],
       body: json['body'],
-      images: (json['images'] as List<dynamic>?)?.cast<String>(),
+      images: (json['images'] != null && json['images'] is List)
+          ? List<String>.from(json['images'])
+          : null,
       writtenChallengeDay: json['written_challenge_day'],
       likes: json['likes'],
       dislikes: json['dislikes'],
+      alreadyChanged: json['already_changed'],
       createdAt: DateTime.parse(json['created_at']).toLocal(),
       updatedAt: DateTime.parse(json['updated_at']).toLocal(),
     );

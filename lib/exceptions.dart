@@ -63,3 +63,9 @@ class PostAuthorConflictException implements Exception {
 
   PostAuthorConflictException(this.message);
 }
+
+class FirebaseUploadException implements Exception {
+  final String message;
+
+  FirebaseUploadException(this.message);
+}

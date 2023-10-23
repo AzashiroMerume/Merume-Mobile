@@ -42,7 +42,7 @@ class PostInListWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '@${post.ownerNickname}',
+                  '@${post.author.nickname}',
                   style: const TextStyle(
                     color: AppColors.mellowLemon,
                     fontSize: 12,
@@ -50,7 +50,7 @@ class PostInListWidget extends StatelessWidget {
                 ),
                 const SizedBox(height: 8.0),
                 Text(
-                  post.body,
+                  post.body!,
                   style: const TextStyle(
                     color: Colors.white,
                     fontFamily: 'WorkSans',
