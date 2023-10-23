@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:merume_mobile/api/user_channels_api/new_channel_api.dart';
 import 'package:merume_mobile/colors.dart';
 import 'package:merume_mobile/exceptions.dart';
-import 'package:merume_mobile/screens/components/load_images_widget.dart';
+import 'package:merume_mobile/screens/components/pfp_load_image_widget.dart';
 import 'package:merume_mobile/screens/main/components/category_popup_widget.dart';
 import 'package:merume_mobile/screens/settings/components/categories.dart';
 
@@ -42,10 +42,15 @@ class _AddChallengeScreenState extends State<AddChallengeScreen> {
     }
   }
 
-  Future<String?> _uploadImage(String? imagePath) async {
-    if (imagePath != null) {
+  Future<String?> uploadImage(String? imagePath) async {
+    if (imagePath == null) {
+      return null; // Return null if no image was provided
+    }
+
+    try {
       final Reference storageReference =
           FirebaseStorage.instance.ref().child('images').child(imagePath);
+
       final UploadTask uploadTask = storageReference.putFile(File(imagePath));
 
       // Wait for the upload to complete
@@ -53,12 +58,17 @@ class _AddChallengeScreenState extends State<AddChallengeScreen> {
         print('Image uploaded to Firebase Storage');
       });
 
-      // Get the download URL for the uploaded image
-      final String downloadURL = await storageReference.getDownloadURL();
-      return downloadURL;
+      // Check if the upload was successful
+      if (uploadTask.snapshot.state == TaskState.success) {
+        final String downloadURL = await storageReference.getDownloadURL();
+        return downloadURL;
+      } else {
+        throw FirebaseUploadException('Image upload failed');
+      }
+    } catch (e) {
+      print('Error uploading image: $e');
+      throw FirebaseUploadException('Image upload failed');
     }
-
-    return null; // Return null if no image was provided
   }
 
   @override
@@ -90,6 +100,7 @@ class _AddChallengeScreenState extends State<AddChallengeScreen> {
   @override
   Widget build(BuildContext context) {
     NavigatorState state = Navigator.of(context);
+
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -143,7 +154,7 @@ class _AddChallengeScreenState extends State<AddChallengeScreen> {
                   ),
                 ),
               if (errorMessage.isNotEmpty) const SizedBox(height: 16.0),
-              LoadImagesWidget(
+              PfpLoadImageWidget(
                 onImageSelected: handleImageUpload,
               ),
               const SizedBox(height: 32.0),
@@ -269,9 +280,7 @@ class _AddChallengeScreenState extends State<AddChallengeScreen> {
                     if (errors.isEmpty) {
                       try {
                         final uploadedImageUrl =
-                            await _uploadImage(selectedImagePath);
-
-                        print(uploadedImageUrl);
+                            await uploadImage(selectedImagePath);
 
                         await newChannel(
                             challengeName,
@@ -293,6 +302,9 @@ class _AddChallengeScreenState extends State<AddChallengeScreen> {
                               e is HttpException) {
                             errorMessage =
                                 'There was an error on the server side. Please try again later.';
+                          } else if (e is FirebaseUploadException) {
+                            errorMessage =
+                                'Uploading of images failed. You can proceed without it now and upload it later.';
                           } else if (e is NetworkException) {
                             errorMessage =
                                 'A network error has occurred. Please check your internet connection.';
