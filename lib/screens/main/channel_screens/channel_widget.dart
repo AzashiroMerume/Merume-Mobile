@@ -248,7 +248,8 @@ class _ChannelWidgetState extends State<ChannelWidget> {
 
                           Author author = Author(
                               id: widget.channel.author.id,
-                              nickname: widget.channel.author.nickname);
+                              nickname: widget.channel.author.nickname,
+                              username: widget.channel.author.username);
 
                           Post post = Post(
                             id: postId,
