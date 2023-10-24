@@ -176,10 +176,24 @@ class _ChannelWidgetState extends State<ChannelWidget> {
                         // key: keyToRebuild,
                         itemCount: posts.length,
                         itemBuilder: (_, index) {
+                          bool isSamePost;
+                          if (index != 0 &&
+                              posts[index].post.createdAt.year ==
+                                  posts[index - 1].post.createdAt.year &&
+                              posts[index].post.createdAt.month ==
+                                  posts[index - 1].post.createdAt.month &&
+                              posts[index].post.createdAt.day ==
+                                  posts[index - 1].post.createdAt.day) {
+                            isSamePost = true;
+                          } else {
+                            isSamePost = false;
+                          }
+
                           return PostInListWidget(
                             post: posts[index].post,
                             status: posts[index].status,
                             isAuthor: isAuthor,
+                            isSamePost: isSamePost,
                           );
                         },
                       );
@@ -257,7 +271,8 @@ class _ChannelWidgetState extends State<ChannelWidget> {
                             channelId: widget.channel.id,
                             body: postBody,
                             images: postImages,
-                            writtenChallengeDay: 0,
+                            writtenChallengeDay:
+                                widget.channel.currentChallengeDay,
                             likes: 0,
                             dislikes: 0,
                             alreadyChanged: false,
