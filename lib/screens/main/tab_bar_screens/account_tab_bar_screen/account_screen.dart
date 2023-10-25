@@ -12,6 +12,7 @@ class AccountScreen extends StatefulWidget {
 class _AccountScreenState extends State<AccountScreen> {
   @override
   Widget build(BuildContext context) {
+    NavigatorState state = Navigator.of(context);
     return Scaffold(
       body: SafeArea(
         child: Center(
@@ -20,8 +21,7 @@ class _AccountScreenState extends State<AccountScreen> {
               final loggedOut = await logout();
               if (loggedOut) {
                 // Navigate to the login screen
-                Navigator.of(context)
-                    .pushNamedAndRemoveUntil('/login', (route) => false);
+                state.pushNamedAndRemoveUntil('/login', (route) => false);
               }
             },
             child: const Text("Log out"),

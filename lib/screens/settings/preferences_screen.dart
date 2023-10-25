@@ -153,20 +153,22 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
                         });
 
                         //show the errors
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              errorMessage,
-                              style: const TextStyle(
-                                fontFamily: 'WorkSans',
-                                fontSize: 15,
-                                color: Colors.white,
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                errorMessage,
+                                style: const TextStyle(
+                                  fontFamily: 'WorkSans',
+                                  fontSize: 15,
+                                  color: Colors.white,
+                                ),
                               ),
+                              duration: const Duration(seconds: 10),
+                              backgroundColor: Colors.red,
                             ),
-                            duration: const Duration(seconds: 10),
-                            backgroundColor: Colors.red,
-                          ),
-                        );
+                          );
+                        }
                       }
                     },
                   ),
