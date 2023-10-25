@@ -57,11 +57,12 @@ class _AddChallengeScreenState extends State<AddChallengeScreen> {
 
       final UploadTask uploadTask = storageReference.putFile(File(imagePath));
 
-      // Check if the upload was successful
-      if (uploadTask.snapshot.state == TaskState.success) {
+      final TaskSnapshot snapshot = await uploadTask.whenComplete(() {});
+      if (snapshot.state == TaskState.success) {
         final String downloadURL = await storageReference.getDownloadURL();
         return downloadURL;
       } else {
+        print("Upload failed. State: ${snapshot.state}");
         throw FirebaseUploadException('Image upload failed');
       }
     } catch (e) {
@@ -333,6 +334,7 @@ class _AddChallengeScreenState extends State<AddChallengeScreen> {
                             errorMessage =
                                 'There was an error on the server side. Please try again later.';
                           } else if (e is FirebaseUploadException) {
+                            print(e.message);
                             errorMessage =
                                 'Uploading of images failed. You can proceed without it now and upload it later.';
                           } else if (e is NetworkException) {
