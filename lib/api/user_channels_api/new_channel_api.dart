@@ -8,8 +8,13 @@ import '../../exceptions.dart';
 
 const storage = FlutterSecureStorage();
 
-Future<void> newChannel(String name, String channelType, String description,
-    List<String> categories, String? channel_profile_picture_url) async {
+Future<void> newChannel(
+    String name,
+    String challangeGoal,
+    String channelType,
+    String description,
+    List<String> categories,
+    String? channelProfilePictureUrl) async {
   final authToken = await storage.read(key: 'authToken');
 
   try {
@@ -17,10 +22,11 @@ Future<void> newChannel(String name, String channelType, String description,
       Uri.parse('http://localhost:8081/users/channels/new'),
       body: json.encode({
         'name': name,
+        'goal': int.tryParse(challangeGoal) ?? 0,
         'channel_type': channelType,
         'description': description,
         'categories': categories,
-        'channel_profile_picture_url': channel_profile_picture_url
+        'channel_profile_picture_url': channelProfilePictureUrl
       }),
       headers: {
         'Content-Type': 'application/json',

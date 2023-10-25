@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:merume_mobile/api/user_channels_api/new_channel_api.dart';
 import 'package:merume_mobile/colors.dart';
 import 'package:merume_mobile/exceptions.dart';
@@ -23,8 +24,11 @@ class _AddChallengeScreenState extends State<AddChallengeScreen> {
       TextEditingController();
   final TextEditingController _challengeCategoriesController =
       TextEditingController();
+  final TextEditingController _challengeGoalController =
+      TextEditingController();
 
   String challengeName = '';
+  String challengeGoal = '';
   String challengeDescription = '';
   String challengeType = 'Public';
   List<String> challengeCategories = [];
@@ -53,11 +57,6 @@ class _AddChallengeScreenState extends State<AddChallengeScreen> {
 
       final UploadTask uploadTask = storageReference.putFile(File(imagePath));
 
-      // Wait for the upload to complete
-      await uploadTask.whenComplete(() {
-        print('Image uploaded to Firebase Storage');
-      });
-
       // Check if the upload was successful
       if (uploadTask.snapshot.state == TaskState.success) {
         final String downloadURL = await storageReference.getDownloadURL();
@@ -66,7 +65,6 @@ class _AddChallengeScreenState extends State<AddChallengeScreen> {
         throw FirebaseUploadException('Image upload failed');
       }
     } catch (e) {
-      print('Error uploading image: $e');
       throw FirebaseUploadException('Image upload failed');
     }
   }
@@ -76,6 +74,7 @@ class _AddChallengeScreenState extends State<AddChallengeScreen> {
     _challengeNameController.dispose();
     _challengeDescriptionController.dispose();
     _challengeCategoriesController.dispose();
+    _challengeGoalController.dispose(); // Add this
     super.dispose();
   }
 
@@ -94,6 +93,16 @@ class _AddChallengeScreenState extends State<AddChallengeScreen> {
     if (challengeCategories.isEmpty) {
       errors['challengeCategories'] =
           'Challenge must have at least one category';
+    }
+
+    if (_challengeGoalController.text.isEmpty) {
+      errors['challengeGoal'] = 'Challenge goal is required';
+    } else {
+      final int goal = int.tryParse(_challengeGoalController.text) ?? 0;
+      if (goal < 1000 || goal > 2000) {
+        errors['challengeGoal'] =
+            'Challenge goal must be between 1000 and 2000 days';
+      }
     }
   }
 
@@ -115,7 +124,7 @@ class _AddChallengeScreenState extends State<AddChallengeScreen> {
                 style: TextStyle(
                   fontFamily: 'Poppins',
                   fontWeight: FontWeight.w500,
-                  fontSize: 32,
+                  fontSize: 24,
                   color: AppColors.mellowLemon,
                 ),
               ),
@@ -171,6 +180,25 @@ class _AddChallengeScreenState extends State<AddChallengeScreen> {
                 onChanged: (value) {
                   challengeName = value;
                 },
+              ),
+              const SizedBox(height: 32.0),
+              TextField(
+                controller: _challengeGoalController,
+                decoration: InputDecoration(
+                  hintText: 'Challenge goal (days) (1000 - 2000)',
+                  fillColor: Colors.white,
+                  filled: true,
+                  errorText: errors.containsKey('challengeGoal')
+                      ? errors['challengeGoal']
+                      : null,
+                ),
+                onChanged: (value) {
+                  challengeGoal = value;
+                },
+                inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly,
+                  LengthLimitingTextInputFormatter(4),
+                ],
               ),
               const SizedBox(height: 32.0),
               TextField(
@@ -283,11 +311,13 @@ class _AddChallengeScreenState extends State<AddChallengeScreen> {
                             await uploadImage(selectedImagePath);
 
                         await newChannel(
-                            challengeName,
-                            challengeType,
-                            challengeDescription,
-                            challengeCategories,
-                            uploadedImageUrl);
+                          challengeName,
+                          challengeGoal,
+                          challengeType,
+                          challengeDescription,
+                          challengeCategories,
+                          uploadedImageUrl,
+                        ); // Pass the challengeGoal
 
                         state.pop(context);
                       } catch (e) {
