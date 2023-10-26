@@ -38,21 +38,21 @@ class PfpLoadImageWidgetState extends State<PfpLoadImageWidget> {
           child: GestureDetector(
             onTap: pickImage,
             child: SizedBox(
-                width: 100,
-                height: 100,
-                child: CircleAvatar(
-                  backgroundColor: AppColors.royalPurple,
-                  radius: 30.0,
-                  child: ClipOval(
-                    child: imagePath != null
-                        ? Image.file(File(imagePath!), fit: BoxFit.cover)
-                        : const Icon(
-                            Icons.image,
-                            size: 70,
-                            color: Colors.white,
-                          ),
-                  ),
-                )),
+              width: 100,
+              height: 100,
+              child: CircleAvatar(
+                backgroundColor: AppColors.royalPurple,
+                backgroundImage:
+                    imagePath != null ? FileImage(File(imagePath!)) : null,
+                child: imagePath == null
+                    ? const Icon(
+                        Icons.image,
+                        size: 70,
+                        color: Colors.white,
+                      )
+                    : null,
+              ),
+            ),
           ),
         ),
       ],

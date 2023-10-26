@@ -12,10 +12,10 @@ class CategoryPopup extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _CategoryPopupState createState() => _CategoryPopupState();
+  CategoryPopupState createState() => CategoryPopupState();
 }
 
-class _CategoryPopupState extends State<CategoryPopup> {
+class CategoryPopupState extends State<CategoryPopup> {
   late List<String> _updatedCategories;
 
   @override

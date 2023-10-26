@@ -4,6 +4,7 @@ import 'package:merume_mobile/api/channel_api/channel_posts_api.dart';
 import 'package:merume_mobile/api/posts_api/create_post_api.dart';
 import 'package:merume_mobile/colors.dart';
 import 'package:merume_mobile/models/author_model.dart';
+import 'package:merume_mobile/screens/main/channel_screens/channel_details_screen.dart';
 import 'package:merume_mobile/screens/main/components/enums.dart';
 import 'package:merume_mobile/exceptions.dart';
 import 'package:merume_mobile/models/channel_model.dart';
@@ -23,16 +24,16 @@ class PostSent {
   });
 }
 
-class ChannelWidget extends StatefulWidget {
+class ChannelScreen extends StatefulWidget {
   final Channel channel;
 
-  const ChannelWidget({Key? key, required this.channel}) : super(key: key);
+  const ChannelScreen({Key? key, required this.channel}) : super(key: key);
 
   @override
-  State<ChannelWidget> createState() => _ChannelWidgetState();
+  State<ChannelScreen> createState() => _ChannelScreenState();
 }
 
-class _ChannelWidgetState extends State<ChannelWidget> {
+class _ChannelScreenState extends State<ChannelScreen> {
   bool isAuthor = false;
 
   final itemsController = StreamController<List<PostSent>>();
@@ -65,7 +66,12 @@ class _ChannelWidgetState extends State<ChannelWidget> {
   }
 
   void _handleAppBarPress() {
-    print("Hello, world!");
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const ChannelDetailsScreen(),
+      ),
+    );
   }
 
   @override

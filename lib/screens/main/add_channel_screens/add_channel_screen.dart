@@ -36,6 +36,8 @@ class _AddChallengeScreenState extends State<AddChallengeScreen> {
   String? selectedImagePath;
   bool isImageSelected = false;
 
+  bool isPressed = false;
+
   String errorMessage = '';
 
   Map<String, String> errors = {};
@@ -300,57 +302,67 @@ class _AddChallengeScreenState extends State<AddChallengeScreen> {
                 const SizedBox(height: 50.0),
                 Center(
                   child: ElevatedButton(
-                    onPressed: () async {
-                      validateFields();
+                    onPressed: isPressed
+                        ? null
+                        : () async {
+                            validateFields();
 
-                      setState(() {
-                        errorMessage = '';
-                      });
-
-                      if (errors.isEmpty) {
-                        try {
-                          final uploadedImageUrl =
-                              await uploadImage(selectedImagePath);
-
-                          await newChannel(
-                            challengeName,
-                            challengeGoal,
-                            challengeType,
-                            challengeDescription,
-                            challengeCategories,
-                            uploadedImageUrl,
-                          );
-
-                          if (context.mounted) {
-                            state.pop(context);
-                          }
-                        } catch (e) {
-                          setState(() {
-                            if (e is TokenAuthException) {
-                              errorMessage =
-                                  'Token authentication error. Please try to relogin.';
-                            } else if (e is UnprocessableEntityException) {
-                              errorMessage =
-                                  'Invalid input data. Please follow the requirements.';
-                            } else if (e is ServerException ||
-                                e is HttpException) {
-                              errorMessage =
-                                  'There was an error on the server side. Please try again later.';
-                            } else if (e is FirebaseUploadException) {
-                              print(e.message);
-                              errorMessage =
-                                  'Uploading of images failed. You can proceed without it now and upload it later.';
-                            } else if (e is NetworkException) {
-                              errorMessage =
-                                  'A network error has occurred. Please check your internet connection.';
-                            } else if (e is TimeoutException) {
-                              errorMessage =
-                                  'Network connection is poor. Please try again later.';
+                            if (errors.isNotEmpty || errorMessage.isNotEmpty) {
+                              isPressed = false;
+                            } else {
+                              isPressed = true;
                             }
-                          });
-                        }
-                      }
-                    },
+
+                            setState(() {
+                              errorMessage = '';
+                            });
+
+                            if (errors.isEmpty) {
+                              try {
+                                final uploadedImageUrl =
+                                    await uploadImage(selectedImagePath);
+
+                                await newChannel(
+                                  challengeName,
+                                  challengeGoal,
+                                  challengeType,
+                                  challengeDescription,
+                                  challengeCategories,
+                                  uploadedImageUrl,
+                                );
+
+                                if (context.mounted) {
+                                  state.pop(context);
+                                }
+                              } catch (e) {
+                                setState(() {
+                                  if (e is TokenAuthException) {
+                                    errorMessage =
+                                        'Token authentication error. Please try to relogin.';
+                                  } else if (e
+                                      is UnprocessableEntityException) {
+                                    errorMessage =
+                                        'Invalid input data. Please follow the requirements.';
+                                  } else if (e is ServerException ||
+                                      e is HttpException) {
+                                    errorMessage =
+                                        'There was an error on the server side. Please try again later.';
+                                  } else if (e is FirebaseUploadException) {
+                                    errorMessage =
+                                        'Uploading of images failed. You can proceed without it now and upload it later.';
+                                  } else if (e is NetworkException) {
+                                    errorMessage =
+                                        'A network error has occurred. Please check your internet connection.';
+                                  } else if (e is TimeoutException) {
+                                    errorMessage =
+                                        'Network connection is poor. Please try again later.';
+                                  }
+                                });
+                              } finally {
+                                isPressed = false;
+                              }
+                            }
+                          },
                     style: ElevatedButton.styleFrom(
                       fixedSize: const Size(178, 38),
                       backgroundColor: AppColors.royalPurple,

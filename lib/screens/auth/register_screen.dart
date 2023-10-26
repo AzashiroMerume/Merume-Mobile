@@ -27,6 +27,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
   String email = '';
   String password = '';
 
+  bool isPressed = false;
+
   String errorMessage = '';
 
   @override
@@ -212,64 +214,85 @@ class _RegisterScreenState extends State<RegisterScreen> {
               const SizedBox(height: 40.0),
               Center(
                 child: ElevatedButton(
-                  onPressed: () async {
-                    validateFields();
+                  onPressed: isPressed
+                      ? null
+                      : () async {
+                          validateFields();
 
-                    setState(() {
-                      errorMessage = '';
-                    });
-
-                    if (errors.isEmpty) {
-                      try {
-                        final userId =
-                            await register(username, nickname, email, password);
-
-                        final user = UserInfo(id: userId);
-                        userInfoProvider.setUserInfo(user);
-
-                        state.pushNamedAndRemoveUntil(
-                          '/main',
-                          (Route<dynamic> route) => false,
-                        );
-                      } catch (e) {
-                        setState(() {
-                          if (e is RegistrationException) {
-                            errorMessage = e.message;
-                          } else if (e is UnprocessableEntityException ||
-                              e is ContentTooLargeException) {
-                            errorMessage =
-                                'Invalid input data. Please follow the requirements.';
-                          } else if (e is NetworkException) {
-                            errorMessage =
-                                'Network error has occured. Please check your internet connection.';
-                          } else if (e is ServerException ||
-                              e is HttpException) {
-                            errorMessage =
-                                'There was an error on the server side, try again later.';
-                          } else if (e is TimeoutException) {
-                            errorMessage =
-                                'Network connection is poor, try again later.';
+                          if (errors.isNotEmpty || errorMessage.isNotEmpty) {
+                            isPressed = false;
                           } else {
-                            errorMessage =
-                                'An unexpected error occurred. Please try again later.';
+                            isPressed = true;
                           }
-                        });
-                      }
-                    }
-                  },
+
+                          setState(() {
+                            errorMessage = '';
+                          });
+
+                          if (errors.isEmpty) {
+                            try {
+                              final userId = await register(
+                                  username, nickname, email, password);
+
+                              final user = UserInfo(id: userId);
+                              userInfoProvider.setUserInfo(user);
+
+                              state.pushNamedAndRemoveUntil(
+                                '/main',
+                                (Route<dynamic> route) => false,
+                              );
+                            } catch (e) {
+                              setState(() {
+                                if (e is RegistrationException) {
+                                  errorMessage = e.message;
+                                } else if (e is UnprocessableEntityException ||
+                                    e is ContentTooLargeException) {
+                                  errorMessage =
+                                      'Invalid input data. Please follow the requirements.';
+                                } else if (e is NetworkException) {
+                                  errorMessage =
+                                      'Network error has occured. Please check your internet connection.';
+                                } else if (e is ServerException ||
+                                    e is HttpException) {
+                                  errorMessage =
+                                      'There was an error on the server side, try again later.';
+                                } else if (e is TimeoutException) {
+                                  errorMessage =
+                                      'Network connection is poor, try again later.';
+                                } else {
+                                  errorMessage =
+                                      'An unexpected error occurred. Please try again later.';
+                                }
+                              });
+                            } finally {
+                              isPressed = false;
+                            }
+                          }
+                        },
                   style: ElevatedButton.styleFrom(
-                      fixedSize: const Size(178, 38),
-                      backgroundColor: AppColors.royalPurple,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(50))),
-                  child: const Text(
-                    'Sign up',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontFamily: 'WorkSans',
-                      fontWeight: FontWeight.w500,
+                    fixedSize: const Size(178, 38),
+                    backgroundColor: AppColors.royalPurple,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(50),
+                      side: BorderSide(
+                        color: isPressed
+                            ? AppColors.royalPurple // When pressed
+                            : Colors.transparent, // Default border color
+                      ),
                     ),
                   ),
+                  child: isPressed
+                      ? const CircularProgressIndicator(
+                          color: Colors.white,
+                        )
+                      : const Text(
+                          'Sign up',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontFamily: 'WorkSans',
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
                 ),
               ),
               const SizedBox(height: 24.0),
