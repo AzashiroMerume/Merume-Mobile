@@ -282,8 +282,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                   ),
                   child: isPressed
-                      ? const CircularProgressIndicator(
-                          color: Colors.white,
+                      ? const SizedBox(
+                          width: 20.0,
+                          height: 20.0,
+                          child: CircularProgressIndicator(
+                            color: AppColors.lavenderHaze,
+                          ),
                         )
                       : const Text(
                           'Sign up',

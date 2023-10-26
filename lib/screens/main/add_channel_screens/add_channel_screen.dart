@@ -368,16 +368,29 @@ class _AddChallengeScreenState extends State<AddChallengeScreen> {
                       backgroundColor: AppColors.royalPurple,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(50),
+                        side: BorderSide(
+                          color: isPressed
+                              ? AppColors.royalPurple // When pressed
+                              : Colors.transparent, // Default border color
+                        ),
                       ),
                     ),
-                    child: const Text(
-                      'Confirm',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontFamily: 'WorkSans',
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
+                    child: isPressed
+                        ? const SizedBox(
+                            width: 20.0,
+                            height: 20.0,
+                            child: CircularProgressIndicator(
+                              color: AppColors.lavenderHaze,
+                            ),
+                          )
+                        : const Text(
+                            'Confirm',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontFamily: 'WorkSans',
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
                   ),
                 ),
                 const SizedBox(height: 32.0),
