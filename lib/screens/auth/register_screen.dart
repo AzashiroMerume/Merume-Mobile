@@ -219,7 +219,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       : () async {
                           validateFields();
 
-                          if (errors.isNotEmpty || errorMessage.isNotEmpty) {
+                          if (errors.isNotEmpty) {
                             isPressed = false;
                           } else {
                             isPressed = true;

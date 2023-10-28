@@ -196,7 +196,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       : () async {
                           validateFields();
 
-                          if (errors.isNotEmpty || errorMessage.isNotEmpty) {
+                          if (errors.isNotEmpty) {
                             isPressed = false;
                           } else {
                             isPressed = true;
