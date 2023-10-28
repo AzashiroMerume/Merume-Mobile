@@ -14,9 +14,9 @@ class ErrorPopupWidget extends StatelessWidget {
       content: Text(
         errorMessage,
         style: const TextStyle(
-            color: AppColors.mellowLemon, fontFamily: 'WorkSans', fontSize: 16),
+            color: Colors.white, fontFamily: 'WorkSans', fontSize: 14),
       ),
-      backgroundColor: Colors.black, // Dark background color
+      backgroundColor: Colors.red, // Dark background color
       actions: <Widget>[
         ElevatedButton(
           onPressed: () {
@@ -30,8 +30,8 @@ class ErrorPopupWidget extends StatelessWidget {
       ],
       shape: const RoundedRectangleBorder(
         side: BorderSide(
-            color: AppColors.postMain,
-            width: 1.0), // Custom border color and width
+            color: Colors.redAccent,
+            width: 2.0), // Custom border color and width
         borderRadius:
             BorderRadius.all(Radius.circular(8.0)), // Custom border radius
       ),
