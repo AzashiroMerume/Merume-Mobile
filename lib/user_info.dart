@@ -7,7 +7,7 @@ class UserInfoProvider extends ChangeNotifier {
 
   UserInfo? get userInfo => _userInfo;
 
-  void setUserInfo(UserInfo user) {
+  void setUserInfo(UserInfo? user) {
     _userInfo = user;
     notifyListeners();
   }

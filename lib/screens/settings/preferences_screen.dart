@@ -100,83 +100,83 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: const Text("Are you sure?"),
-                content: const Text("Do you want to save your preferences?"),
-                actions: [
-                  TextButton(
-                    child: const Text("CANCEL"),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                  TextButton(
-                    child: const Text("SAVE"),
-                    onPressed: () async {
-                      try {
-                        if (selected.isEmpty) {
-                          throw UnprocessableEntityException(
-                              'Invalid input data');
-                        }
+        onPressed: selected.isEmpty
+            ? null
+            : () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: const Text("Are you sure?"),
+                      content:
+                          const Text("Do you want to save your preferences?"),
+                      actions: [
+                        TextButton(
+                          child: const Text("CANCEL"),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                        TextButton(
+                          child: const Text("SAVE"),
+                          onPressed: () async {
+                            try {
+                              if (selected.isEmpty) {
+                                throw UnprocessableEntityException(
+                                    'Invalid input data');
+                              }
 
-                        await savePreferences(selected);
+                              await savePreferences(selected);
 
-                        state.pushNamedAndRemoveUntil(
-                          '/main',
-                          (Route<dynamic> route) => false,
-                        );
-                      } catch (e) {
-                        //close the alertDialog if error encountered
-                        state.pop();
+                              state.pop();
+                            } catch (e) {
+                              state.pop();
 
-                        setState(() {
-                          if (e is TokenAuthException) {
-                            errorMessage =
-                                'There is an error with authentication. Please try to re-login.';
-                          } else if (e is UnprocessableEntityException) {
-                            errorMessage = 'Please choose at least one element';
-                          } else if (e is NetworkException) {
-                            errorMessage =
-                                'Network error has occured. Please check your internet connection.';
-                          } else if (e is ServerException ||
-                              e is HttpException) {
-                            errorMessage =
-                                'There was an error on the server side, try again later.';
-                          } else {
-                            errorMessage =
-                                'An unexpected error occurred. Please try again later.';
-                          }
-                        });
+                              setState(() {
+                                if (e is TokenAuthException) {
+                                  errorMessage =
+                                      'There is an error with authentication. Please try to re-login.';
+                                } else if (e is UnprocessableEntityException) {
+                                  errorMessage =
+                                      'Please choose at least one element';
+                                } else if (e is NetworkException) {
+                                  errorMessage =
+                                      'Network error has occured. Please check your internet connection.';
+                                } else if (e is ServerException ||
+                                    e is HttpException) {
+                                  errorMessage =
+                                      'There was an error on the server side, try again later.';
+                                } else {
+                                  errorMessage =
+                                      'An unexpected error occurred. Please try again later.';
+                                }
+                              });
 
-                        //show the errors
-                        if (context.mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                errorMessage,
-                                style: const TextStyle(
-                                  fontFamily: 'WorkSans',
-                                  fontSize: 15,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              duration: const Duration(seconds: 10),
-                              backgroundColor: Colors.red,
-                            ),
-                          );
-                        }
-                      }
-                    },
-                  ),
-                ],
-              );
-            },
-          );
-        },
+                              //show the errors
+                              if (context.mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      errorMessage,
+                                      style: const TextStyle(
+                                        fontFamily: 'WorkSans',
+                                        fontSize: 15,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    duration: const Duration(seconds: 10),
+                                    backgroundColor: Colors.red,
+                                  ),
+                                );
+                              }
+                            }
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
         backgroundColor: AppColors.royalPurple,
         child: const Icon(Icons.check),
       ),
