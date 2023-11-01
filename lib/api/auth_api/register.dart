@@ -3,12 +3,13 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:merume_mobile/models/user_info_model.dart';
 
 import '../../exceptions.dart';
 
 const storage = FlutterSecureStorage();
 
-Future<String> register(
+Future<UserInfo> register(
     String username, String nickname, String email, String password) async {
   try {
     final response = await http.post(
@@ -30,7 +31,8 @@ Future<String> register(
       case 201:
         final responseData = json.decode(response.body);
         await storage.write(key: 'authToken', value: responseData['token']);
-        return responseData['user_id']['\$oid'];
+        final userInfo = UserInfo.fromJson(responseData);
+        return userInfo;
       case 409:
         final responseData = json.decode(response.body);
         throw RegistrationException(responseData['error_message']);
@@ -42,7 +44,7 @@ Future<String> register(
         throw ServerException('The server encountered an unexpected error');
       default:
         throw HttpException(
-            'Received unexpected status code: ${response.statusCode}');
+            'Received an unexpected status code: ${response.statusCode}');
     }
   } catch (e) {
     if (e is SocketException) {

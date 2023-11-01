@@ -6,6 +6,7 @@ import 'package:merume_mobile/colors.dart';
 
 import 'package:merume_mobile/api/auth_api/register.dart';
 import 'package:merume_mobile/exceptions.dart';
+import 'package:merume_mobile/models/user_info_model.dart';
 import 'package:merume_mobile/user_info.dart';
 import 'package:provider/provider.dart';
 
@@ -231,10 +232,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                           if (errors.isEmpty) {
                             try {
-                              final userId = await register(
+                              final userInfo = await register(
                                   username, nickname, email, password);
 
-                              final user = UserInfo(id: userId);
+                              final user = UserInfo(
+                                id: userInfo.id,
+                                nickname: userInfo.nickname,
+                                username: userInfo.username,
+                                email: userInfo.email,
+                              );
+                              ;
                               userInfoProvider.setUserInfo(user);
 
                               state.pushNamedAndRemoveUntil(

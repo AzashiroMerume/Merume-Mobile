@@ -3,12 +3,13 @@ import 'dart:convert';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:merume_mobile/models/user_info_model.dart';
 
 import '../../exceptions.dart';
 
 const storage = FlutterSecureStorage();
 
-Future<String?> verifyAuth() async {
+Future<UserInfo?> verifyAuth() async {
   final authToken = await storage.read(key: 'authToken');
 
   if (authToken == null) {
@@ -28,12 +29,11 @@ Future<String?> verifyAuth() async {
       },
     );
 
-    print("Status code: ${response.statusCode}");
-
     switch (response.statusCode) {
       case 200:
         final responseData = json.decode(response.body);
-        return responseData['user_id']['\$oid'];
+        final userInfo = UserInfo.fromJson(responseData);
+        return userInfo;
       case 401:
         await storage.delete(key: 'authToken');
         throw TokenAuthException('Token authentication error');

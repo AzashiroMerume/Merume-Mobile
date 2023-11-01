@@ -3,19 +3,20 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:merume_mobile/models/user_info_model.dart';
 
 import '../../exceptions.dart';
 
 const storage = FlutterSecureStorage();
 
-Future<String> login(String identifier, String password, bool byEmail) async {
+Future<UserInfo> login(String identifier, String password, bool byEmail) async {
   try {
     final response = await http.post(
       Uri.parse('http://localhost:8081/auth/login'),
       body: json.encode({
         'identifier': identifier,
         'password': password,
-        'by_email': byEmail
+        'by_email': byEmail,
       }),
       headers: {
         'Content-Type': 'application/json',
@@ -28,7 +29,8 @@ Future<String> login(String identifier, String password, bool byEmail) async {
       case 200:
         final responseData = json.decode(response.body);
         await storage.write(key: 'authToken', value: responseData['token']);
-        return responseData['user_id']['\$oid'];
+        final userInfo = UserInfo.fromJson(responseData);
+        return userInfo;
       case 401:
         throw AuthenticationException(
             'The identifier or password is incorrect');

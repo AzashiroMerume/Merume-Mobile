@@ -1,12 +1,5 @@
 import 'package:flutter/material.dart';
-
-class UserInfo {
-  final String id;
-
-  UserInfo({
-    required this.id,
-  });
-}
+import 'package:merume_mobile/models/user_info_model.dart';
 
 //class for provider
 class UserInfoProvider extends ChangeNotifier {

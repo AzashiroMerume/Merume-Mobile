@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:merume_mobile/colors.dart';
 import 'package:merume_mobile/firebase_options.dart';
+import 'package:merume_mobile/models/user_info_model.dart';
 import 'package:merume_mobile/screens/auth/login_screen.dart';
 import 'package:merume_mobile/screens/auth/register_screen.dart';
 import 'package:merume_mobile/screens/main/main_tab_bar_screen.dart';
@@ -13,7 +14,7 @@ import 'package:provider/provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  String? userId;
+  UserInfo? userInfo;
   bool isAuthenticated = false;
   String errorMessage = '';
 
@@ -22,15 +23,20 @@ void main() async {
   );
 
   try {
-    userId = await verifyAuth();
-    isAuthenticated = userId != null;
+    userInfo = await verifyAuth();
+    isAuthenticated = userInfo != null;
   } catch (e) {
     errorMessage = 'There was an error on the server side';
   }
 
   final userInfoProvider = UserInfoProvider();
-  if (userId != null) {
-    userInfoProvider.setUserInfo(UserInfo(id: userId));
+  if (userInfo != null) {
+    userInfoProvider.setUserInfo(UserInfo(
+      id: userInfo.id,
+      nickname: userInfo.nickname,
+      username: userInfo.username,
+      email: userInfo.email,
+    ));
   }
 
   runApp(
