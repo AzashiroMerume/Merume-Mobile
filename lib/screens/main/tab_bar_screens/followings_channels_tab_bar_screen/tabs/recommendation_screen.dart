@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:merume_mobile/colors.dart';
-
 import 'package:merume_mobile/models/channel_model.dart';
 import 'package:merume_mobile/api/recommendations_api/recommendations_api.dart';
 import 'package:merume_mobile/screens/main/channel_screens/channel_in_list_widget.dart';
+import 'package:merume_mobile/screens/settings/preferences_screen.dart';
 
 class RecommendationScreen extends StatefulWidget {
-  const RecommendationScreen({Key? key}) : super(key: key);
+  final List<String>? preferences;
+
+  const RecommendationScreen({Key? key, required this.preferences})
+      : super(key: key);
 
   @override
   State<RecommendationScreen> createState() => _RecommendationScreenState();
@@ -24,8 +27,11 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
   @override
   void initState() {
     super.initState();
-    _scrollController.addListener(_scrollListener);
-    initRecommendations();
+
+    if (widget.preferences != null && widget.preferences!.isNotEmpty) {
+      _scrollController.addListener(_scrollListener);
+      initRecommendations();
+    }
   }
 
   @override
@@ -47,10 +53,15 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
   }
 
   Future<void> initRecommendations() async {
+    _scrollController
+        .removeListener(_scrollListener); // Remove the previous listener
     final response = await fetchRecommendations(pageNumber);
+
     setState(() {
       recommendations = response;
     });
+
+    _scrollController.addListener(_scrollListener); // Add the new listener
   }
 
   Future<void> loadMoreRecommendations() async {
@@ -125,6 +136,51 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              if (widget.preferences == null || widget.preferences!.isEmpty)
+                Column(
+                  children: [
+                    Row(
+                      children: [
+                        const Text(
+                          "Please choose the preferences first",
+                          style: TextStyle(
+                            fontFamily: 'WorkSans',
+                            fontSize: 14,
+                            fontWeight: FontWeight.normal,
+                            color: AppColors.mellowLemon,
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 12.0,
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const PreferencesScreen(),
+                              ),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.royalPurple,
+                          ),
+                          child: const Text(
+                            'Select',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontFamily: 'WorkSans',
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 24.0,
+                    ),
+                  ],
+                ),
               SizedBox(
                 width: double.infinity,
                 child: SingleChildScrollView(

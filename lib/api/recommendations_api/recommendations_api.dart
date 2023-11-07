@@ -12,7 +12,6 @@ const storage = FlutterSecureStorage();
 
 Future<List<Channel>> fetchRecommendations(int page, {int limit = 10}) async {
   const baseUrl = 'http://localhost:8081/users/recommendations';
-  print("Page of Load More function: ${page}");
   final authToken = await storage.read(key: 'authToken');
   final headers = {'Authorization': '$authToken'};
 
@@ -25,6 +24,8 @@ Future<List<Channel>> fetchRecommendations(int page, {int limit = 10}) async {
       Uri.parse('$baseUrl?page=$page&limit=$limit'),
       headers: headers,
     );
+
+    print(response.statusCode);
 
     switch (response.statusCode) {
       case 200:
@@ -43,10 +44,7 @@ Future<List<Channel>> fetchRecommendations(int page, {int limit = 10}) async {
       default:
         throw HttpException('Unexpected status code: ${response.statusCode}');
     }
-  } catch (e, stackTrace) {
-    print('Exception: $e');
-    print('Stack trace:\n$stackTrace');
-
+  } catch (e) {
     if (e is SocketException) {
       throw NetworkException('Network error');
     } else if (e is TimeoutException) {

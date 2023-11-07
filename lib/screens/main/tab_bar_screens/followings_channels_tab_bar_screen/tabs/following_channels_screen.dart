@@ -28,7 +28,7 @@ class _FollowingChannelsScreenState extends State<FollowingChannelsScreen> {
               const SizedBox(height: 16),
               Expanded(
                 child: StreamBuilder<List<Channel>>(
-                  stream: fetchFollowings(),
+                  stream: fetchFollowings().asBroadcastStream(),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       if (snapshot.data!.isEmpty) {
