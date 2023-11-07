@@ -37,6 +37,8 @@ void main() async {
       username: userInfo.username,
       email: userInfo.email,
     ));
+  } else {
+    userInfoProvider.setUserInfo(null);
   }
 
   runApp(

@@ -32,7 +32,7 @@ Future<UserInfo?> verifyAuth() async {
     switch (response.statusCode) {
       case 200:
         final responseData = json.decode(response.body);
-        final userInfo = UserInfo.fromJson(responseData);
+        final userInfo = UserInfo.fromJson(responseData['user_info']);
         return userInfo;
       case 401:
         await storage.delete(key: 'authToken');

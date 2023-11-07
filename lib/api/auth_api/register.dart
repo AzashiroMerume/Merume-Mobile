@@ -31,7 +31,7 @@ Future<UserInfo> register(
       case 201:
         final responseData = json.decode(response.body);
         await storage.write(key: 'authToken', value: responseData['token']);
-        final userInfo = UserInfo.fromJson(responseData);
+        final userInfo = UserInfo.fromJson(responseData['user_info']);
         return userInfo;
       case 409:
         final responseData = json.decode(response.body);
@@ -47,6 +47,7 @@ Future<UserInfo> register(
             'Received an unexpected status code: ${response.statusCode}');
     }
   } catch (e) {
+    print(e);
     if (e is SocketException) {
       throw NetworkException('Network error');
     } else if (e is TimeoutException) {

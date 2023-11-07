@@ -29,7 +29,7 @@ Future<UserInfo> login(String identifier, String password, bool byEmail) async {
       case 200:
         final responseData = json.decode(response.body);
         await storage.write(key: 'authToken', value: responseData['token']);
-        final userInfo = UserInfo.fromJson(responseData);
+        final userInfo = UserInfo.fromJson(responseData['user_info']);
         return userInfo;
       case 401:
         throw AuthenticationException(
