@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:merume_mobile/colors.dart';
 import 'package:merume_mobile/exceptions.dart';
+import 'package:merume_mobile/user_info.dart';
+import 'package:provider/provider.dart';
 import 'components/categories.dart';
 
 import '../../api/user_preferences_api/user_preferences_api.dart';
@@ -13,6 +15,8 @@ class PreferencesScreen extends StatefulWidget {
 }
 
 class _PreferencesScreenState extends State<PreferencesScreen> {
+  bool isPressed = false;
+
   List<String> selected = [];
 
   String errorMessage = '';
@@ -26,6 +30,9 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
   @override
   Widget build(BuildContext context) {
     NavigatorState state = Navigator.of(context);
+    final userInfoProvider =
+        Provider.of<UserInfoProvider>(context, listen: false);
+    final userInfo = userInfoProvider.userInfo;
 
     return Scaffold(
       body: SafeArea(
@@ -100,77 +107,119 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: selected.isEmpty
+        onPressed: selected.isEmpty || isPressed
             ? null
             : () {
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
                     return AlertDialog(
-                      title: const Text("Are you sure?"),
-                      content:
-                          const Text("Do you want to save your preferences?"),
+                      backgroundColor: Colors.black,
+                      title: const Text(
+                        "Are you sure?",
+                        style: TextStyle(
+                            color: AppColors.mellowLemon,
+                            fontFamily: "Poppins"),
+                      ),
+                      content: const Text(
+                        "Do you want to save your preferences?",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontFamily: 'WorkSans',
+                            fontSize: 16),
+                      ),
                       actions: [
                         TextButton(
-                          child: const Text("CANCEL"),
+                          child: const Text(
+                            "CANCEL",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontFamily: 'WorkSans',
+                                fontSize: 16),
+                          ),
                           onPressed: () {
                             Navigator.of(context).pop();
                           },
                         ),
-                        TextButton(
-                          child: const Text("SAVE"),
-                          onPressed: () async {
-                            try {
-                              if (selected.isEmpty) {
-                                throw UnprocessableEntityException(
-                                    'Invalid input data');
-                              }
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                AppColors.royalPurple, // Custom button color
+                          ),
+                          onPressed: isPressed
+                              ? null
+                              : () async {
+                                  setState(() {
+                                    isPressed = true;
+                                  });
 
-                              await savePreferences(selected);
+                                  state.pop();
 
-                              state.pop();
-                            } catch (e) {
-                              state.pop();
+                                  try {
+                                    if (selected.isEmpty) {
+                                      throw UnprocessableEntityException(
+                                          'Invalid input data');
+                                    }
 
-                              setState(() {
-                                if (e is TokenAuthException) {
-                                  errorMessage =
-                                      'There is an error with authentication. Please try to re-login.';
-                                } else if (e is UnprocessableEntityException) {
-                                  errorMessage =
-                                      'Please choose at least one element';
-                                } else if (e is NetworkException) {
-                                  errorMessage =
-                                      'Network error has occured. Please check your internet connection.';
-                                } else if (e is ServerException ||
-                                    e is HttpException) {
-                                  errorMessage =
-                                      'There was an error on the server side, try again later.';
-                                } else {
-                                  errorMessage =
-                                      'An unexpected error occurred. Please try again later.';
-                                }
-                              });
+                                    await savePreferences(selected);
 
-                              //show the errors
-                              if (context.mounted) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      errorMessage,
-                                      style: const TextStyle(
-                                        fontFamily: 'WorkSans',
-                                        fontSize: 15,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                    duration: const Duration(seconds: 10),
-                                    backgroundColor: Colors.red,
-                                  ),
-                                );
-                              }
-                            }
-                          },
+                                    //update preferences in Provider
+                                    userInfoProvider.setUserInfo(userInfo!
+                                        .updatePreferences(
+                                            preferences: selected));
+
+                                    Navigator.of(context).pop();
+                                  } catch (e) {
+                                    setState(() {
+                                      if (e is TokenAuthException) {
+                                        errorMessage =
+                                            'There is an error with authentication. Please try to re-login.';
+                                      } else if (e
+                                          is UnprocessableEntityException) {
+                                        errorMessage =
+                                            'Please choose at least one element';
+                                      } else if (e is NetworkException) {
+                                        errorMessage =
+                                            'Network error has occured. Please check your internet connection.';
+                                      } else if (e is ServerException ||
+                                          e is HttpException) {
+                                        errorMessage =
+                                            'There was an error on the server side, try again later.';
+                                      } else {
+                                        errorMessage =
+                                            'An unexpected error occurred. Please try again later.';
+                                      }
+                                    });
+                                  } finally {
+                                    isPressed = false;
+
+                                    //show the errors
+                                    if (context.mounted) {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                            errorMessage,
+                                            style: const TextStyle(
+                                              fontFamily: 'WorkSans',
+                                              fontSize: 15,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                          duration: const Duration(seconds: 10),
+                                          backgroundColor: Colors.red,
+                                        ),
+                                      );
+                                    }
+                                  }
+                                },
+                          child: const Text(
+                            "SAVE",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontFamily: 'WorkSans',
+                                fontSize: 16),
+                          ),
                         ),
                       ],
                     );
