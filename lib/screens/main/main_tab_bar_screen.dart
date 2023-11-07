@@ -3,7 +3,7 @@ import 'package:merume_mobile/colors.dart';
 import 'package:merume_mobile/screens/main/add_channel_screens/add_channel_screen.dart';
 import 'package:merume_mobile/screens/main/tab_bar_screens/account_tab_bar_screen/account_screen.dart';
 import 'package:merume_mobile/screens/main/tab_bar_screens/created_channels_tab_bar_screen/created_channels_screen.dart';
-import 'package:merume_mobile/screens/main/tab_bar_screens/followings_channels_tab_bar_screen/followings_channels_screen.dart';
+import 'package:merume_mobile/screens/main/tab_bar_screens/followings_channels_tab_bar_screen/following_tab_screen.dart';
 // import 'package:merume_mobile/screens/main/tab_bar_screens/recommendation_screen.dart';
 
 class MainTabBarScreen extends StatefulWidget {
@@ -18,7 +18,7 @@ class _MainTabBarScreenState extends State<MainTabBarScreen> {
 
   final List<Widget> _screens = [
     const CreatedChannelsScreen(),
-    const FollowingChannelsScreen(),
+    const FollowingTabScreen(),
     const AccountScreen(),
   ];
 
@@ -29,64 +29,67 @@ class _MainTabBarScreenState extends State<MainTabBarScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Container(
-            padding: const EdgeInsets.only(left: 20.0), child: customSearchBar),
-        automaticallyImplyLeading: false,
-        actions: [
-          Container(
-            padding: const EdgeInsets.only(right: 10.0),
-            child: IconButton(
-              onPressed: () {
-                setState(() {
-                  if (customIcon.icon == Icons.search) {
-                    customIcon = const Icon(Icons.cancel);
-                    customSearchBar = const ListTile(
-                      leading: Icon(
-                        Icons.search,
-                        color: Colors.white,
-                        size: 28,
-                      ),
-                      title: TextField(
-                        decoration: InputDecoration(
-                          hintText: 'search',
-                          hintStyle: TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontStyle: FontStyle.italic,
+      appBar: _currentIndex == 1
+          ? null
+          : AppBar(
+              title: Container(
+                  padding: const EdgeInsets.only(left: 20.0),
+                  child: customSearchBar),
+              automaticallyImplyLeading: false,
+              actions: [
+                Container(
+                  padding: const EdgeInsets.only(right: 10.0),
+                  child: IconButton(
+                    onPressed: () {
+                      setState(() {
+                        if (customIcon.icon == Icons.search) {
+                          customIcon = const Icon(Icons.cancel);
+                          customSearchBar = const ListTile(
+                            leading: Icon(
+                              Icons.search,
+                              color: Colors.white,
+                              size: 28,
+                            ),
+                            title: TextField(
+                              decoration: InputDecoration(
+                                hintText: 'search',
+                                hintStyle: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  fontStyle: FontStyle.italic,
+                                ),
+                                border: InputBorder.none,
+                              ),
+                            ),
+                          );
+                        } else {
+                          customIcon = const Icon(Icons.search);
+                          customSearchBar = const Text('Merume');
+                        }
+                      });
+                    },
+                    icon: customIcon,
+                  ),
+                ),
+                if (customIcon.icon ==
+                    Icons
+                        .search) // Only show the "Add" icon when search is not active
+                  Container(
+                    padding: const EdgeInsets.only(right: 10.0),
+                    child: IconButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const AddChallengeScreen(),
                           ),
-                          border: InputBorder.none,
-                        ),
-                      ),
-                    );
-                  } else {
-                    customIcon = const Icon(Icons.search);
-                    customSearchBar = const Text('Merume');
-                  }
-                });
-              },
-              icon: customIcon,
-            ),
-          ),
-          if (customIcon.icon ==
-              Icons
-                  .search) // Only show the "Add" icon when search is not active
-            Container(
-              padding: const EdgeInsets.only(right: 10.0),
-              child: IconButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const AddChallengeScreen(),
+                        );
+                      },
+                      icon: addIcon,
                     ),
-                  );
-                },
-                icon: addIcon,
-              ),
+                  ),
+              ],
             ),
-        ],
-      ),
       body: _screens[_currentIndex],
       bottomNavigationBar: Container(
         padding: const EdgeInsets.symmetric(vertical: 5.0),
@@ -114,7 +117,7 @@ class _MainTabBarScreenState extends State<MainTabBarScreen> {
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.subscriptions),
-              label: 'Subscriptions',
+              label: 'Followings',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.person),

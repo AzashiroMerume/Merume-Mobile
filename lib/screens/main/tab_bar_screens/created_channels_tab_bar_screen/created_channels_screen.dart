@@ -51,7 +51,7 @@ class _CreatedChannelsScreenState extends State<CreatedChannelsScreen> {
                       );
                     } else if (snapshot.hasError) {
                       //Handle err for user
-                      return Text('Error: ${snapshot.error}');
+                      return const Text('Error occured');
                     } else {
                       return const Center(child: CircularProgressIndicator());
                     }
