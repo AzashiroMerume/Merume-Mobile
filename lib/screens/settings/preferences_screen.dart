@@ -4,7 +4,6 @@ import 'package:merume_mobile/exceptions.dart';
 import 'package:merume_mobile/user_info.dart';
 import 'package:provider/provider.dart';
 import 'components/categories.dart';
-
 import '../../api/user_preferences_api/user_preferences_api.dart';
 
 class PreferencesScreen extends StatefulWidget {
@@ -15,7 +14,7 @@ class PreferencesScreen extends StatefulWidget {
 }
 
 class _PreferencesScreenState extends State<PreferencesScreen> {
-  bool isPressed = false;
+  bool isSavePressed = false;
 
   List<String> selected = [];
 
@@ -107,7 +106,7 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: selected.isEmpty || isPressed
+        onPressed: selected.isEmpty || isSavePressed
             ? null
             : () {
                 showDialog(
@@ -146,11 +145,11 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
                             backgroundColor:
                                 AppColors.royalPurple, // Custom button color
                           ),
-                          onPressed: isPressed
+                          onPressed: isSavePressed
                               ? null
                               : () async {
                                   setState(() {
-                                    isPressed = true;
+                                    isSavePressed = true;
                                   });
 
                                   state.pop();
@@ -168,7 +167,7 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
                                         .updatePreferences(
                                             preferences: selected));
 
-                                    Navigator.of(context).pop();
+                                    state.pop();
                                   } catch (e) {
                                     setState(() {
                                       if (e is TokenAuthException) {
@@ -191,7 +190,7 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
                                       }
                                     });
                                   } finally {
-                                    isPressed = false;
+                                    isSavePressed = false;
 
                                     //show the errors
                                     if (context.mounted) {

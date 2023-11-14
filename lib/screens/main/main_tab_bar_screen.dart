@@ -51,6 +51,10 @@ class _MainTabBarScreenState extends State<MainTabBarScreen> {
                               size: 28,
                             ),
                             title: TextField(
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                              ),
                               decoration: InputDecoration(
                                 hintText: 'search',
                                 hintStyle: TextStyle(
