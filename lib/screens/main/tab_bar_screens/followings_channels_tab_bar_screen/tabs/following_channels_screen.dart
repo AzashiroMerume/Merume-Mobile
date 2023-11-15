@@ -1,21 +1,37 @@
 import 'package:flutter/material.dart';
-import 'package:merume_mobile/api/user_channels_api/followed_channels_api.dart/followed_channels_api.dart';
 import 'package:merume_mobile/colors.dart';
-
 import 'package:merume_mobile/models/channel_model.dart';
 import 'package:merume_mobile/screens/main/channel_screens/channel_in_list_widget.dart';
+import 'package:merume_mobile/screens/main/tab_bar_screens/followings_channels_tab_bar_screen/followings_channels_controller.dart';
 
 class FollowingChannelsScreen extends StatefulWidget {
-  const FollowingChannelsScreen({super.key});
+  final FollowingChannelsController controller;
+
+  const FollowingChannelsScreen({Key? key, required this.controller})
+      : super(key: key);
 
   @override
   State<FollowingChannelsScreen> createState() =>
       _FollowingChannelsScreenState();
 }
 
-class _FollowingChannelsScreenState extends State<FollowingChannelsScreen> {
+class _FollowingChannelsScreenState extends State<FollowingChannelsScreen>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  void initState() {
+    super.initState();
+    widget.controller.fetchFollowingsForController();
+  }
+
+  @override
+  void dispose() {
+    widget.controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -28,7 +44,7 @@ class _FollowingChannelsScreenState extends State<FollowingChannelsScreen> {
               const SizedBox(height: 16),
               Expanded(
                 child: StreamBuilder<List<Channel>>(
-                  stream: fetchFollowings().asBroadcastStream(),
+                  stream: widget.controller.channelStream,
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       if (snapshot.data!.isEmpty) {
@@ -67,4 +83,7 @@ class _FollowingChannelsScreenState extends State<FollowingChannelsScreen> {
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

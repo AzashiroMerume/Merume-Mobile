@@ -32,11 +32,11 @@ void main() async {
   final userInfoProvider = UserInfoProvider();
   if (userInfo != null) {
     userInfoProvider.setUserInfo(UserInfo(
-      id: userInfo.id,
-      nickname: userInfo.nickname,
-      username: userInfo.username,
-      email: userInfo.email,
-    ));
+        id: userInfo.id,
+        nickname: userInfo.nickname,
+        username: userInfo.username,
+        email: userInfo.email,
+        preferences: userInfo.preferences));
   } else {
     userInfoProvider.setUserInfo(null);
   }

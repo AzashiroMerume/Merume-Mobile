@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:merume_mobile/colors.dart';
+import 'package:merume_mobile/screens/main/tab_bar_screens/followings_channels_tab_bar_screen/followings_channels_controller.dart';
 import 'package:merume_mobile/screens/main/tab_bar_screens/followings_channels_tab_bar_screen/tabs/following_channels_screen.dart';
 import 'package:merume_mobile/screens/main/tab_bar_screens/followings_channels_tab_bar_screen/tabs/recommendation_screen.dart';
 import 'package:merume_mobile/user_info.dart';
@@ -13,10 +14,24 @@ class FollowingTabScreen extends StatefulWidget {
 }
 
 class _FollowingTabScreenState extends State<FollowingTabScreen> {
+  late FollowingChannelsController _followingChannelsController;
+
+  @override
+  void initState() {
+    super.initState();
+    _followingChannelsController = FollowingChannelsController();
+  }
+
+  @override
+  void dispose() {
+    _followingChannelsController.dispose(); // Dispose of the controller
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final userInfo =
-        Provider.of<UserInfoProvider>(context, listen: false).userInfo;
+        Provider.of<UserInfoProvider>(context, listen: true).userInfo;
 
     return DefaultTabController(
       length: 2,
@@ -54,7 +69,7 @@ class _FollowingTabScreenState extends State<FollowingTabScreen> {
   }
 
   Widget buildFollowingsTab() {
-    return const FollowingChannelsScreen();
+    return FollowingChannelsScreen(controller: _followingChannelsController);
   }
 
   Widget buildRecommendationsTab(List<String>? preferences) {

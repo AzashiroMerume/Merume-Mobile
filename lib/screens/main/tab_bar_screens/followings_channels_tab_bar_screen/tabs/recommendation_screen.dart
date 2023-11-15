@@ -53,15 +53,17 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
   }
 
   Future<void> initRecommendations() async {
-    _scrollController
-        .removeListener(_scrollListener); // Remove the previous listener
-    final response = await fetchRecommendations(pageNumber);
+    if (mounted) {
+      _scrollController.removeListener(_scrollListener);
+      final response = await fetchRecommendations(pageNumber);
 
-    setState(() {
-      recommendations = response;
-    });
-
-    _scrollController.addListener(_scrollListener); // Add the new listener
+      if (mounted) {
+        setState(() {
+          recommendations = response;
+        });
+        _scrollController.addListener(_scrollListener);
+      }
+    }
   }
 
   Future<void> loadMoreRecommendations() async {
