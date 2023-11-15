@@ -24,6 +24,8 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
   List<Channel>? recommendations;
   int pageNumber = 0;
 
+  bool isLoading = false;
+
   @override
   void initState() {
     super.initState();
@@ -54,14 +56,28 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
 
   Future<void> initRecommendations() async {
     if (mounted) {
-      _scrollController.removeListener(_scrollListener);
-      final response = await fetchRecommendations(pageNumber);
+      setState(() {
+        isLoading = true; // Set loading state
+      });
 
-      if (mounted) {
+      _scrollController.removeListener(_scrollListener);
+      try {
+        final response = await fetchRecommendations(pageNumber);
+
+        if (mounted) {
+          setState(() {
+            recommendations = response;
+            isLoading = false; // Set loading state to false when done
+          });
+          _scrollController.addListener(_scrollListener);
+        }
+      } catch (e) {
+        // Handle errors here
         setState(() {
-          recommendations = response;
+          isLoading = false; // Set loading state to false on error
         });
-        _scrollController.addListener(_scrollListener);
+        print('Error fetching recommendations: $e');
+        // You can show an error message to the user here
       }
     }
   }
@@ -201,16 +217,18 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
                   color: Colors.white,
                   backgroundColor: AppColors.royalPurple,
                   child: recommendations == null || recommendations!.isEmpty
-                      ? const Center(
-                          child: Text(
-                            "No content yet",
-                            style: TextStyle(
-                              fontFamily: 'WorkSans',
-                              fontSize: 18,
-                              fontWeight: FontWeight.normal,
-                              color: AppColors.mellowLemon,
-                            ),
-                          ),
+                      ? Center(
+                          child: isLoading
+                              ? const CircularProgressIndicator()
+                              : const Text(
+                                  "No content yet",
+                                  style: TextStyle(
+                                    fontFamily: 'WorkSans',
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.normal,
+                                    color: AppColors.mellowLemon,
+                                  ),
+                                ),
                         )
                       : ListView.builder(
                           controller: _scrollController,
