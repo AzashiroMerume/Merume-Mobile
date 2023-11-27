@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:merume_mobile/colors.dart';
+import 'package:merume_mobile/exceptions.dart';
 import 'package:merume_mobile/models/channel_model.dart';
 import 'package:merume_mobile/api/recommendations_api/recommendations_api.dart';
 import 'package:merume_mobile/screens/main/channel_screens/channel_in_list_widget.dart';
@@ -24,6 +26,7 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
   List<Channel>? recommendations;
   int pageNumber = 0;
 
+  String errorMessage = '';
   bool isLoading = false;
 
   @override
@@ -57,7 +60,7 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
   Future<void> initRecommendations() async {
     if (mounted) {
       setState(() {
-        isLoading = true; // Set loading state
+        isLoading = true;
       });
 
       _scrollController.removeListener(_scrollListener);
@@ -67,17 +70,24 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
         if (mounted) {
           setState(() {
             recommendations = response;
-            isLoading = false; // Set loading state to false when done
+            isLoading = false;
           });
           _scrollController.addListener(_scrollListener);
         }
       } catch (e) {
-        // Handle errors here
         setState(() {
-          isLoading = false; // Set loading state to false on error
+          isLoading = false;
+          if (e is AuthenticationException) {
+            errorMessage = 'Token authentication error. Please try to relogin.';
+          } else if (e is NetworkException) {
+            errorMessage = 'Network error occurred.';
+          } else if (e is TimeoutException) {
+            errorMessage = 'Slow internet connection.';
+          } else if (e is HttpException) {
+            errorMessage =
+                'There was an error on the server side. Please try again later.';
+          }
         });
-        print('Error fetching recommendations: $e');
-        // You can show an error message to the user here
       }
     }
   }
@@ -220,13 +230,18 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
                       ? Center(
                           child: isLoading
                               ? const CircularProgressIndicator()
-                              : const Text(
-                                  "No content yet",
+                              : Text(
+                                  errorMessage.isNotEmpty
+                                      ? errorMessage
+                                      : "No content yet",
                                   style: TextStyle(
                                     fontFamily: 'WorkSans',
                                     fontSize: 18,
                                     fontWeight: FontWeight.normal,
-                                    color: AppColors.mellowLemon,
+                                    color: errorMessage.isNotEmpty
+                                        ? Colors
+                                            .red // Show error message in red
+                                        : AppColors.mellowLemon,
                                   ),
                                 ),
                         )

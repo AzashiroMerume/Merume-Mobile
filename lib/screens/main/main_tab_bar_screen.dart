@@ -24,7 +24,9 @@ class _MainTabBarScreenState extends State<MainTabBarScreen> {
 
   Icon customIcon = const Icon(Icons.search);
   Icon addIcon = const Icon(Icons.add);
-  Widget customSearchBar = const Text('Merume');
+  Widget customSearchBar = const Text(
+    'Merume',
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +34,7 @@ class _MainTabBarScreenState extends State<MainTabBarScreen> {
       appBar: _currentIndex == 1
           ? null
           : AppBar(
+              foregroundColor: Colors.white,
               title: Container(
                   padding: const EdgeInsets.only(left: 20.0),
                   child: customSearchBar),
@@ -68,7 +71,9 @@ class _MainTabBarScreenState extends State<MainTabBarScreen> {
                           );
                         } else {
                           customIcon = const Icon(Icons.search);
-                          customSearchBar = const Text('Merume');
+                          customSearchBar = const Text(
+                            'Merume',
+                          );
                         }
                       });
                     },
