@@ -128,7 +128,7 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
           child: ElevatedButton(
             onPressed: () => _onFilterButtonPressed(i),
             style: ElevatedButton.styleFrom(
-              fixedSize: const Size(100, 35),
+              fixedSize: const Size(110, 35),
               backgroundColor:
                   _isSelected[i] ? AppColors.mellowLemon : Colors.black,
               shape: RoundedRectangleBorder(
@@ -159,7 +159,7 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.only(
-              top: 20.0, bottom: 0.0, right: 30.0, left: 30.0),
+              top: 20.0, bottom: 0.0, right: 20.0, left: 20.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,

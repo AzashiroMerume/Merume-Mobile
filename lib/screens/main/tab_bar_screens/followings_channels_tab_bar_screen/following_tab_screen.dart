@@ -45,6 +45,11 @@ class _FollowingTabScreenState extends State<FollowingTabScreen> {
                 ),
                 child: const TabBar(
                   indicatorColor: AppColors.lavenderHaze,
+                  labelStyle: TextStyle(
+                    fontSize: 14,
+                    fontFamily: 'Poppins',
+                    fontWeight: FontWeight.w500,
+                  ),
                   tabs: [
                     Tab(text: 'Followings'),
                     Tab(text: 'Recommendations'),
