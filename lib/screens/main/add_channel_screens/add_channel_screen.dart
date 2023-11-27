@@ -134,40 +134,6 @@ class _AddChallengeScreenState extends State<AddChallengeScreen> {
                   ),
                 ),
                 const SizedBox(height: 32.0),
-                // if (errorMessage.isNotEmpty)
-                //   Container(
-                //     padding: const EdgeInsets.symmetric(
-                //       vertical: 12.0,
-                //       horizontal: 16.0,
-                //     ),
-                //     decoration: BoxDecoration(
-                //       color: Colors.red.withOpacity(0.8),
-                //       borderRadius: BorderRadius.circular(8.0),
-                //     ),
-                //     child: Row(
-                //       children: [
-                //         const Icon(
-                //           Icons.error_outline,
-                //           color: Colors.white,
-                //           size: 20.0,
-                //         ),
-                //         const SizedBox(width: 12.0),
-                //         Expanded(
-                //           child: Text(
-                //             'Error: $errorMessage',
-                //             style: const TextStyle(
-                //               fontFamily: 'WorkSans',
-                //               fontSize: 14.0,
-                //               fontWeight: FontWeight.bold,
-                //               color: Colors.white,
-                //               height: 1.5,
-                //             ),
-                //           ),
-                //         ),
-                //       ],
-                //     ),
-                //   ),
-                // if (errorMessage.isNotEmpty) const SizedBox(height: 16.0),
                 PfpLoadImageWidget(
                   onImageSelected: handleImageUpload,
                 ),

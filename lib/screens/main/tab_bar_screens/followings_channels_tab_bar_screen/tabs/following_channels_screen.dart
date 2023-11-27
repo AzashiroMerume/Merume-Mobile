@@ -17,15 +17,18 @@ class FollowingChannelsScreen extends StatefulWidget {
 
 class _FollowingChannelsScreenState extends State<FollowingChannelsScreen>
     with AutomaticKeepAliveClientMixin {
+  late FollowingChannelsController _controller;
+
   @override
   void initState() {
     super.initState();
-    widget.controller.fetchFollowingsForController();
+    _controller = widget.controller;
+    _controller.initController();
   }
 
   @override
   void dispose() {
-    widget.controller.dispose();
+    _controller.dispose();
     super.dispose();
   }
 

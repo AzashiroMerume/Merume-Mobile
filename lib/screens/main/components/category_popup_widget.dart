@@ -29,52 +29,72 @@ class CategoryPopupState extends State<CategoryPopup> {
     return Dialog(
       backgroundColor: Colors.black,
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Container(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: widget.categories.map((category) {
-                bool isSelected = _updatedCategories.contains(category);
-                return ListTile(
-                  title: Text(
-                    category,
-                    style: TextStyle(
-                      fontFamily: 'WorkSans',
-                      fontSize: 15,
-                      color: isSelected ? AppColors.mellowLemon : Colors.white,
-                    ),
-                  ),
-                  leading: isSelected
-                      ? const Icon(
-                          Icons.check_box,
-                          color: AppColors.mellowLemon,
-                        )
-                      : const Icon(
-                          Icons.check_box_outline_blank,
-                          color: AppColors.mellowLemon,
+          Expanded(
+            child: SingleChildScrollView(
+              child: Container(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: widget.categories.map((category) {
+                    bool isSelected = _updatedCategories.contains(category);
+                    return ListTile(
+                      title: Text(
+                        category,
+                        style: TextStyle(
+                          fontFamily: 'WorkSans',
+                          fontSize: 15,
+                          color:
+                              isSelected ? AppColors.mellowLemon : Colors.white,
                         ),
-                  onTap: () {
-                    setState(() {
-                      if (isSelected) {
-                        _updatedCategories.remove(category);
-                      } else {
-                        _updatedCategories.add(category);
-                      }
-                    });
-                  },
-                );
-              }).toList(),
+                      ),
+                      leading: isSelected
+                          ? const Icon(
+                              Icons.check_box,
+                              color: AppColors.mellowLemon,
+                            )
+                          : const Icon(
+                              Icons.check_box_outline_blank,
+                              color: AppColors.mellowLemon,
+                            ),
+                      onTap: () {
+                        setState(() {
+                          if (isSelected) {
+                            _updatedCategories.remove(category);
+                          } else {
+                            _updatedCategories.add(category);
+                          }
+                        });
+                      },
+                    );
+                  }).toList(),
+                ),
+              ),
             ),
           ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.of(context).pop(_updatedCategories);
-            },
-            child: const Text(
-              "Confirm",
-              style: TextStyle(
-                color: AppColors.mellowLemon,
+          Container(
+            padding: const EdgeInsets.all(16.0),
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop(_updatedCategories);
+              },
+              style: ElevatedButton.styleFrom(
+                fixedSize: const Size(178, 38),
+                backgroundColor: AppColors.royalPurple,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(50),
+                  side: const BorderSide(
+                    color: AppColors.royalPurple, // When pressed
+                  ),
+                ),
+              ),
+              child: const Text(
+                "Confirm",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontFamily: 'WorkSans',
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
           ),
