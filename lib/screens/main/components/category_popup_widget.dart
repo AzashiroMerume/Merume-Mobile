@@ -6,10 +6,10 @@ class CategoryPopup extends StatefulWidget {
   final List<String> selectedCategories;
 
   const CategoryPopup({
-    Key? key,
+    super.key,
     required this.categories,
     required this.selectedCategories,
-  }) : super(key: key);
+  });
 
   @override
   CategoryPopupState createState() => CategoryPopupState();
@@ -20,6 +20,7 @@ class CategoryPopupState extends State<CategoryPopup> {
 
   @override
   void initState() {
+    widget.categories.sort();
     _updatedCategories = List.from(widget.selectedCategories);
     super.initState();
   }

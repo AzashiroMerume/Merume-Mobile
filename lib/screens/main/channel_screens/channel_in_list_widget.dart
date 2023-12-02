@@ -6,8 +6,7 @@ import 'package:merume_mobile/screens/main/channel_screens/channel_screen.dart';
 class ChannelInListWidget extends StatelessWidget {
   final Channel channel;
 
-  const ChannelInListWidget({Key? key, required this.channel})
-      : super(key: key);
+  const ChannelInListWidget({super.key, required this.channel});
 
   @override
   Widget build(BuildContext context) {

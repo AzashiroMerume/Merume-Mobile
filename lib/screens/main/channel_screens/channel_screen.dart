@@ -27,7 +27,7 @@ class PostSent {
 class ChannelScreen extends StatefulWidget {
   final Channel channel;
 
-  const ChannelScreen({Key? key, required this.channel}) : super(key: key);
+  const ChannelScreen({super.key, required this.channel});
 
   @override
   State<ChannelScreen> createState() => _ChannelScreenState();
@@ -41,7 +41,6 @@ class _ChannelScreenState extends State<ChannelScreen> {
   TextEditingController textEditingController = TextEditingController();
 
   List<PostSent> posts = [];
-  // Key keyToRebuild = UniqueKey();
 
   String postBody = '';
   List<String> postImages = [];
@@ -141,7 +140,12 @@ class _ChannelScreenState extends State<ChannelScreen> {
             child: AppBar(
               title: Container(
                 padding: const EdgeInsets.only(left: 20.0),
-                child: Text(widget.channel.name),
+                child: Text(
+                  widget.channel.name,
+                  style: const TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
               ),
               automaticallyImplyLeading: false,
             ),
