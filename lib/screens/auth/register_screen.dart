@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:merume_mobile/api/auth_api/firebase_auth.dart';
 import 'package:merume_mobile/colors.dart';
 
 import 'package:merume_mobile/api/auth_api/register.dart';
@@ -234,6 +235,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             try {
                               final userInfo = await register(
                                   username, nickname, email, password);
+
+                              await registerInFirebase(
+                                  userInfo.email, password);
 
                               final user = UserInfo(
                                 id: userInfo.id,

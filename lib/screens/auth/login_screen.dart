@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:merume_mobile/api/auth_api/firebase_auth.dart';
 import 'package:merume_mobile/colors.dart';
 
 import 'dart:async';
@@ -211,6 +212,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             try {
                               final userInfo = await login(
                                   identifier, password, useEmailLogin);
+
+                              await loginInFirebase(userInfo.email, password);
 
                               final user = UserInfo(
                                 id: userInfo.id,

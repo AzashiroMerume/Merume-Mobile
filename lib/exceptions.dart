@@ -10,6 +10,12 @@ class AuthenticationException implements Exception {
   AuthenticationException(this.message);
 }
 
+class FirebaseAuthenticationException implements Exception {
+  final String message;
+
+  FirebaseAuthenticationException(this.message);
+}
+
 class PreferencesUnsetException implements Exception {
   final String message;
 
