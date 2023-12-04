@@ -30,8 +30,7 @@ class _FollowingTabScreenState extends State<FollowingTabScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final userInfo =
-        Provider.of<UserInfoProvider>(context, listen: true).userInfo;
+    final userInfo = Provider.of<UserProvider>(context, listen: true).userInfo;
 
     return DefaultTabController(
       length: 2,

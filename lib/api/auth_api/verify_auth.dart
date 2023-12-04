@@ -3,12 +3,12 @@ import 'dart:convert';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:merume_mobile/models/user_info_model.dart';
+import 'package:merume_mobile/models/user_model.dart';
 import '../../exceptions.dart';
 
 const storage = FlutterSecureStorage();
 
-Future<UserInfo?> verifyAuth() async {
+Future<User?> verifyAuth() async {
   final authToken = await storage.read(key: 'authToken');
 
   if (authToken == null) {
@@ -31,7 +31,7 @@ Future<UserInfo?> verifyAuth() async {
     switch (response.statusCode) {
       case 200:
         final responseData = json.decode(response.body);
-        final userInfo = UserInfo.fromJson(responseData['user_info']);
+        final userInfo = User.fromJson(responseData['user_info']);
         return userInfo;
       case 401:
         await storage.delete(key: 'authToken');

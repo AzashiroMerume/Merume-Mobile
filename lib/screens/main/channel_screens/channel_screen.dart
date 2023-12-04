@@ -117,8 +117,7 @@ class _ChannelScreenState extends State<ChannelScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final userInfo =
-        Provider.of<UserInfoProvider>(context, listen: false).userInfo;
+    final userInfo = Provider.of<UserProvider>(context, listen: false).userInfo;
 
     // Check if the user is the author of the channel
     isAuthor = userInfo != null && userInfo.id == widget.channel.author.id;

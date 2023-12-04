@@ -15,8 +15,7 @@ class _AccountScreenState extends State<AccountScreen> {
   @override
   Widget build(BuildContext context) {
     NavigatorState state = Navigator.of(context);
-    final userInfoProvider =
-        Provider.of<UserInfoProvider>(context, listen: false);
+    final userInfoProvider = Provider.of<UserProvider>(context, listen: false);
 
     return Scaffold(
       body: SafeArea(
@@ -26,7 +25,7 @@ class _AccountScreenState extends State<AccountScreen> {
               final loggedOut = await logout();
 
               if (loggedOut) {
-                userInfoProvider.setUserInfo(null);
+                userInfoProvider.setUser(null);
                 // Navigate to the login screen
                 state.pushNamedAndRemoveUntil('/login', (route) => false);
               }

@@ -34,8 +34,7 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
   @override
   Widget build(BuildContext context) {
     NavigatorState state = Navigator.of(context);
-    final userInfoProvider =
-        Provider.of<UserInfoProvider>(context, listen: false);
+    final userInfoProvider = Provider.of<UserProvider>(context, listen: false);
     final userInfo = userInfoProvider.userInfo;
 
     return PopScope(
@@ -181,7 +180,7 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
                                           await savePreferences(selected);
 
                                           //update preferences in Provider
-                                          userInfoProvider.setUserInfo(userInfo!
+                                          userInfoProvider.setUser(userInfo!
                                               .updatePreferences(
                                                   preferences: selected));
 

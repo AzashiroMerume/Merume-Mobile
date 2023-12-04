@@ -3,7 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:merume_mobile/colors.dart';
 import 'package:merume_mobile/firebase_options.dart';
-import 'package:merume_mobile/models/user_info_model.dart';
+import 'package:merume_mobile/models/user_model.dart';
 import 'package:merume_mobile/screens/auth/login_screen.dart';
 import 'package:merume_mobile/screens/auth/register_screen.dart';
 import 'package:merume_mobile/screens/main/main_tab_bar_screen.dart';
@@ -15,7 +15,7 @@ import 'package:provider/provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  UserInfo? userInfo;
+  User? userInfo;
   bool isAuthenticated = false;
   String errorMessage = '';
 
@@ -34,16 +34,16 @@ void main() async {
     errorMessage = 'There was an error on the server side';
   }
 
-  final userInfoProvider = UserInfoProvider();
+  final userInfoProvider = UserProvider();
   if (userInfo != null) {
-    userInfoProvider.setUserInfo(UserInfo(
+    userInfoProvider.setUser(User(
         id: userInfo.id,
         nickname: userInfo.nickname,
         username: userInfo.username,
         email: userInfo.email,
         preferences: userInfo.preferences));
   } else {
-    userInfoProvider.setUserInfo(null);
+    userInfoProvider.setUser(null);
   }
 
   runApp(

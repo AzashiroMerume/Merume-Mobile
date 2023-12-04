@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:merume_mobile/models/user_info_model.dart';
+import 'package:merume_mobile/models/user_model.dart';
 
 //class for provider
-class UserInfoProvider extends ChangeNotifier {
-  UserInfo? _userInfo;
+class UserProvider extends ChangeNotifier {
+  User? _userInfo;
 
-  UserInfo? get userInfo => _userInfo;
+  User? get userInfo => _userInfo;
 
-  void setUserInfo(UserInfo? user) {
+  void setUser(User? user) {
     _userInfo = user;
     notifyListeners();
   }

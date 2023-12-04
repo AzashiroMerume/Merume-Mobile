@@ -1,13 +1,12 @@
 import 'dart:async';
-
 import 'package:email_validator/email_validator.dart';
+import 'package:firebase_auth/firebase_auth.dart' as fire_base;
 import 'package:flutter/material.dart';
 import 'package:merume_mobile/api/auth_api/firebase_auth.dart';
 import 'package:merume_mobile/colors.dart';
-
 import 'package:merume_mobile/api/auth_api/register.dart';
 import 'package:merume_mobile/exceptions.dart';
-import 'package:merume_mobile/models/user_info_model.dart';
+import 'package:merume_mobile/models/user_model.dart';
 import 'package:merume_mobile/user_info.dart';
 import 'package:provider/provider.dart';
 
@@ -86,8 +85,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     NavigatorState state = Navigator.of(context);
-    final userInfoProvider =
-        Provider.of<UserInfoProvider>(context, listen: false);
+    final userInfoProvider = Provider.of<UserProvider>(context, listen: false);
 
     return Scaffold(
       body: SafeArea(
@@ -239,14 +237,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               await registerInFirebase(
                                   userInfo.email, password);
 
-                              final user = UserInfo(
+                              final user = User(
                                 id: userInfo.id,
                                 nickname: userInfo.nickname,
                                 username: userInfo.username,
                                 email: userInfo.email,
                               );
                               ;
-                              userInfoProvider.setUserInfo(user);
+                              userInfoProvider.setUser(user);
 
                               state.pushNamedAndRemoveUntil(
                                 '/main',
@@ -256,6 +254,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               setState(() {
                                 if (e is RegistrationException) {
                                   errorMessage = e.message;
+                                } else if (e
+                                    is fire_base.FirebaseAuthException) {
+                                  if (e.code == 'email-already-in-use') {
+                                    errorMessage =
+                                        'The email address is already in use. Please use a different email or try logging in.';
+                                  } else {
+                                    errorMessage =
+                                        'An unexpected error occurred. Please try again later.';
+                                  }
                                 } else if (e is UnprocessableEntityException ||
                                     e is ContentTooLargeException) {
                                   errorMessage =

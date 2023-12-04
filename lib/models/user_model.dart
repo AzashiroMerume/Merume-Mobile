@@ -1,11 +1,11 @@
-class UserInfo {
+class User {
   final String id;
   final String nickname;
   final String username;
   final String email;
   final List<String>? preferences;
 
-  UserInfo({
+  User({
     required this.id,
     required this.nickname,
     required this.username,
@@ -13,8 +13,8 @@ class UserInfo {
     this.preferences,
   });
 
-  factory UserInfo.fromJson(Map<String, dynamic> json) {
-    return UserInfo(
+  factory User.fromJson(Map<String, dynamic> json) {
+    return User(
       id: json['id']['\$oid'],
       nickname: json['nickname'],
       username: json['username'],
@@ -25,8 +25,8 @@ class UserInfo {
     );
   }
 
-  UserInfo updatePreferences({List<String>? preferences}) {
-    return UserInfo(
+  User updatePreferences({List<String>? preferences}) {
+    return User(
       id: id,
       nickname: nickname,
       username: username,

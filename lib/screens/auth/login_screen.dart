@@ -1,17 +1,17 @@
+import 'package:firebase_auth/firebase_auth.dart' as fire_base;
 import 'package:flutter/material.dart';
 import 'package:merume_mobile/api/auth_api/firebase_auth.dart';
 import 'package:merume_mobile/colors.dart';
-
 import 'dart:async';
 import 'package:email_validator/email_validator.dart';
 import 'package:merume_mobile/api/auth_api/login.dart';
 import 'package:merume_mobile/exceptions.dart';
-import 'package:merume_mobile/models/user_info_model.dart';
+import 'package:merume_mobile/models/user_model.dart';
 import 'package:merume_mobile/user_info.dart';
 import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+  const LoginScreen({super.key});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -71,8 +71,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     NavigatorState state = Navigator.of(context);
-    final userInfoProvider =
-        Provider.of<UserInfoProvider>(context, listen: false);
+    final userInfoProvider = Provider.of<UserProvider>(context, listen: false);
 
     return Scaffold(
       body: SafeArea(
@@ -215,13 +214,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
                               await loginInFirebase(userInfo.email, password);
 
-                              final user = UserInfo(
+                              final user = User(
                                 id: userInfo.id,
                                 nickname: userInfo.nickname,
                                 username: userInfo.username,
                                 email: userInfo.email,
                               );
-                              userInfoProvider.setUserInfo(user);
+                              userInfoProvider.setUser(user);
 
                               state.pushNamedAndRemoveUntil(
                                 '/main',
@@ -236,6 +235,19 @@ class _LoginScreenState extends State<LoginScreen> {
                                   } else {
                                     errorMessage =
                                         'Nickname or password is incorrect, please try a different nickname or sign up for a new account.';
+                                  }
+                                } else if (e
+                                    is fire_base.FirebaseAuthException) {
+                                  if (e.code == 'user-not-found' ||
+                                      e.code == 'wrong-password') {
+                                    errorMessage =
+                                        'Email or password is incorrect, please try a different email or sign up for a new account.';
+                                  } else if (e.code == 'invalid-email') {
+                                    errorMessage =
+                                        'Invalid email format. Please provide a valid email address.';
+                                  } else {
+                                    errorMessage =
+                                        'An unexpected error occurred. Please try again later.';
                                   }
                                 } else if (e is NotFoundException) {
                                   if (useEmailLogin) {
