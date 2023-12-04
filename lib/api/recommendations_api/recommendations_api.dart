@@ -1,10 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-
 import '../../exceptions.dart';
 import '../../models/channel_model.dart';
 
@@ -20,6 +19,11 @@ Future<List<Channel>> fetchRecommendations(int page, {int limit = 10}) async {
   }
 
   try {
+    final connectivityResult = await Connectivity().checkConnectivity();
+    if (connectivityResult == ConnectivityResult.none) {
+      throw NetworkException('No internet connection');
+    }
+
     final response = await http.get(
       Uri.parse('$baseUrl?page=$page&limit=$limit'),
       headers: headers,

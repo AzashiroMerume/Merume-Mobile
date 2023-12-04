@@ -12,14 +12,14 @@ import 'package:merume_mobile/screens/components/pfp_load_image_widget.dart';
 import 'package:merume_mobile/screens/main/components/category_popup_widget.dart';
 import 'package:merume_mobile/screens/components/categories.dart';
 
-class AddChallengeScreen extends StatefulWidget {
-  const AddChallengeScreen({super.key});
+class AddChannelScreenSecond extends StatefulWidget {
+  const AddChannelScreenSecond({super.key});
 
   @override
-  State<AddChallengeScreen> createState() => _AddChallengeScreenState();
+  State<AddChannelScreenSecond> createState() => _AddChannelScreenSecondState();
 }
 
-class _AddChallengeScreenState extends State<AddChallengeScreen> {
+class _AddChannelScreenSecondState extends State<AddChannelScreenSecond> {
   final TextEditingController _challengeNameController =
       TextEditingController();
   final TextEditingController _challengeDescriptionController =

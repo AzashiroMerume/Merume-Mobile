@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-
 import '../../exceptions.dart';
 
 const storage = FlutterSecureStorage();
@@ -18,6 +18,11 @@ Future<void> newChannel(
   final authToken = await storage.read(key: 'authToken');
 
   try {
+    final connectivityResult = await Connectivity().checkConnectivity();
+    if (connectivityResult == ConnectivityResult.none) {
+      throw NetworkException('No internet connection');
+    }
+
     final response = await http.post(
       Uri.parse('http://localhost:8081/users/channels/new'),
       body: json.encode({

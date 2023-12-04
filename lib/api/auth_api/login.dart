@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:merume_mobile/models/user_model.dart';
@@ -10,6 +11,11 @@ const storage = FlutterSecureStorage();
 
 Future<User> login(String identifier, String password, bool byEmail) async {
   try {
+    final connectivityResult = await Connectivity().checkConnectivity();
+    if (connectivityResult == ConnectivityResult.none) {
+      throw NetworkException('No internet connection');
+    }
+
     final response = await http.post(
       Uri.parse('http://localhost:8081/auth/login'),
       body: json.encode({
