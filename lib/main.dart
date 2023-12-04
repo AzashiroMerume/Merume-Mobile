@@ -24,7 +24,7 @@ void main() async {
   );
 
   await FirebaseAppCheck.instance.activate(
-    androidProvider: AndroidProvider.playIntegrity,
+    androidProvider: AndroidProvider.debug,
   );
 
   try {
