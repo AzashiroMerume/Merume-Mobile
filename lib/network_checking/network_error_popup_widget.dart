@@ -13,16 +13,16 @@ class NetworkErrorPopupWidget extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           SizedBox(
-            width: 200,
+            width: 150,
             child: Image.asset('assets/images/no_connection.png'),
           ),
-          const SizedBox(height: 32),
+          const SizedBox(height: 16),
           const Text(
             "Whoops!",
             style: TextStyle(
-                fontSize: 16,
+                fontSize: 20,
                 fontFamily: "WorkSans",
-                fontWeight: FontWeight.w700),
+                fontWeight: FontWeight.w500),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 16),
