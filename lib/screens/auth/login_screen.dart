@@ -6,7 +6,6 @@ import 'dart:async';
 import 'package:email_validator/email_validator.dart';
 import 'package:merume_mobile/api/auth_api/login.dart';
 import 'package:merume_mobile/exceptions.dart';
-import 'package:merume_mobile/models/user_model.dart';
 import 'package:merume_mobile/user_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -209,17 +208,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
                           if (errors.isEmpty) {
                             try {
-                              final userInfo = await login(
+                              final user = await login(
                                   identifier, password, useEmailLogin);
 
-                              await loginInFirebase(userInfo.email, password);
+                              await loginInFirebase(user.email, password);
 
-                              final user = User(
-                                id: userInfo.id,
-                                nickname: userInfo.nickname,
-                                username: userInfo.username,
-                                email: userInfo.email,
-                              );
                               userInfoProvider.setUser(user);
 
                               state.pushNamedAndRemoveUntil(

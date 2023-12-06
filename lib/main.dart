@@ -16,7 +16,7 @@ import 'package:provider/provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  User? userInfo;
+  User? user;
   bool isAuthenticated = false;
   String errorMessage = '';
 
@@ -29,27 +29,22 @@ void main() async {
   );
 
   try {
-    userInfo = await verifyAuth();
-    isAuthenticated = userInfo != null;
+    user = await verifyAuth();
+    isAuthenticated = user != null;
   } catch (e) {
     errorMessage = 'There was an error on the server side';
   }
 
-  final userInfoProvider = UserProvider();
-  if (userInfo != null) {
-    userInfoProvider.setUser(User(
-        id: userInfo.id,
-        nickname: userInfo.nickname,
-        username: userInfo.username,
-        email: userInfo.email,
-        preferences: userInfo.preferences));
+  final userProvider = UserProvider();
+  if (user != null) {
+    userProvider.setUser(user);
   } else {
-    userInfoProvider.setUser(null);
+    userProvider.setUser(null);
   }
 
   runApp(
     ChangeNotifierProvider.value(
-      value: userInfoProvider,
+      value: userProvider,
       child: MyApp(
         isAuthenticated: isAuthenticated,
         errorMessage: errorMessage,

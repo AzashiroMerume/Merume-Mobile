@@ -6,7 +6,6 @@ import 'package:merume_mobile/api/auth_api/firebase_auth.dart';
 import 'package:merume_mobile/colors.dart';
 import 'package:merume_mobile/api/auth_api/register.dart';
 import 'package:merume_mobile/exceptions.dart';
-import 'package:merume_mobile/models/user_model.dart';
 import 'package:merume_mobile/user_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -231,19 +230,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                           if (errors.isEmpty) {
                             try {
-                              final userInfo = await register(
+                              final user = await register(
                                   username, nickname, email, password);
 
-                              await registerInFirebase(
-                                  userInfo.email, password);
+                              await registerInFirebase(user.email, password);
 
-                              final user = User(
-                                id: userInfo.id,
-                                nickname: userInfo.nickname,
-                                username: userInfo.username,
-                                email: userInfo.email,
-                              );
-                              ;
                               userInfoProvider.setUser(user);
 
                               state.pushNamedAndRemoveUntil(
