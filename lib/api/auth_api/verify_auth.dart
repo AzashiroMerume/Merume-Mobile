@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:merume_mobile/api_config.dart';
 import 'package:merume_mobile/models/user_model.dart';
 import '../../exceptions.dart';
 
@@ -22,7 +23,7 @@ Future<User?> verifyAuth() async {
 
   try {
     final response = await http.get(
-      Uri.parse('http://localhost:8081/auth'),
+      Uri.parse('${ConfigAPI.baseURL}auth'),
       headers: {
         'Authorization': authToken,
       },

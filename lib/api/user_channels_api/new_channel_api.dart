@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:merume_mobile/api_config.dart';
 import '../../exceptions.dart';
 
 const storage = FlutterSecureStorage();
@@ -24,7 +25,7 @@ Future<void> newChannel(
     }
 
     final response = await http.post(
-      Uri.parse('http://localhost:8081/users/channels/new'),
+      Uri.parse('${ConfigAPI.baseURL}users/channels/new'),
       body: json.encode({
         'name': name,
         'goal': int.tryParse(challangeGoal) ?? 0,

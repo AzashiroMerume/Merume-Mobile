@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:merume_mobile/api_config.dart';
 import '../../exceptions.dart';
 
 const storage = FlutterSecureStorage();
@@ -22,7 +23,7 @@ Future<bool> savePreferences(List<String> preferences) async {
     }
 
     final response = await http.post(
-      Uri.parse('http://localhost:8081/preferences'),
+      Uri.parse('${ConfigAPI.baseURL}preferences'),
       body: json.encode({'preferences': preferences}),
       headers: {
         'Content-Type': 'application/json',

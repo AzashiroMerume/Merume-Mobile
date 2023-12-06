@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
-
+import 'package:merume_mobile/api_config.dart';
 import 'package:merume_mobile/models/post_model.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -8,7 +8,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 const storage = FlutterSecureStorage();
 
 Stream<List<Post>> fetchChannelPosts(String channelId) async* {
-  String channelUrl = "ws://localhost:8081/channels/$channelId/content";
+  String channelUrl = '${ConfigAPI.wsURL}channels/$channelId/content';
   final authToken = await storage.read(key: 'authToken');
   final headers = {'Authorization': '$authToken'};
 

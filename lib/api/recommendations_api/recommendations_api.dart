@@ -4,13 +4,14 @@ import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:merume_mobile/api_config.dart';
 import '../../exceptions.dart';
 import '../../models/channel_model.dart';
 
 const storage = FlutterSecureStorage();
 
 Future<List<Channel>> fetchRecommendations(int page, {int limit = 10}) async {
-  const baseUrl = 'http://localhost:8081/users/recommendations';
+  const baseUrl = '${ConfigAPI.baseURL}users/recommendations';
   final authToken = await storage.read(key: 'authToken');
   final headers = {'Authorization': '$authToken'};
 

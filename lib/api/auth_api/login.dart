@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:merume_mobile/api_config.dart';
 import 'package:merume_mobile/models/user_model.dart';
 import '../../exceptions.dart';
 
@@ -17,7 +18,7 @@ Future<User> login(String identifier, String password, bool byEmail) async {
     }
 
     final response = await http.post(
-      Uri.parse('http://localhost:8081/auth/login'),
+      Uri.parse('${ConfigAPI.baseURL}auth/login'),
       body: json.encode({
         'identifier': identifier,
         'password': password,
