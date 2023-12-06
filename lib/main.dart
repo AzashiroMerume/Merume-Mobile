@@ -7,7 +7,7 @@ import 'package:merume_mobile/models/user_model.dart';
 import 'package:merume_mobile/screens/auth/login_screen.dart';
 import 'package:merume_mobile/screens/auth/register_screen.dart';
 import 'package:merume_mobile/screens/main/main_tab_bar_screen.dart';
-import 'package:merume_mobile/network_checking/network_error_wrapper.dart';
+import 'package:merume_mobile/network_checking/network_wrapper.dart';
 import 'package:merume_mobile/screens/on_boarding/start_screen.dart';
 import 'package:merume_mobile/api/auth_api/verify_auth.dart';
 import 'package:merume_mobile/user_provider.dart';
@@ -80,7 +80,7 @@ class MyApp extends StatelessWidget {
         ),
         scaffoldBackgroundColor: Colors.black,
       ),
-      home: NetworkErrorWrapper(
+      home: NetworkWrapper(
         child: isAuthenticated ? const MainTabBarScreen() : const StartScreen(),
       ),
       routes: {

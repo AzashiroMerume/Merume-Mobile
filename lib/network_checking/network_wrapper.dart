@@ -3,16 +3,16 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:merume_mobile/network_checking/network_error_popup_widget.dart';
 
-class NetworkErrorWrapper extends StatefulWidget {
+class NetworkWrapper extends StatefulWidget {
   final Widget child;
 
-  const NetworkErrorWrapper({super.key, required this.child});
+  const NetworkWrapper({super.key, required this.child});
 
   @override
-  NetworkErrorWrapperState createState() => NetworkErrorWrapperState();
+  NetworkWrapperState createState() => NetworkWrapperState();
 }
 
-class NetworkErrorWrapperState extends State<NetworkErrorWrapper> {
+class NetworkWrapperState extends State<NetworkWrapper> {
   bool? isConnected;
   late Timer _connectivityTimer; // Add a Timer variable
 

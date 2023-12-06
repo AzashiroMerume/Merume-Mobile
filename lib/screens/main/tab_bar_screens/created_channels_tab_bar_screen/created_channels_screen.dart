@@ -6,7 +6,7 @@ import 'package:merume_mobile/api/user_channels_api/created_channels_api.dart/cr
 import 'package:merume_mobile/screens/main/channel_screens/channel_in_list_widget.dart';
 
 class CreatedChannelsScreen extends StatefulWidget {
-  const CreatedChannelsScreen({Key? key}) : super(key: key);
+  const CreatedChannelsScreen({super.key});
 
   @override
   State<CreatedChannelsScreen> createState() => _CreatedChannelsScreenState();
