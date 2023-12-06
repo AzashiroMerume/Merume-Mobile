@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:merume_mobile/colors.dart';
-import 'package:merume_mobile/exceptions.dart';
+import 'package:merume_mobile/other/colors.dart';
+import 'package:merume_mobile/other/exceptions.dart';
 import 'package:merume_mobile/user_provider.dart';
 import 'package:provider/provider.dart';
 import '../components/categories.dart';

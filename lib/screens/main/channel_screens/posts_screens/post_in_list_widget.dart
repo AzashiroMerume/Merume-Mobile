@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:merume_mobile/colors.dart';
+import 'package:merume_mobile/other/colors.dart';
 import 'package:merume_mobile/screens/main/components/enums.dart';
 import 'package:intl/intl.dart';
 import 'package:merume_mobile/models/post_model.dart';

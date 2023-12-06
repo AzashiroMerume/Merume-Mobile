@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:merume_mobile/colors.dart';
+import 'package:merume_mobile/other/colors.dart';
 import 'package:merume_mobile/screens/main/add_channel_screens/add_channel_screen_2.dart';
 import 'package:merume_mobile/screens/main/tab_bar_screens/account_tab_bar_screen/account_screen.dart';
 import 'package:merume_mobile/screens/main/tab_bar_screens/created_channels_tab_bar_screen/created_channels_screen.dart';

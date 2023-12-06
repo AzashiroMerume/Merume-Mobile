@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:merume_mobile/colors.dart';
+import 'package:merume_mobile/other/colors.dart';
 
 import 'package:merume_mobile/models/channel_model.dart';
 import 'package:merume_mobile/api/user_channels_api/created_channels_api.dart/created_channels_api.dart';

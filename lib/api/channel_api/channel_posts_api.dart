@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:merume_mobile/api_config.dart';
+import 'package:merume_mobile/other/api_config.dart';
 import 'package:merume_mobile/models/post_model.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:merume_mobile/colors.dart';
+import 'package:merume_mobile/other/colors.dart';
 
 class CategoryPopup extends StatefulWidget {
   final List<String> categories;

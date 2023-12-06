@@ -1,15 +1,15 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:merume_mobile/colors.dart';
+import 'package:merume_mobile/other/colors.dart';
 
 class PfpLoadImageWidget extends StatefulWidget {
   final Function(String?) onImageSelected;
 
   const PfpLoadImageWidget({
-    Key? key,
+    super.key,
     required this.onImageSelected,
-  }) : super(key: key);
+  });
 
   @override
   PfpLoadImageWidgetState createState() => PfpLoadImageWidgetState();

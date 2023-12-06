@@ -4,9 +4,9 @@ import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:merume_mobile/api_config.dart';
+import 'package:merume_mobile/other/api_config.dart';
 import 'package:merume_mobile/models/user_model.dart';
-import '../../exceptions.dart';
+import '../../other/exceptions.dart';
 
 const storage = FlutterSecureStorage();
 
