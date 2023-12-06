@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:merume_mobile/api/auth_api/logout.dart';
-import 'package:merume_mobile/user_info.dart';
+import 'package:merume_mobile/user_provider.dart';
 import 'package:provider/provider.dart';
 
 class AccountScreen extends StatefulWidget {

@@ -10,7 +10,7 @@ import 'package:merume_mobile/screens/main/main_tab_bar_screen.dart';
 import 'package:merume_mobile/network_checking/network_error_wrapper.dart';
 import 'package:merume_mobile/screens/on_boarding/start_screen.dart';
 import 'package:merume_mobile/api/auth_api/verify_auth.dart';
-import 'package:merume_mobile/user_info.dart';
+import 'package:merume_mobile/user_provider.dart';
 import 'package:provider/provider.dart';
 
 void main() async {

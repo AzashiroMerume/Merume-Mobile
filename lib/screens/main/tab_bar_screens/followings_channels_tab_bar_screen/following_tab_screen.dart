@@ -3,11 +3,11 @@ import 'package:merume_mobile/colors.dart';
 import 'package:merume_mobile/screens/main/tab_bar_screens/followings_channels_tab_bar_screen/followings_channels_controller.dart';
 import 'package:merume_mobile/screens/main/tab_bar_screens/followings_channels_tab_bar_screen/tabs/following_channels_screen.dart';
 import 'package:merume_mobile/screens/main/tab_bar_screens/followings_channels_tab_bar_screen/tabs/recommendation_screen.dart';
-import 'package:merume_mobile/user_info.dart';
+import 'package:merume_mobile/user_provider.dart';
 import 'package:provider/provider.dart';
 
 class FollowingTabScreen extends StatefulWidget {
-  const FollowingTabScreen({Key? key}) : super(key: key);
+  const FollowingTabScreen({super.key});
 
   @override
   State<FollowingTabScreen> createState() => _FollowingTabScreenState();

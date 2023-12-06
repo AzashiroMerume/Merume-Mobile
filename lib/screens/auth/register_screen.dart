@@ -7,7 +7,7 @@ import 'package:merume_mobile/colors.dart';
 import 'package:merume_mobile/api/auth_api/register.dart';
 import 'package:merume_mobile/exceptions.dart';
 import 'package:merume_mobile/models/user_model.dart';
-import 'package:merume_mobile/user_info.dart';
+import 'package:merume_mobile/user_provider.dart';
 import 'package:provider/provider.dart';
 
 class RegisterScreen extends StatefulWidget {
