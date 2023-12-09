@@ -24,7 +24,7 @@ class _FollowingTabScreenState extends State<FollowingTabScreen> {
 
   @override
   void dispose() {
-    _followingChannelsController.dispose(); // Dispose of the controller
+    _followingChannelsController.dispose();
     super.dispose();
   }
 

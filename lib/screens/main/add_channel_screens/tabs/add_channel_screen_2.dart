@@ -137,7 +137,7 @@ class _AddChannelScreenSecondState extends State<AddChannelScreenSecond> {
                     style: TextStyle(
                       fontFamily: 'Poppins',
                       fontWeight: FontWeight.w500,
-                      fontSize: 24,
+                      fontSize: 24.0,
                       color: AppColors.mellowLemon,
                     ),
                   ),
