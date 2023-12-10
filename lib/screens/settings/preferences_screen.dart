@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:merume_mobile/other/colors.dart';
 import 'package:merume_mobile/other/exceptions.dart';
+import 'package:merume_mobile/screens/components/confirmation_popup_widget.dart';
 import 'package:merume_mobile/user_provider.dart';
 import 'package:provider/provider.dart';
 import '../components/categories.dart';
@@ -19,6 +20,23 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
   List<String> selected = [];
 
   String errorMessage = '';
+
+  void _showSnackBar(BuildContext context, String errorMessage) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          errorMessage,
+          style: const TextStyle(
+            fontFamily: 'WorkSans',
+            fontSize: 15,
+            color: Colors.white,
+          ),
+        ),
+        duration: const Duration(seconds: 10),
+        backgroundColor: Colors.red,
+      ),
+    );
+  }
 
   @override
   void initState() {
@@ -121,125 +139,63 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
                   : () {
                       showDialog(
                         context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                              side: const BorderSide(
-                                color: AppColors.lavenderHaze, // Border color
-                                width: 2.0, // Border width
-                              ),
-                            ),
-                            backgroundColor: Colors.black,
-                            title: const Text(
-                              "Are you sure?",
-                              style: TextStyle(
-                                  color: AppColors.mellowLemon,
-                                  fontFamily: "Poppins"),
-                            ),
-                            content: const Text(
-                              "Do you want to save your preferences?",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontFamily: 'WorkSans',
-                                  fontSize: 16),
-                            ),
-                            actions: [
-                              TextButton(
-                                child: const Text(
-                                  "CANCEL",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontFamily: 'WorkSans',
-                                      fontSize: 16),
-                                ),
-                                onPressed: () {
-                                  state.pop();
-                                },
-                              ),
-                              ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: AppColors
-                                      .royalPurple, // Custom button color
-                                ),
-                                onPressed: isSavePressed
-                                    ? null
-                                    : () async {
-                                        state.pop(context);
+                        builder: (BuildContext dialogContext) {
+                          return ConfirmationDialog(
+                            onCancel: () {
+                              state.pop(dialogContext); // Close the dialog
+                            },
+                            onSave: () async {
+                              state.pop(dialogContext); // Close the dialog
 
-                                        setState(() {
-                                          isSavePressed = true;
-                                        });
+                              setState(() {
+                                isSavePressed = true;
+                              });
 
-                                        try {
-                                          if (selected.isEmpty) {
-                                            throw UnprocessableEntityException(
-                                                'Invalid input data');
-                                          }
+                              try {
+                                if (selected.isEmpty) {
+                                  throw UnprocessableEntityException(
+                                      'Invalid input data');
+                                }
 
-                                          await savePreferences(selected);
+                                await savePreferences(selected);
 
-                                          //update preferences in Provider
-                                          userInfoProvider.setUser(userInfo!
-                                              .updatePreferences(
-                                                  preferences: selected));
+                                //update preferences in Provider
+                                userInfoProvider.setUser(userInfo!
+                                    .updatePreferences(preferences: selected));
 
-                                          state.pop();
-                                        } catch (e) {
-                                          setState(() {
-                                            if (e is TokenAuthException) {
-                                              errorMessage =
-                                                  'There is an error with authentication. Please try to re-login.';
-                                            } else if (e
-                                                is UnprocessableEntityException) {
-                                              errorMessage =
-                                                  'Please choose at least one element';
-                                            } else if (e is NetworkException) {
-                                              errorMessage =
-                                                  'Network error has occured. Please check your internet connection.';
-                                            } else if (e is ServerException ||
-                                                e is HttpException) {
-                                              errorMessage =
-                                                  'There was an error on the server side, try again later.';
-                                            } else {
-                                              errorMessage =
-                                                  'An unexpected error occurred. Please try again later.';
-                                            }
-                                          });
-                                        } finally {
-                                          isSavePressed = false;
+                                if (context.mounted) {
+                                  state.pop(context);
+                                }
+                              } catch (e) {
+                                setState(() {
+                                  if (e is TokenAuthException) {
+                                    errorMessage =
+                                        'There is an error with authentication. Please try to re-login.';
+                                  } else if (e
+                                      is UnprocessableEntityException) {
+                                    errorMessage =
+                                        'Please choose at least one element';
+                                  } else if (e is NetworkException) {
+                                    errorMessage =
+                                        'Network error has occurred. Please check your internet connection.';
+                                  } else if (e is ServerException ||
+                                      e is HttpException) {
+                                    errorMessage =
+                                        'There was an error on the server side, try again later.';
+                                  } else {
+                                    errorMessage =
+                                        'An unexpected error occurred. Please try again later.';
+                                  }
+                                });
+                              } finally {
+                                isSavePressed = false;
 
-                                          if (context.mounted) {
-                                            if (errorMessage.isNotEmpty) {
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(
-                                                SnackBar(
-                                                  content: Text(
-                                                    errorMessage,
-                                                    style: const TextStyle(
-                                                      fontFamily: 'WorkSans',
-                                                      fontSize: 15,
-                                                      color: Colors.white,
-                                                    ),
-                                                  ),
-                                                  duration: const Duration(
-                                                      seconds: 10),
-                                                  backgroundColor: Colors.red,
-                                                ),
-                                              );
-                                            }
-                                          }
-                                        }
-                                      },
-                                child: const Text(
-                                  "SAVE",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontFamily: 'WorkSans',
-                                      fontSize: 16),
-                                ),
-                              ),
-                            ],
+                                if (context.mounted &&
+                                    errorMessage.isNotEmpty) {
+                                  _showSnackBar(context, errorMessage);
+                                }
+                              }
+                            },
                           );
                         },
                       );

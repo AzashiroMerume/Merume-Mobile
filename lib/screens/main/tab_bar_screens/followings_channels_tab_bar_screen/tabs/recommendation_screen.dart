@@ -10,8 +10,7 @@ import 'package:merume_mobile/screens/settings/preferences_screen.dart';
 class RecommendationScreen extends StatefulWidget {
   final List<String>? preferences;
 
-  const RecommendationScreen({Key? key, required this.preferences})
-      : super(key: key);
+  const RecommendationScreen({super.key, required this.preferences});
 
   @override
   State<RecommendationScreen> createState() => _RecommendationScreenState();
