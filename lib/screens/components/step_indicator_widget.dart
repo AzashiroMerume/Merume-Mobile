@@ -2,22 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:merume_mobile/other/colors.dart';
 
 class StepIndicator extends StatelessWidget {
-  final int currentStep;
+  final int coloredStep;
   final int totalSteps;
 
   const StepIndicator({
     super.key,
-    required this.currentStep,
+    required this.coloredStep,
     required this.totalSteps,
   });
 
   Widget _buildStepCircle(int step) {
+    bool isColored = step <= coloredStep - 1;
+
     return Container(
       width: 24,
       height: 24,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: step <= currentStep ? Colors.green : Colors.grey,
+        color: isColored ? AppColors.royalPurple : Colors.grey,
       ),
       child: Center(
         child: Text(
@@ -35,7 +37,7 @@ class StepIndicator extends StatelessWidget {
     return Container(
       height: 2,
       width: 50,
-      color: currentStep >= 1 ? AppColors.lavenderHaze : Colors.grey,
+      color: coloredStep >= 1 ? AppColors.lavenderHaze : Colors.grey,
     );
   }
 

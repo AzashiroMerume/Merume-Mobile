@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:merume_mobile/screens/components/step_indicator_widget.dart';
 import 'package:merume_mobile/screens/main/add_channel_screens/tabs/add_channel_screen_1.dart';
 import 'package:merume_mobile/screens/main/add_channel_screens/tabs/add_channel_screen_2.dart';
+import 'package:merume_mobile/screens/main/components/enums.dart';
 
 class AddChannelTabScreen extends StatefulWidget {
   const AddChannelTabScreen({super.key});
@@ -14,6 +15,7 @@ class _AddChannelTabScreenState extends State<AddChannelTabScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   int currentStep = 0; // Track the current step
+  ChannelType? _selectedItem;
 
   @override
   void initState() {
@@ -46,23 +48,34 @@ class _AddChannelTabScreenState extends State<AddChannelTabScreen>
               height: 24.0,
             ),
             StepIndicator(
-              currentStep: currentStep,
-              totalSteps: 2, // Set the total number of steps here
-            ),
-            const SizedBox(
-              height: 24.0,
+              coloredStep: currentStep,
+              totalSteps: 2,
             ),
             Expanded(
               child: TabBarView(
                 controller: _tabController,
-                physics: const NeverScrollableScrollPhysics(),
+                physics: currentStep > 1
+                    ? null
+                    : const NeverScrollableScrollPhysics(),
                 children: [
                   AddChannelScreenFirst(
                     onComplete: () {
                       _updateStep(1); // Move to the next step
                     },
+                    onItemSelected: (selectedItem) {
+                      // Update the selected item in AddChannelTabScreen when it changes
+                      setState(() {
+                        // Store the selected item in AddChannelTabScreen
+                        _selectedItem = selectedItem;
+                      });
+                    },
+                    initialSelectedItem: _selectedItem,
                   ),
-                  const AddChannelScreenSecond(),
+                  AddChannelScreenSecond(
+                    onComplete: (step) {
+                      _updateStep(step); // Move to the next step
+                    },
+                  ),
                 ],
               ),
             ),

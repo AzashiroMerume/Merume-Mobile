@@ -13,7 +13,9 @@ import 'package:merume_mobile/screens/main/components/category_popup_widget.dart
 import 'package:merume_mobile/screens/components/categories.dart';
 
 class AddChannelScreenSecond extends StatefulWidget {
-  const AddChannelScreenSecond({super.key});
+  final Function(int step) onComplete;
+
+  const AddChannelScreenSecond({super.key, required this.onComplete});
 
   @override
   State<AddChannelScreenSecond> createState() => _AddChannelScreenSecondState();
@@ -113,6 +115,10 @@ class _AddChannelScreenSecondState extends State<AddChannelScreenSecond> {
             'Challenge goal must be between 1000 and 2000 days';
       }
     }
+
+    if (errors.isEmpty) {
+      widget.onComplete(2);
+    }
   }
 
   @override
@@ -131,7 +137,7 @@ class _AddChannelScreenSecondState extends State<AddChannelScreenSecond> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const SizedBox(height: 32.0),
+                  const SizedBox(height: 16.0),
                   const Text(
                     'Create Challenge',
                     style: TextStyle(
@@ -346,6 +352,7 @@ class _AddChannelScreenSecondState extends State<AddChannelScreenSecond> {
                                             errorMessage: errorMessage);
                                       },
                                     );
+                                    widget.onComplete(1);
                                   }
                                 }
                               }
