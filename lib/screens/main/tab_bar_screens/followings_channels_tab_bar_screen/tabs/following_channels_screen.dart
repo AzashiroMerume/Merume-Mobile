@@ -7,8 +7,7 @@ import 'package:merume_mobile/screens/main/tab_bar_screens/followings_channels_t
 class FollowingChannelsScreen extends StatefulWidget {
   final FollowingChannelsController controller;
 
-  const FollowingChannelsScreen({Key? key, required this.controller})
-      : super(key: key);
+  const FollowingChannelsScreen({super.key, required this.controller});
 
   @override
   State<FollowingChannelsScreen> createState() =>
@@ -73,7 +72,7 @@ class _FollowingChannelsScreenState extends State<FollowingChannelsScreen>
                       );
                     } else if (snapshot.hasError) {
                       //Handle err for user
-                      return Text('Error: ${snapshot.error}');
+                      return const Text('Error occured!');
                     } else {
                       return const Center(child: CircularProgressIndicator());
                     }
