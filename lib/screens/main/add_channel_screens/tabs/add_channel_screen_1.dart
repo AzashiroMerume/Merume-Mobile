@@ -44,7 +44,6 @@ class _AddChannelScreenFirstState extends State<AddChannelScreenFirst> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 16.0),
               const Text(
                 "Select a channel type",
                 style: TextStyle(
@@ -54,7 +53,7 @@ class _AddChannelScreenFirstState extends State<AddChannelScreenFirst> {
                   color: AppColors.mellowLemon,
                 ),
               ),
-              const SizedBox(height: 24.0),
+              const SizedBox(height: 32.0),
               Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -111,7 +110,7 @@ class _AddChannelScreenFirstState extends State<AddChannelScreenFirst> {
                     thickness: 1,
                   ),
                   const SizedBox(
-                    height: 8.0,
+                    height: 16.0,
                   ),
                   GestureDetector(
                     onTap: () {
@@ -146,7 +145,7 @@ class _AddChannelScreenFirstState extends State<AddChannelScreenFirst> {
                             ),
                           ),
                           const SizedBox(
-                            height: 8.0,
+                            height: 16.0,
                           ),
                           const Text(
                             "Create a dedicated space for continuous improvement in your chosen field. Set your channel duration for an extended period, allowing members to commit to ongoing growth and progress over 1000 days or more. Share, learn, and evolve together in this focused and dedicated environment.",
@@ -161,7 +160,7 @@ class _AddChannelScreenFirstState extends State<AddChannelScreenFirst> {
                     ),
                   ),
                   const SizedBox(
-                    height: 24.0,
+                    height: 32.0,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
