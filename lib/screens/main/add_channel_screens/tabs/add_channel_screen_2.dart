@@ -35,7 +35,7 @@ class _AddChannelScreenSecondState extends State<AddChannelScreenSecond> {
       TextEditingController();
 
   String challengeName = '';
-  String challengeGoal = '';
+  String? challengeGoal;
   String challengeDescription = '';
   String challengeVisibility = 'Public';
   List<String> challengeCategories = [];
@@ -92,7 +92,6 @@ class _AddChannelScreenSecondState extends State<AddChannelScreenSecond> {
     super.dispose();
   }
 
-  // Function to validate fields
   void validateFields() {
     errors.clear();
 
@@ -109,13 +108,15 @@ class _AddChannelScreenSecondState extends State<AddChannelScreenSecond> {
           'Challenge must have at least one category';
     }
 
-    if (_challengeGoalController.text.isEmpty) {
-      errors['challengeGoal'] = 'Challenge goal is required';
-    } else {
-      final int goal = int.tryParse(_challengeGoalController.text) ?? 0;
-      if (goal < 1000 || goal > 2000) {
-        errors['challengeGoal'] =
-            'Challenge goal must be between 1000 and 2000 days';
+    if (widget.selectedChannelType == ChannelType.fixed) {
+      if (_challengeGoalController.text.isEmpty) {
+        errors['challengeGoal'] = 'Challenge goal is required';
+      } else {
+        final int goal = int.tryParse(_challengeGoalController.text) ?? 0;
+        if (goal < 1000 || goal > 2000) {
+          errors['challengeGoal'] =
+              'Challenge goal must be between 1000 and 2000 days';
+        }
       }
     }
 
@@ -169,25 +170,30 @@ class _AddChannelScreenSecondState extends State<AddChannelScreenSecond> {
                     },
                   ),
                   const SizedBox(height: 32.0),
-                  TextField(
-                    controller: _challengeGoalController,
-                    decoration: InputDecoration(
-                      hintText: 'Challenge goal (days) (1000 - 2000)',
-                      fillColor: Colors.white,
-                      filled: true,
-                      errorText: errors.containsKey('challengeGoal')
-                          ? errors['challengeGoal']
-                          : null,
+                  if (widget.selectedChannelType == ChannelType.fixed)
+                    Column(
+                      children: [
+                        TextField(
+                          controller: _challengeGoalController,
+                          decoration: InputDecoration(
+                            hintText: 'Challenge goal (days) (1000 - 2000)',
+                            fillColor: Colors.white,
+                            filled: true,
+                            errorText: errors.containsKey('challengeGoal')
+                                ? errors['challengeGoal']
+                                : null,
+                          ),
+                          onChanged: (value) {
+                            challengeGoal = value;
+                          },
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                            LengthLimitingTextInputFormatter(4),
+                          ],
+                        ),
+                        const SizedBox(height: 32.0),
+                      ],
                     ),
-                    onChanged: (value) {
-                      challengeGoal = value;
-                    },
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly,
-                      LengthLimitingTextInputFormatter(4),
-                    ],
-                  ),
-                  const SizedBox(height: 32.0),
                   TextField(
                     controller: _challengeDescriptionController,
                     decoration: InputDecoration(

@@ -13,7 +13,7 @@ const storage = FlutterSecureStorage();
 Future<void> newChannel(
     ChannelType channelType,
     String name,
-    String challangeGoal,
+    String? challangeGoal,
     String channelVisibility,
     String description,
     List<String> categories,
@@ -29,9 +29,9 @@ Future<void> newChannel(
     final response = await http.post(
       Uri.parse('${ConfigAPI.baseURL}users/channels/new'),
       body: json.encode({
-        'channel_type': channelType.toString(),
+        'channel_type': channelType.name,
         'name': name,
-        'goal': int.tryParse(challangeGoal) ?? 0,
+        'goal': challangeGoal,
         'channel_visibility': channelVisibility,
         'description': description,
         'categories': categories,
