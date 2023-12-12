@@ -4,6 +4,7 @@ import 'package:merume_mobile/api/channel_api/channel_posts_api.dart';
 import 'package:merume_mobile/api/posts_api/create_post_api.dart';
 import 'package:merume_mobile/other/colors.dart';
 import 'package:merume_mobile/models/author_model.dart';
+import 'package:merume_mobile/other/error_custom_snackbar.dart';
 import 'package:merume_mobile/screens/main/channel_screens/channel_details_screen.dart';
 import 'package:merume_mobile/screens/main/components/enums.dart';
 import 'package:merume_mobile/other/exceptions.dart';
@@ -46,23 +47,6 @@ class _ChannelScreenState extends State<ChannelScreen> {
   List<String> postImages = [];
 
   String errorMessage = '';
-
-  void showErrorSnackBar(String errorMessage) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          errorMessage,
-          style: const TextStyle(
-            fontFamily: 'WorkSans',
-            fontSize: 15,
-            color: Colors.white,
-          ),
-        ),
-        duration: const Duration(seconds: 10),
-        backgroundColor: Colors.red,
-      ),
-    );
-  }
 
   void _handleAppBarPress() {
     Navigator.push(
@@ -348,7 +332,7 @@ class _ChannelScreenState extends State<ChannelScreen> {
                                     'Network connection is poor. Please try again later.';
                               }
 
-                              showErrorSnackBar(errorMessage);
+                              showCustomSnackBar(context, errorMessage);
                             });
                           }
                         }

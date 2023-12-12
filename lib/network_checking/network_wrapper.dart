@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:merume_mobile/network_checking/network_error_popup_widget.dart';
+import 'package:merume_mobile/other/error_custom_snackbar.dart';
 
 class NetworkWrapper extends StatefulWidget {
   final Widget child;
@@ -62,20 +63,8 @@ class NetworkWrapperState extends State<NetworkWrapper> {
                         await Connectivity().checkConnectivity();
                     if (connectivityResult == ConnectivityResult.none) {
                       if (context.mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text(
-                              'Please turn on your wifi or mobile data',
-                              style: TextStyle(
-                                fontFamily: 'WorkSans',
-                                fontSize: 15,
-                                color: Colors.white,
-                              ),
-                            ),
-                            duration: Duration(seconds: 10),
-                            backgroundColor: Colors.red,
-                          ),
-                        );
+                        showCustomSnackBar(
+                            context, 'Please turn on your wifi or mobile data');
                       }
                     } else {
                       if (context.mounted) {

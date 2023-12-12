@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:merume_mobile/api/user_channels_api/new_channel_api.dart';
 import 'package:merume_mobile/other/colors.dart';
 import 'package:merume_mobile/other/exceptions.dart';
+import 'package:merume_mobile/other/error_custom_snackbar.dart';
 import 'package:merume_mobile/screens/components/pfp_load_image_widget.dart';
 import 'package:merume_mobile/screens/main/components/category_popup_widget.dart';
 import 'package:merume_mobile/screens/components/categories.dart';
@@ -47,23 +48,6 @@ class _AddChannelScreenSecondState extends State<AddChannelScreenSecond> {
   String errorMessage = '';
 
   Map<String, String> errors = {};
-
-  void _showSnackBar(BuildContext context, String errorMessage) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          errorMessage,
-          style: const TextStyle(
-            fontFamily: 'WorkSans',
-            fontSize: 15,
-            color: Colors.white,
-          ),
-        ),
-        duration: const Duration(seconds: 10),
-        backgroundColor: Colors.red,
-      ),
-    );
-  }
 
   void handleImageUpload(String? imagePath) {
     if (imagePath != null) {
@@ -364,7 +348,7 @@ class _AddChannelScreenSecondState extends State<AddChannelScreenSecond> {
 
                                   if (context.mounted &&
                                       errorMessage.isNotEmpty) {
-                                    _showSnackBar(context, errorMessage);
+                                    showCustomSnackBar(context, errorMessage);
                                     widget.onComplete(1);
                                   }
                                 }

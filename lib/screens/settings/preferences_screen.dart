@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:merume_mobile/other/colors.dart';
 import 'package:merume_mobile/other/exceptions.dart';
 import 'package:merume_mobile/screens/components/confirmation_popup_widget.dart';
+import 'package:merume_mobile/other/error_custom_snackbar.dart';
 import 'package:merume_mobile/user_provider.dart';
 import 'package:provider/provider.dart';
 import '../components/categories.dart';
@@ -20,23 +21,6 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
   List<String> selected = [];
 
   String errorMessage = '';
-
-  void _showSnackBar(BuildContext context, String errorMessage) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          errorMessage,
-          style: const TextStyle(
-            fontFamily: 'WorkSans',
-            fontSize: 15,
-            color: Colors.white,
-          ),
-        ),
-        duration: const Duration(seconds: 10),
-        backgroundColor: Colors.red,
-      ),
-    );
-  }
 
   @override
   void initState() {
@@ -192,7 +176,7 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
 
                                 if (context.mounted &&
                                     errorMessage.isNotEmpty) {
-                                  _showSnackBar(context, errorMessage);
+                                  showCustomSnackBar(context, errorMessage);
                                 }
                               }
                             },
