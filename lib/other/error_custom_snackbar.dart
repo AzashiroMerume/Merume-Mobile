@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-void showCustomSnackBar(BuildContext context, String errorMessage) {
+void showCustomSnackBar(BuildContext context, String errorMessage,
+    {int duration = 10}) {
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
       elevation: 6.0,
@@ -23,7 +24,7 @@ void showCustomSnackBar(BuildContext context, String errorMessage) {
           ),
         ),
       ),
-      duration: const Duration(seconds: 10),
+      duration: Duration(seconds: duration),
       backgroundColor: Colors.red,
       action: SnackBarAction(
         label: 'Dismiss',
