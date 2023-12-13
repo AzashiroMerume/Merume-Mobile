@@ -13,7 +13,7 @@ const storage = FlutterSecureStorage();
 Future<void> newChannel(
     ChannelType channelType,
     String name,
-    String? challangeGoal,
+    int? challangeGoal,
     String channelVisibility,
     String description,
     List<String> categories,

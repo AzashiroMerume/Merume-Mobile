@@ -35,7 +35,7 @@ class _AddChannelScreenSecondState extends State<AddChannelScreenSecond> {
       TextEditingController();
 
   String challengeName = '';
-  String? challengeGoal;
+  int? challengeGoal;
   String challengeDescription = '';
   String challengeVisibility = 'Public';
   List<String> challengeCategories = [];
@@ -184,7 +184,7 @@ class _AddChannelScreenSecondState extends State<AddChannelScreenSecond> {
                                 : null,
                           ),
                           onChanged: (value) {
-                            challengeGoal = value;
+                            challengeGoal = int.tryParse(value) ?? 0;
                           },
                           inputFormatters: [
                             FilteringTextInputFormatter.digitsOnly,

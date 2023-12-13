@@ -3,8 +3,10 @@ import 'package:merume_mobile/models/author_model.dart';
 class Channel {
   final String id;
   final Author author;
-  final String name;
   final String channelType;
+  final String name;
+  final int? goal;
+  final String channelVisibility;
   final String description;
   final List<String> categories;
   final List<String>? participants;
@@ -16,8 +18,10 @@ class Channel {
   const Channel({
     required this.id,
     required this.author,
-    required this.name,
     required this.channelType,
+    required this.name,
+    this.goal,
+    required this.channelVisibility,
     required this.description,
     required this.categories,
     this.participants,
@@ -31,8 +35,10 @@ class Channel {
     return Channel(
       id: json['_id']['\$oid'],
       author: Author.fromJson(json['author']),
-      name: json['name'],
       channelType: json['channel_type'],
+      name: json['name'],
+      goal: json['goal'],
+      channelVisibility: json['channel_visibility'],
       description: json['description'],
       categories: List<String>.from(json['categories']),
       participants:
