@@ -102,42 +102,46 @@ class _MainTabBarScreenState extends State<MainTabBarScreen> {
               ),
         body: _screens[_currentIndex],
         bottomNavigationBar: Container(
-          padding: const EdgeInsets.symmetric(vertical: 5.0),
-          decoration: BoxDecoration(
-            border: Border(
-              top: BorderSide(
-                color: AppColors.lavenderHaze.withOpacity(0.5),
-                width: 1.0,
+            padding: const EdgeInsets.symmetric(vertical: 5.0),
+            decoration: BoxDecoration(
+              border: Border(
+                top: BorderSide(
+                  color: AppColors.lavenderHaze.withOpacity(0.5),
+                  width: 1.0,
+                ),
               ),
             ),
-          ),
-          child: BottomNavigationBar(
-            type: BottomNavigationBarType.fixed,
-            selectedFontSize: 12.0,
-            selectedIconTheme:
-                const IconThemeData(color: AppColors.lavenderHaze),
-            selectedItemColor: AppColors.lavenderHaze,
-            unselectedIconTheme: const IconThemeData(color: Colors.white),
-            currentIndex: _currentIndex,
-            onTap: (index) => setState(() => _currentIndex = index),
-            backgroundColor: Colors.black,
-            items: const [
-              BottomNavigationBarItem(
-                icon: Icon(Icons.home),
-                label: 'Home',
+            child: Theme(
+              data: ThemeData(
+                splashColor: Colors.transparent,
               ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.subscriptions),
-                label: 'Followings',
+              child: BottomNavigationBar(
+                type: BottomNavigationBarType.fixed,
+                selectedFontSize: 12.0,
+                selectedIconTheme:
+                    const IconThemeData(color: AppColors.lavenderHaze),
+                selectedItemColor: AppColors.lavenderHaze,
+                unselectedIconTheme: const IconThemeData(color: Colors.white),
+                currentIndex: _currentIndex,
+                onTap: (index) => setState(() => _currentIndex = index),
+                backgroundColor: Colors.black,
+                items: const [
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.home),
+                    label: 'Home',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.subscriptions),
+                    label: 'Followings',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.person),
+                    label: 'Profile',
+                  ),
+                  // other bottom tab bar items here
+                ],
               ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.person),
-                label: 'Profile',
-              ),
-              // other bottom tab bar items here
-            ],
-          ),
-        ),
+            )),
       ),
     );
   }

@@ -15,8 +15,8 @@ class ConfirmationDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10.0),
-      ),
+          borderRadius: BorderRadius.circular(10.0),
+          side: const BorderSide(width: 0.5, color: AppColors.lavenderHaze)),
       backgroundColor: Colors.black,
       title: const Text(
         "Are you sure?",
