@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:merume_mobile/api/user_channels_api/new_channel_api.dart';
@@ -12,6 +13,7 @@ import 'package:merume_mobile/screens/components/pfp_load_image_widget.dart';
 import 'package:merume_mobile/screens/main/components/category_popup_widget.dart';
 import 'package:merume_mobile/screens/components/categories.dart';
 import 'package:merume_mobile/screens/main/components/enums.dart';
+import 'package:objectid/objectid.dart';
 
 class AddChannelScreenSecond extends StatefulWidget {
   final ChannelType? selectedChannelType;
@@ -66,8 +68,13 @@ class _AddChannelScreenSecondState extends State<AddChannelScreenSecond> {
         throw AuthenticationException('User not authenticated with Firebase');
       }
 
-      final Reference storageReference =
-          FirebaseStorage.instance.ref().child('images').child(imagePath);
+      final String randomName = ObjectId().hexString;
+
+      final Reference storageReference = FirebaseStorage.instance
+          .ref()
+          .child('images')
+          .child('channel_pfps')
+          .child('$randomName.jpg');
 
       final UploadTask uploadTask = storageReference.putFile(File(imagePath));
 
@@ -79,7 +86,18 @@ class _AddChannelScreenSecondState extends State<AddChannelScreenSecond> {
         throw FirebaseUploadException('Image upload failed');
       }
     } catch (e) {
-      throw FirebaseUploadException('Image upload failed');
+      if (e is FirebaseException) {
+        // Specific Firebase Storage exceptions
+        if (e.code == 'permission-denied') {
+          throw FirebaseUploadException('Permission denied');
+        } else if (e.code == 'unauthenticated') {
+          throw AuthenticationException('User unauthenticated');
+        } else {
+          throw FirebaseUploadException('Unknown error: ${e.code}');
+        }
+      } else {
+        rethrow;
+      }
     }
   }
 
@@ -326,10 +344,16 @@ class _AddChannelScreenSecondState extends State<AddChannelScreenSecond> {
                                     state.pop(context);
                                   }
                                 } catch (e) {
+                                  if (kDebugMode) {
+                                    print("Add Channel Second error: $e");
+                                  }
                                   setState(() {
                                     if (e is TokenAuthException) {
                                       errorMessage =
                                           'Token authentication error. Please try to relogin.';
+                                    } else if (e is FirebaseAuthException) {
+                                      errorMessage =
+                                          'An unexpected error occurred. Please try again later.';
                                     } else if (e
                                         is UnprocessableEntityException) {
                                       errorMessage =
@@ -347,6 +371,9 @@ class _AddChannelScreenSecondState extends State<AddChannelScreenSecond> {
                                     } else if (e is TimeoutException) {
                                       errorMessage =
                                           'Network connection is poor. Please try again later.';
+                                    } else {
+                                      errorMessage =
+                                          'An unexpected error occurred. Please try again later.';
                                     }
                                   });
                                 } finally {

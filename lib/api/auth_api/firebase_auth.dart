@@ -23,7 +23,6 @@ Future<UserCredential> registerInFirebase(String email, String password) async {
     );
     return userCredential;
   } catch (e) {
-    // Handle registration errors
     print(e.toString());
     rethrow;
   }

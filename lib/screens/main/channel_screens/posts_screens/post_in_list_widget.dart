@@ -12,12 +12,12 @@ class PostInListWidget extends StatelessWidget {
   final bool isSamePost;
 
   const PostInListWidget({
-    Key? key,
+    super.key,
     required this.post,
     required this.status,
     required this.isAuthor,
     required this.isSamePost,
-  }) : super(key: key);
+  });
 
   String formatPostDate(DateTime postDate) {
     final now = DateTime.now();
