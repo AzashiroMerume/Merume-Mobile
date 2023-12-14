@@ -28,3 +28,12 @@ Future<UserCredential> registerInFirebase(String email, String password) async {
     rethrow;
   }
 }
+
+Future<void> logoutFromFirebase() async {
+  try {
+    await FirebaseAuth.instance.signOut();
+  } catch (e) {
+    print(e.toString());
+    rethrow;
+  }
+}

@@ -1,7 +1,9 @@
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:merume_mobile/api/auth_api/firebase_auth.dart';
 import 'package:merume_mobile/other/colors.dart';
+import 'package:merume_mobile/other/exceptions.dart';
 import 'package:merume_mobile/other/firebase_options.dart';
 import 'package:merume_mobile/models/user_model.dart';
 import 'package:merume_mobile/screens/auth/login_screen.dart';
@@ -32,6 +34,9 @@ void main() async {
     user = await verifyAuth();
     isAuthenticated = user != null;
   } catch (e) {
+    if (e is TokenAuthException) {
+      await logoutFromFirebase();
+    }
     errorMessage = 'There was an error on the server side';
   }
 

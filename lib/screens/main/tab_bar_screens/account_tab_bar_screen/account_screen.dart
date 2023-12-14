@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:merume_mobile/api/auth_api/firebase_auth.dart';
 import 'package:merume_mobile/api/auth_api/logout.dart';
 import 'package:merume_mobile/user_provider.dart';
 import 'package:provider/provider.dart';
@@ -23,6 +23,8 @@ class _AccountScreenState extends State<AccountScreen> {
           child: ElevatedButton(
             onPressed: () async {
               final loggedOut = await logout();
+
+              await logoutFromFirebase();
 
               if (loggedOut) {
                 userInfoProvider.setUser(null);
