@@ -46,6 +46,8 @@ class _ChannelScreenState extends State<ChannelScreen> {
   String postBody = '';
   List<String> postImages = [];
 
+  bool isLoading = true;
+
   String errorMessage = '';
 
   void _handleAppBarPress() {
@@ -147,6 +149,7 @@ class _ChannelScreenState extends State<ChannelScreen> {
                   stream: itemsController.stream,
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
+                      isLoading = false;
                       if (snapshot.data!.isEmpty) {
                         // If there are no posts, display the "No posts yet" message
                         return const Center(
@@ -191,11 +194,13 @@ class _ChannelScreenState extends State<ChannelScreen> {
                         },
                       );
                     } else if (snapshot.hasError) {
+                      isLoading = false;
                       // Handle the error state
                       return const Center(
                         child: Text('There is an error.. Try again later'),
                       );
                     } else {
+                      isLoading = true;
                       // Display the CircularProgressIndicator centered
                       return const Center(
                         child: CircularProgressIndicator(),
@@ -247,7 +252,9 @@ class _ChannelScreenState extends State<ChannelScreen> {
                     Icons.send,
                     color: AppColors.mellowLemon,
                   ),
-                  onPressed: postBody.isNotEmpty || postImages.isNotEmpty
+                  onPressed: !isLoading ||
+                          postBody.isNotEmpty ||
+                          postImages.isNotEmpty
                       ? () async {
                           final String postId = ObjectId().hexString;
 

@@ -5,7 +5,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:merume_mobile/api/user_channels_api/new_channel_api.dart';
+import 'package:merume_mobile/api/user_api/user_channels_api/new_channel_api.dart';
 import 'package:merume_mobile/other/colors.dart';
 import 'package:merume_mobile/other/exceptions.dart';
 import 'package:merume_mobile/other/error_custom_snackbar.dart';

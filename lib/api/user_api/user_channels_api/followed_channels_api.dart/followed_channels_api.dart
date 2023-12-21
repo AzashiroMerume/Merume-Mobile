@@ -1,14 +1,14 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:merume_mobile/other/api_config.dart';
-import 'package:merume_mobile/models/channel_model.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:merume_mobile/models/channel_model.dart';
 
 const storage = FlutterSecureStorage();
 
-Stream<List<Channel>> fetchOwnChannels() async* {
-  const channelUrl = '${ConfigAPI.wsURL}users/channels/created';
+Stream<List<Channel>> fetchFollowings() async* {
+  const channelUrl = '${ConfigAPI.wsURL}user/channels/subscriptions';
   final authToken = await storage.read(key: 'authToken');
   final headers = {'Authorization': '$authToken'};
 
@@ -25,9 +25,12 @@ Stream<List<Channel>> fetchOwnChannels() async* {
         yield channels;
       }
 
+      // The WebSocket connection was closed, attempt to reconnect
       await channel.sink.close();
     } catch (e) {
+      // Handle any exceptions that occur during the WebSocket connection
       print('WebSocket error: $e');
+      // You can implement a delay here before attempting to reconnect
       await Future.delayed(const Duration(seconds: 5));
     }
   }

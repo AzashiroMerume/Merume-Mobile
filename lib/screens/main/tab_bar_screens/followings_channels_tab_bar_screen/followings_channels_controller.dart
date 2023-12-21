@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:merume_mobile/api/user_channels_api/followed_channels_api.dart/followed_channels_api.dart';
+import 'package:merume_mobile/api/user_api/user_channels_api/followed_channels_api.dart/followed_channels_api.dart';
 import 'package:merume_mobile/models/channel_model.dart';
 
 class FollowingChannelsController {
