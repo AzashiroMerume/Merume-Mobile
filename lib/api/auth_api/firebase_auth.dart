@@ -1,29 +1,24 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-Future<UserCredential> loginInFirebase(String email, String password) async {
+Future<String?> loginInFirebase(String email, String password) async {
   try {
-    UserCredential userCredential =
-        await FirebaseAuth.instance.signInWithEmailAndPassword(
-      email: email,
-      password: password,
-    );
-    return userCredential;
+    UserCredential userCredential = await FirebaseAuth.instance
+        .signInWithEmailAndPassword(email: email, password: password);
+    return userCredential.user!.uid;
   } catch (e) {
-    print(e.toString());
+    print('Login Error: $e');
     rethrow;
   }
 }
 
-Future<UserCredential> registerInFirebase(String email, String password) async {
+Future<String?> registerInFirebase(String email, String password) async {
   try {
-    UserCredential userCredential =
-        await FirebaseAuth.instance.createUserWithEmailAndPassword(
-      email: email,
-      password: password,
-    );
-    return userCredential;
+    UserCredential userCredential = await FirebaseAuth.instance
+        .createUserWithEmailAndPassword(email: email, password: password);
+    return userCredential.user!.uid;
   } catch (e) {
-    print(e.toString());
+    print('Registration Error: $e');
     rethrow;
   }
 }
@@ -32,7 +27,25 @@ Future<void> logoutFromFirebase() async {
   try {
     await FirebaseAuth.instance.signOut();
   } catch (e) {
-    print(e.toString());
+    print('Logout Error: $e');
     rethrow;
+  }
+}
+
+Future<bool> verifyAuthInFirebase() async {
+  const storage = FlutterSecureStorage();
+  try {
+    final authToken = await storage.read(key: 'authToken');
+
+    if (authToken != null) {
+      await FirebaseAuth.instance.signInWithCustomToken(authToken);
+      print("success");
+      return true; // Authentication successful
+    } else {
+      return false; // No authToken found
+    }
+  } catch (e) {
+    print('Verify FirebaseAuth Error: $e');
+    return false; // Error during authentication
   }
 }
