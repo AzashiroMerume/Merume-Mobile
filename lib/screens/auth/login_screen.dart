@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart' as fire_base;
 import 'package:flutter/material.dart';
 import 'package:merume_mobile/api/auth_api/firebase_auth.dart';
+import 'package:merume_mobile/api/user_api/get_email_api.dart';
 import 'package:merume_mobile/other/colors.dart';
 import 'dart:async';
 import 'package:email_validator/email_validator.dart';
@@ -207,11 +208,21 @@ class _LoginScreenState extends State<LoginScreen> {
                           });
 
                           if (errors.isEmpty) {
+                            String? firebaseUserId;
                             try {
-                              final user = await login(
-                                  identifier, password, useEmailLogin);
+                              if (!useEmailLogin) {
+                                String userEmail =
+                                    await getEmailByNickname(identifier);
 
-                              await loginInFirebase(user.email, password);
+                                firebaseUserId =
+                                    await loginInFirebase(userEmail, password);
+                              } else {
+                                firebaseUserId =
+                                    await loginInFirebase(identifier, password);
+                              }
+
+                              final user = await login(identifier, password,
+                                  useEmailLogin, firebaseUserId!);
 
                               userInfoProvider.setUser(user);
 

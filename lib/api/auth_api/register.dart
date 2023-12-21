@@ -10,8 +10,8 @@ import '../../other/exceptions.dart';
 
 const storage = FlutterSecureStorage();
 
-Future<User> register(
-    String username, String nickname, String email, String password) async {
+Future<User> register(String username, String nickname, String email,
+    String password, String firebaseUserId) async {
   try {
     final connectivityResult = await Connectivity().checkConnectivity();
     if (connectivityResult == ConnectivityResult.none) {
@@ -25,6 +25,7 @@ Future<User> register(
         'nickname': nickname,
         'email': email,
         'password': password,
+        'firebase_user_id': firebaseUserId
       }),
       headers: {
         'Content-Type': 'application/json',

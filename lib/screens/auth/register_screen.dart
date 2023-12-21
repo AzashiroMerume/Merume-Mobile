@@ -229,11 +229,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           });
 
                           if (errors.isEmpty) {
+                            String? firebaseUserId;
                             try {
-                              final user = await register(
-                                  username, nickname, email, password);
+                              firebaseUserId =
+                                  await registerInFirebase(email, password);
 
-                              await registerInFirebase(user.email, password);
+                              final user = await register(username, nickname,
+                                  email, password, firebaseUserId!);
 
                               userInfoProvider.setUser(user);
 
