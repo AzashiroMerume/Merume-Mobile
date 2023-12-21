@@ -33,8 +33,11 @@ void main() async {
   try {
     user = await verifyAuth();
     isAuthenticated = user != null;
+    await verifyAuthInFirebase();
   } catch (e) {
     if (e is TokenAuthException) {
+      print(e.message);
+      isAuthenticated = false;
       await logoutFromFirebase();
     }
     errorMessage = 'There was an error on the server side';
