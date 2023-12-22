@@ -100,10 +100,15 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
                                 ),
                                 child: Text(
                                   categories[index],
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontFamily: 'WorkSans',
+                                    fontWeight: isSelected
+                                        ? FontWeight.bold
+                                        : FontWeight.normal,
                                     fontSize: 15,
-                                    color: Colors.white,
+                                    color: isSelected
+                                        ? AppColors.royalPurple
+                                        : Colors.white,
                                   ),
                                   textAlign: TextAlign.start,
                                 ),
@@ -184,8 +189,15 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
                         },
                       );
                     },
-              backgroundColor: AppColors.royalPurple,
-              child: const Icon(Icons.check),
+              backgroundColor: selected.isEmpty
+                  ? AppColors.royalPurple.withOpacity(0.5)
+                  : AppColors.royalPurple,
+              child: Icon(
+                Icons.check,
+                color: selected.isEmpty
+                    ? AppColors.lightGrey
+                    : AppColors.mellowLemon,
+              ),
             ),
           ),
           if (isSavePressed)

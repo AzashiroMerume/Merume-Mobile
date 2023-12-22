@@ -16,53 +16,53 @@ class _StartScreenState extends State<StartScreen> {
         child: Stack(
           children: [
             Container(
-              decoration: const BoxDecoration(
-                color: Colors.black,
-              ),
+              color: Colors.black,
               child: Center(
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
                     Image.asset(
                       'assets/images/background.png',
                       width: 300,
                       height: 300,
                       fit: BoxFit.contain,
                     ),
-                    Container(
-                      margin: const EdgeInsets.only(top: 50.0),
-                      child: const Text(
-                        '1000 Days To Perfection',
-                        overflow: TextOverflow.clip,
-                        textAlign: TextAlign.center,
-                        maxLines: null,
-                        style: TextStyle(
-                            color: AppColors.mellowLemon,
-                            fontSize: 40,
-                            fontFamily: 'Poppins',
-                            fontWeight: FontWeight.w500,
-                            height: 1.5),
+                    const SizedBox(height: 40.0),
+                    const Text(
+                      '1000 Days To Perfection',
+                      overflow: TextOverflow.clip,
+                      textAlign: TextAlign.center,
+                      maxLines: null,
+                      style: TextStyle(
+                        color: AppColors.mellowLemon,
+                        fontSize: 40,
+                        fontFamily: 'Poppins',
+                        fontWeight: FontWeight.w500,
+                        height: 1.5,
                       ),
                     ),
-                    Container(
+                    const SizedBox(height: 17.0),
+                    const SizedBox(
                       width: 300,
-                      margin: const EdgeInsets.only(top: 17.0),
-                      child: const Text(
+                      child: Text(
                         'Become the best at what you love to do. Sharpen your skills with Merume!',
                         style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.white,
-                            fontFamily: 'WorkSans',
-                            fontWeight: FontWeight.normal,
-                            height: 1.3),
+                          fontSize: 16,
+                          color: Colors.white,
+                          fontFamily: 'WorkSans',
+                          fontWeight: FontWeight.normal,
+                          height: 1.3,
+                        ),
                         textAlign: TextAlign.center,
                       ),
                     ),
-                  ])),
+                    const SizedBox(height: 24.0),
+                  ],
+                ),
+              ),
             ),
             const Positioned(
-              top: 40,
+              top: 35,
               left: 35,
               child: Text(
                 'Merume',
@@ -75,17 +75,21 @@ class _StartScreenState extends State<StartScreen> {
               ),
             ),
             Positioned(
-              bottom: 40,
+              bottom: 60,
               left: 0,
               right: 0,
               child: Center(
                 child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pushNamed('/login');
+                  },
                   style: ElevatedButton.styleFrom(
-                      fixedSize: const Size(178, 38),
-                      backgroundColor: AppColors.royalPurple,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(50))),
-                  onPressed: (() => Navigator.of(context).pushNamed('/login')),
+                    fixedSize: const Size(178, 38),
+                    backgroundColor: AppColors.royalPurple,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                  ),
                   child: const Text(
                     'Get started',
                     style: TextStyle(
