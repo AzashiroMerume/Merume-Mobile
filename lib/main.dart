@@ -1,5 +1,6 @@
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:merume_mobile/api/auth_api/firebase_auth.dart';
 import 'package:merume_mobile/other/colors.dart';
@@ -36,7 +37,10 @@ void main() async {
     await verifyAuthInFirebase();
   } catch (e) {
     if (e is TokenAuthException) {
-      print(e.message);
+      if (kDebugMode) {
+        print(e.message);
+      }
+
       isAuthenticated = false;
       await logoutFromFirebase();
     }

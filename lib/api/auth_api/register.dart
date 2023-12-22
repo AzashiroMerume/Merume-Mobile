@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:merume_mobile/other/api_config.dart';
@@ -32,7 +33,9 @@ Future<User> register(String username, String nickname, String email,
       },
     );
 
-    print("Status code: ${response.statusCode}");
+    if (kDebugMode) {
+      print("Status code: ${response.statusCode}");
+    }
 
     switch (response.statusCode) {
       case 201:
@@ -54,7 +57,6 @@ Future<User> register(String username, String nickname, String email,
             'Received an unexpected status code: ${response.statusCode}');
     }
   } catch (e) {
-    print(e);
     if (e is SocketException) {
       throw NetworkException('Network error');
     } else if (e is TimeoutException) {
@@ -62,6 +64,10 @@ Future<User> register(String username, String nickname, String email,
     } else if (e is http.ClientException) {
       throw NetworkException('Network error');
     } else {
+      if (kDebugMode) {
+        print(e);
+      }
+
       rethrow; // Rethrow the caught exception
     }
   }

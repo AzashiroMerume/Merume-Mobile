@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:merume_mobile/other/api_config.dart';
 import 'package:merume_mobile/other/exceptions.dart';
@@ -21,7 +22,9 @@ Future<String> getEmailByNickname(String nickname) async {
       },
     );
 
-    print("Status code: ${response.statusCode}");
+    if (kDebugMode) {
+      print("Status code: ${response.statusCode}");
+    }
 
     switch (response.statusCode) {
       case 200:

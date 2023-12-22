@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart' as fire_base;
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:merume_mobile/api/auth_api/firebase_auth.dart';
 import 'package:merume_mobile/api/user_api/get_email_api.dart';
@@ -276,7 +277,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                   errorMessage =
                                       'Network connection is poor. Please try again later.';
                                 } else {
-                                  print(e);
+                                  if (kDebugMode) {
+                                    print(e);
+                                  }
+
                                   errorMessage =
                                       'An unexpected error occurred. Please try again later.';
                                 }

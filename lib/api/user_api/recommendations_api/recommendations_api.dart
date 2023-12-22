@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:merume_mobile/other/api_config.dart';
@@ -30,7 +31,9 @@ Future<List<Channel>> fetchRecommendations(int page, {int limit = 10}) async {
       headers: headers,
     );
 
-    print(response.statusCode);
+    if (kDebugMode) {
+      print("Status code: ${response.statusCode}");
+    }
 
     switch (response.statusCode) {
       case 200:

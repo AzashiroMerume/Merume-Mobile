@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fire_base;
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:merume_mobile/api/auth_api/firebase_auth.dart';
 import 'package:merume_mobile/other/colors.dart';
@@ -271,8 +272,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   errorMessage =
                                       'Network connection is poor, try again later.';
                                 } else {
-                                  errorMessage =
-                                      'An unexpected error occurred. Please try again later.';
+                                  if (kDebugMode) {
+                                    errorMessage =
+                                        'An unexpected error occurred. Please try again later.';
+                                  }
                                 }
                               });
                             } finally {

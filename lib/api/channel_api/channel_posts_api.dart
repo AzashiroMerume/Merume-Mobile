@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:merume_mobile/other/api_config.dart';
 import 'package:merume_mobile/models/post_model.dart';
 import 'package:web_socket_channel/io.dart';
@@ -26,7 +27,10 @@ Stream<List<Post>> fetchChannelPosts(String channelId) async* {
 
       await channel.sink.close();
     } catch (e) {
-      print('WebSocket error: $e');
+      if (kDebugMode) {
+        print('WebSocket error: $e');
+      }
+
       await Future.delayed(const Duration(seconds: 5));
     }
   }

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:merume_mobile/other/api_config.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -29,7 +30,11 @@ Stream<List<Channel>> fetchFollowings() async* {
       await channel.sink.close();
     } catch (e) {
       // Handle any exceptions that occur during the WebSocket connection
-      print('WebSocket error: $e');
+
+      if (kDebugMode) {
+        print('WebSocket error: $e');
+      }
+
       // You can implement a delay here before attempting to reconnect
       await Future.delayed(const Duration(seconds: 5));
     }
