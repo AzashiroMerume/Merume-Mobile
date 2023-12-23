@@ -39,7 +39,8 @@ Future<User> login(String identifier, String password, bool byEmail,
     switch (response.statusCode) {
       case 200:
         final responseData = json.decode(response.body);
-        await storage.write(key: 'authToken', value: responseData['token']);
+        await storage.write(
+            key: 'accessToken', value: responseData['access_token']);
         final userInfo = User.fromJson(responseData['user_info']);
         return userInfo;
       case 401:

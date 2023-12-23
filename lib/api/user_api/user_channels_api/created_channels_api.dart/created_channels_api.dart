@@ -10,8 +10,8 @@ const storage = FlutterSecureStorage();
 
 Stream<List<Channel>> fetchOwnChannels() async* {
   const channelUrl = '${ConfigAPI.wsURL}user/channels/created';
-  final authToken = await storage.read(key: 'authToken');
-  final headers = {'Authorization': '$authToken'};
+  final accessToken = await storage.read(key: 'accessToken');
+  final headers = {'Authorization': '$accessToken'};
 
   while (true) {
     try {

@@ -25,7 +25,7 @@ class _MainTabBarScreenState extends State<MainTabBarScreen> {
   Icon addIcon = const Icon(Icons.add);
   Widget customSearchBar = const Text(
     'Merume',
-    style: TextStyle(fontFamily: "Poppins"),
+    style: TextStyle(fontFamily: "Franklin-Gothic-Medium"),
   );
 
   @override

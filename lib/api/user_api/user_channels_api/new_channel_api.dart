@@ -19,7 +19,7 @@ Future<void> newChannel(
     String description,
     List<String> categories,
     String? channelProfilePictureUrl) async {
-  final authToken = await storage.read(key: 'authToken');
+  final accessToken = await storage.read(key: 'accessToken');
 
   try {
     final connectivityResult = await Connectivity().checkConnectivity();
@@ -40,7 +40,7 @@ Future<void> newChannel(
       }),
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': '$authToken'
+        'Authorization': '$accessToken'
       },
     );
 
@@ -52,7 +52,7 @@ Future<void> newChannel(
       case 201:
         break;
       case 401:
-        await storage.delete(key: 'authToken');
+        await storage.delete(key: 'accessToken');
         throw TokenAuthException('Token authentication error');
       case 422:
         throw UnprocessableEntityException('The request data is invalid');

@@ -12,7 +12,7 @@ const storage = FlutterSecureStorage();
 
 Future<void> createPost(String channelId, String postId, String postBody,
     List<String> postImages) async {
-  final authToken = await storage.read(key: 'authToken');
+  final accessToken = await storage.read(key: 'accessToken');
 
   try {
     final connectivityResult = await Connectivity().checkConnectivity();
@@ -29,7 +29,7 @@ Future<void> createPost(String channelId, String postId, String postBody,
       }),
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': '$authToken'
+        'Authorization': '$accessToken'
       },
     );
 
@@ -41,7 +41,7 @@ Future<void> createPost(String channelId, String postId, String postBody,
       case 201:
         break;
       case 401:
-        await storage.delete(key: 'authToken');
+        await storage.delete(key: 'accessToken');
         throw TokenAuthException('Token authentication error');
       case 404:
         throw NotFoundException('The channel not found');

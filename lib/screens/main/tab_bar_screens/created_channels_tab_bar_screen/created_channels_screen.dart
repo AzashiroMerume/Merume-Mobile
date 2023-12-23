@@ -1,6 +1,6 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:merume_mobile/other/colors.dart';
-
 import 'package:merume_mobile/models/channel_model.dart';
 import 'package:merume_mobile/api/user_api/user_channels_api/created_channels_api.dart/created_channels_api.dart';
 import 'package:merume_mobile/screens/main/channel_screens/channel_in_list_widget.dart';
@@ -13,6 +13,35 @@ class CreatedChannelsScreen extends StatefulWidget {
 }
 
 class _CreatedChannelsScreenState extends State<CreatedChannelsScreen> {
+  late StreamController<List<Channel>> _streamController;
+
+  @override
+  void initState() {
+    super.initState();
+    _streamController = StreamController<List<Channel>>();
+    _initializeStream();
+  }
+
+  @override
+  void dispose() {
+    _streamController.close();
+    super.dispose();
+  }
+
+  void _initializeStream() async {
+    try {
+      // Fetch data and add it to the stream controller
+      final Stream<List<Channel>> dataStream = fetchOwnChannels();
+      dataStream.listen((List<Channel> data) {
+        _streamController.add(data);
+      }, onError: (error) {
+        _streamController.addError(error);
+      });
+    } catch (e) {
+      _streamController.addError(e);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,7 +54,7 @@ class _CreatedChannelsScreenState extends State<CreatedChannelsScreen> {
             children: [
               Expanded(
                 child: StreamBuilder<List<Channel>>(
-                  stream: fetchOwnChannels(),
+                  stream: _streamController.stream,
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       if (snapshot.data!.isEmpty) {
@@ -50,8 +79,8 @@ class _CreatedChannelsScreenState extends State<CreatedChannelsScreen> {
                         ),
                       );
                     } else if (snapshot.hasError) {
-                      //Handle err for user
-                      return const Text('Error occured');
+                      // Handle error for the user
+                      return const Text('Error occurred');
                     } else {
                       return const Center(child: CircularProgressIndicator());
                     }

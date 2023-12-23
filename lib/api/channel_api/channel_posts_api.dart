@@ -10,8 +10,8 @@ const storage = FlutterSecureStorage();
 
 Stream<List<Post>> fetchChannelPosts(String channelId) async* {
   String channelUrl = '${ConfigAPI.wsURL}channels/$channelId/content';
-  final authToken = await storage.read(key: 'authToken');
-  final headers = {'Authorization': '$authToken'};
+  final accessToken = await storage.read(key: 'accessToken');
+  final headers = {'Authorization': '$accessToken'};
 
   while (true) {
     try {

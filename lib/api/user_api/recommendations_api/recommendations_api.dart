@@ -13,10 +13,10 @@ const storage = FlutterSecureStorage();
 
 Future<List<Channel>> fetchRecommendations(int page, {int limit = 10}) async {
   const baseUrl = '${ConfigAPI.baseURL}user/recommendations';
-  final authToken = await storage.read(key: 'authToken');
-  final headers = {'Authorization': '$authToken'};
+  final accessToken = await storage.read(key: 'accessToken');
+  final headers = {'Authorization': '$accessToken'};
 
-  if (authToken == null) {
+  if (accessToken == null) {
     throw AuthenticationException('Unauthorized');
   }
 
@@ -45,7 +45,7 @@ Future<List<Channel>> fetchRecommendations(int page, {int limit = 10}) async {
         }).toList();
         return recommendedChannels;
       case 401:
-        await storage.delete(key: 'authToken');
+        await storage.delete(key: 'accessToken');
         throw AuthenticationException('Unauthorized');
       case 500:
         throw ServerException('Internal server error');

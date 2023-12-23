@@ -10,9 +10,9 @@ import 'package:merume_mobile/other/exceptions.dart';
 const storage = FlutterSecureStorage();
 
 Future<User?> verifyAuth() async {
-  final authToken = await storage.read(key: 'authToken');
+  final accessToken = await storage.read(key: 'accessToken');
 
-  if (authToken == null) {
+  if (accessToken == null) {
     return null;
   }
 
@@ -25,7 +25,7 @@ Future<User?> verifyAuth() async {
     final response = await http.get(
       Uri.parse('${ConfigAPI.baseURL}auth'),
       headers: {
-        'Authorization': authToken,
+        'Authorization': accessToken,
       },
     );
 

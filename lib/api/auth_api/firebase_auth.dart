@@ -45,13 +45,13 @@ Future<void> logoutFromFirebase() async {
 Future<bool> verifyAuthInFirebase() async {
   const storage = FlutterSecureStorage();
   try {
-    final authToken = await storage.read(key: 'authToken');
+    final accessToken = await storage.read(key: 'accessToken');
 
-    if (authToken != null) {
-      await FirebaseAuth.instance.signInWithCustomToken(authToken);
+    if (accessToken != null) {
+      await FirebaseAuth.instance.signInWithCustomToken(accessToken);
       return true; // Authentication successful
     } else {
-      return false; // No authToken found
+      return false; // No accessToken found
     }
   } catch (e) {
     if (kDebugMode) {

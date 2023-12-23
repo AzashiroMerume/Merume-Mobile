@@ -10,9 +10,9 @@ import '../../../other/exceptions.dart';
 const storage = FlutterSecureStorage();
 
 Future<bool> savePreferences(List<String> preferences) async {
-  final authToken = await storage.read(key: 'authToken');
+  final accessToken = await storage.read(key: 'accessToken');
 
-  if (authToken == null) {
+  if (accessToken == null) {
     throw TokenAuthException('Token authentication error');
   }
 
@@ -27,14 +27,14 @@ Future<bool> savePreferences(List<String> preferences) async {
       body: json.encode({'preferences': preferences}),
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': authToken,
+        'Authorization': accessToken,
       },
     );
 
     if (response.statusCode == 200) {
       return true;
     } else if (response.statusCode == 401) {
-      await storage.delete(key: 'authToken');
+      await storage.delete(key: 'accessToken');
       throw TokenAuthException('Token authentication error');
     } else if (response.statusCode == 413) {
       throw ContentTooLargeException('Content too large');
@@ -51,9 +51,9 @@ Future<bool> savePreferences(List<String> preferences) async {
 }
 
 Future<List<String>?> getPreferences() async {
-  final authToken = await storage.read(key: 'authToken');
+  final accessToken = await storage.read(key: 'accessToken');
 
-  if (authToken == null) {
+  if (accessToken == null) {
     throw TokenAuthException('Token authentication error');
   }
 
@@ -61,7 +61,7 @@ Future<List<String>?> getPreferences() async {
     final response = await http.get(
       Uri.parse('http://localhost:8081/preferences'),
       headers: {
-        'Authorization': authToken,
+        'Authorization': accessToken,
       },
     );
 
@@ -82,7 +82,7 @@ Future<List<String>?> getPreferences() async {
         throw Exception('Preferences retrieval failed');
       }
     } else if (response.statusCode == 401) {
-      await storage.delete(key: 'authToken');
+      await storage.delete(key: 'accessToken');
       throw TokenAuthException('Token authentication error');
     } else if (response.statusCode == 413) {
       throw ContentTooLargeException('Content too large');

@@ -61,6 +61,7 @@ class _ChannelScreenState extends State<ChannelScreen> {
 
   @override
   void dispose() {
+    itemsController.sink.close();
     itemsController.close();
     super.dispose();
   }
