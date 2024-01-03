@@ -6,6 +6,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:merume_mobile/other/api_config.dart';
 import 'package:merume_mobile/models/user_model.dart';
 import 'package:merume_mobile/other/exceptions.dart';
+import 'package:merume_mobile/api/auth_api/access_token_api.dart'; // Import for getNewAccessToken
 
 const storage = FlutterSecureStorage();
 
@@ -36,10 +37,17 @@ Future<User?> verifyAuth() async {
         final userInfo = User.fromJson(responseData['user_info']);
         return userInfo;
       case 401:
-        await storage.delete(key: 'authToken');
+        await storage.delete(key: 'accessToken');
         final responseData = json.decode(response.body);
         if (responseData['error_message'] == 'Expired') {
-          throw TokenExpiredException('Access token expired');
+          final newAccessToken =
+              await getNewAccessToken(); // Get a new access token
+          if (newAccessToken != null) {
+            await storage.write(key: 'accessToken', value: newAccessToken);
+            return await verifyAuth(); // Retry with the new access token
+          } else {
+            throw TokenErrorException('Token authentication error');
+          }
         } else {
           throw TokenErrorException('Token authentication error');
         }
