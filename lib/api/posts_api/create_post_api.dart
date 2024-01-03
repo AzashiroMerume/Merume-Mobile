@@ -29,7 +29,7 @@ Future<void> createPost(String channelId, String postId, String postBody,
       }),
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': '$accessToken'
+        'access_token': '$accessToken'
       },
     );
 
@@ -42,7 +42,7 @@ Future<void> createPost(String channelId, String postId, String postBody,
         break;
       case 401:
         await storage.delete(key: 'accessToken');
-        throw TokenAuthException('Token authentication error');
+        throw TokenErrorException('Token authentication error');
       case 404:
         throw NotFoundException('The channel not found');
       case 409:

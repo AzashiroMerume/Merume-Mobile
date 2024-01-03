@@ -316,7 +316,7 @@ class _ChannelScreenState extends State<ChannelScreen> {
                                     post: post, status: MessageStatus.error));
                               }
 
-                              if (e is TokenAuthException) {
+                              if (e is TokenErrorException) {
                                 errorMessage =
                                     'Token authentication error. Please try to relogin.';
                               } else if (e is NotFoundException) {

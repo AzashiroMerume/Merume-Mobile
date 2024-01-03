@@ -11,7 +11,7 @@ const storage = FlutterSecureStorage();
 Stream<List<Channel>> fetchFollowings() async* {
   const channelUrl = '${ConfigAPI.wsURL}user/channels/subscriptions';
   final accessToken = await storage.read(key: 'accessToken');
-  final headers = {'Authorization': '$accessToken'};
+  final headers = {'access_token': '$accessToken'};
 
   while (true) {
     try {

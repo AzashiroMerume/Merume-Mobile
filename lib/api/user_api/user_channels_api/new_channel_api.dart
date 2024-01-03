@@ -40,7 +40,7 @@ Future<void> newChannel(
       }),
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': '$accessToken'
+        'access_token': '$accessToken'
       },
     );
 
@@ -53,7 +53,7 @@ Future<void> newChannel(
         break;
       case 401:
         await storage.delete(key: 'accessToken');
-        throw TokenAuthException('Token authentication error');
+        throw TokenErrorException('Token authentication error');
       case 422:
         throw UnprocessableEntityException('The request data is invalid');
       case 500:

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:merume_mobile/api/auth_api/firebase_auth.dart';
-import 'package:merume_mobile/api/auth_api/logout.dart';
+import 'package:merume_mobile/api/auth_api/firebase_auth_api.dart';
+import 'package:merume_mobile/api/auth_api/logout_api.dart';
 import 'package:merume_mobile/user_provider.dart';
 import 'package:provider/provider.dart';
 

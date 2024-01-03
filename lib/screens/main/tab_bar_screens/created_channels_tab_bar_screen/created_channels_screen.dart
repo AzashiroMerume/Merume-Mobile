@@ -28,15 +28,10 @@ class _CreatedChannelsScreenState extends State<CreatedChannelsScreen> {
     super.dispose();
   }
 
-  void _initializeStream() async {
+  void _initializeStream() {
     try {
-      // Fetch data and add it to the stream controller
       final Stream<List<Channel>> dataStream = fetchOwnChannels();
-      dataStream.listen((List<Channel> data) {
-        _streamController.add(data);
-      }, onError: (error) {
-        _streamController.addError(error);
-      });
+      _streamController.addStream(dataStream);
     } catch (e) {
       _streamController.addError(e);
     }
@@ -80,7 +75,7 @@ class _CreatedChannelsScreenState extends State<CreatedChannelsScreen> {
                       );
                     } else if (snapshot.hasError) {
                       // Handle error for the user
-                      return const Text('Error occurred');
+                      return Text('Error occurred: ${snapshot.error}');
                     } else {
                       return const Center(child: CircularProgressIndicator());
                     }

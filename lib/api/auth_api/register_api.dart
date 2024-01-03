@@ -40,9 +40,15 @@ Future<User> register(String username, String nickname, String email,
     switch (response.statusCode) {
       case 201:
         final responseData = json.decode(response.body);
+
+        await storage.write(key: 'accessToken', value: responseData['token']);
         await storage.write(
-            key: 'accessToken', value: responseData['access_token']);
+            key: 'refreshToken', value: responseData['refresh_token']);
+        await storage.write(
+            key: 'userInfo', value: json.encode(responseData['user_info']));
+
         final userInfo = User.fromJson(responseData['user_info']);
+
         return userInfo;
       case 409:
         final responseData = json.decode(response.body);

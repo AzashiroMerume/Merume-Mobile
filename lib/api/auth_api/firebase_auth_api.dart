@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:merume_mobile/api/auth_api/access_token_api.dart';
+import 'package:merume_mobile/other/exceptions.dart';
 
 Future<String?> loginInFirebase(String email, String password) async {
   try {
@@ -58,6 +60,23 @@ Future<bool> verifyAuthInFirebase() async {
       print('Verify FirebaseAuth Error: $e');
     }
 
-    return false; // Error during authentication
+    if (e is FirebaseAuthException) {
+      if (e.code == 'customTokenExpired') {
+        await storage.delete(key: 'accessToken');
+        try {
+          final accessToken = await getNewAccessToken();
+
+          if (accessToken != null) {
+            await FirebaseAuth.instance.signInWithCustomToken(accessToken);
+          } else {
+            throw TokenErrorException('Token auth error');
+          }
+        } catch (accessTokenError) {
+          rethrow;
+        }
+      }
+    }
+
+    throw TokenErrorException('Token auth error');
   }
 }

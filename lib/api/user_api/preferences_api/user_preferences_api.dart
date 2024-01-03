@@ -13,7 +13,7 @@ Future<bool> savePreferences(List<String> preferences) async {
   final accessToken = await storage.read(key: 'accessToken');
 
   if (accessToken == null) {
-    throw TokenAuthException('Token authentication error');
+    throw TokenErrorException('Token authentication error');
   }
 
   try {
@@ -27,7 +27,7 @@ Future<bool> savePreferences(List<String> preferences) async {
       body: json.encode({'preferences': preferences}),
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': accessToken,
+        'access_token': accessToken,
       },
     );
 
@@ -35,7 +35,7 @@ Future<bool> savePreferences(List<String> preferences) async {
       return true;
     } else if (response.statusCode == 401) {
       await storage.delete(key: 'accessToken');
-      throw TokenAuthException('Token authentication error');
+      throw TokenErrorException('Token authentication error');
     } else if (response.statusCode == 413) {
       throw ContentTooLargeException('Content too large');
     } else if (response.statusCode == 422) {
@@ -54,14 +54,14 @@ Future<List<String>?> getPreferences() async {
   final accessToken = await storage.read(key: 'accessToken');
 
   if (accessToken == null) {
-    throw TokenAuthException('Token authentication error');
+    throw TokenErrorException('Token authentication error');
   }
 
   try {
     final response = await http.get(
       Uri.parse('http://localhost:8081/preferences'),
       headers: {
-        'Authorization': accessToken,
+        'access_token': accessToken,
       },
     );
 
@@ -83,7 +83,7 @@ Future<List<String>?> getPreferences() async {
       }
     } else if (response.statusCode == 401) {
       await storage.delete(key: 'accessToken');
-      throw TokenAuthException('Token authentication error');
+      throw TokenErrorException('Token authentication error');
     } else if (response.statusCode == 413) {
       throw ContentTooLargeException('Content too large');
     } else if (response.statusCode == 422) {

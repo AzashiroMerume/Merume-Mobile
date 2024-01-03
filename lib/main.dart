@@ -1,10 +1,11 @@
+import 'dart:convert';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:merume_mobile/api/auth_api/firebase_auth.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:merume_mobile/api/auth_api/firebase_auth_api.dart';
 import 'package:merume_mobile/other/colors.dart';
-import 'package:merume_mobile/other/exceptions.dart';
 import 'package:merume_mobile/other/firebase_options.dart';
 import 'package:merume_mobile/models/user_model.dart';
 import 'package:merume_mobile/screens/auth/login_screen.dart';
@@ -12,9 +13,10 @@ import 'package:merume_mobile/screens/auth/register_screen.dart';
 import 'package:merume_mobile/screens/main/main_tab_bar_screen.dart';
 import 'package:merume_mobile/network_checking/network_wrapper.dart';
 import 'package:merume_mobile/screens/on_boarding/start_screen.dart';
-import 'package:merume_mobile/api/auth_api/verify_auth.dart';
 import 'package:merume_mobile/user_provider.dart';
 import 'package:provider/provider.dart';
+
+const storage = FlutterSecureStorage();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,27 +34,24 @@ void main() async {
   );
 
   try {
-    user = await verifyAuth();
-    isAuthenticated = user != null;
-    await verifyAuthInFirebase();
+    isAuthenticated = await verifyAuthInFirebase();
   } catch (e) {
-    if (e is TokenAuthException) {
-      if (kDebugMode) {
-        print(e.message);
-      }
-
-      isAuthenticated = false;
-      await logoutFromFirebase();
+    if (kDebugMode) {
+      print(e);
     }
-    errorMessage = 'There was an error on the server side';
+    isAuthenticated = false;
+  }
+
+  if (isAuthenticated) {
+    final userInfoJson = await storage.read(key: 'userInfo');
+    if (userInfoJson != null) {
+      final Map<String, dynamic> userInfoMap = jsonDecode(userInfoJson);
+      user = User.fromJson(userInfoMap);
+    }
   }
 
   final userProvider = UserProvider();
-  if (user != null) {
-    userProvider.setUser(user);
-  } else {
-    userProvider.setUser(null);
-  }
+  userProvider.setUser(user);
 
   runApp(
     ChangeNotifierProvider.value(

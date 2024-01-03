@@ -1,12 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart' as fire_base;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:merume_mobile/api/auth_api/firebase_auth.dart';
+import 'package:merume_mobile/api/auth_api/firebase_auth_api.dart';
 import 'package:merume_mobile/api/user_api/get_email_api.dart';
 import 'package:merume_mobile/other/colors.dart';
 import 'dart:async';
 import 'package:email_validator/email_validator.dart';
-import 'package:merume_mobile/api/auth_api/login.dart';
+import 'package:merume_mobile/api/auth_api/login_api.dart';
 import 'package:merume_mobile/other/exceptions.dart';
 import 'package:merume_mobile/user_provider.dart';
 import 'package:provider/provider.dart';

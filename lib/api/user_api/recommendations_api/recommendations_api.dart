@@ -14,7 +14,7 @@ const storage = FlutterSecureStorage();
 Future<List<Channel>> fetchRecommendations(int page, {int limit = 10}) async {
   const baseUrl = '${ConfigAPI.baseURL}user/recommendations';
   final accessToken = await storage.read(key: 'accessToken');
-  final headers = {'Authorization': '$accessToken'};
+  final headers = {'access_token': '$accessToken'};
 
   if (accessToken == null) {
     throw AuthenticationException('Unauthorized');

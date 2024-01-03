@@ -348,7 +348,7 @@ class _AddChannelScreenSecondState extends State<AddChannelScreenSecond> {
                                     print("Add Channel Second error: $e");
                                   }
                                   setState(() {
-                                    if (e is TokenAuthException) {
+                                    if (e is TokenErrorException) {
                                       errorMessage =
                                           'Token authentication error. Please try to relogin.';
                                     } else if (e is FirebaseAuthException) {

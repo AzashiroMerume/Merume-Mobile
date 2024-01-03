@@ -157,7 +157,7 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
                                 }
                               } catch (e) {
                                 setState(() {
-                                  if (e is TokenAuthException) {
+                                  if (e is TokenErrorException) {
                                     errorMessage =
                                         'There is an error with authentication. Please try to re-login.';
                                   } else if (e
