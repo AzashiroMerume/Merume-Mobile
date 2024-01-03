@@ -69,37 +69,53 @@ class _ChannelScreenState extends State<ChannelScreen> {
   @override
   void initState() {
     super.initState();
-    final webSocketStream = fetchChannelPosts(widget.channel.id);
-    webSocketStream.listen((dynamic data) {
-      if (data is List<Post>) {
-        final List<PostSent> newPosts = data
-            .map((post) => PostSent(post: post, status: MessageStatus.done))
-            .toList();
+    _initializeStream();
+  }
 
-        // Create a list of post IDs from the new posts
-        final List<String> newPostIds =
-            newPosts.map((post) => post.post.id).toList();
+  void _initializeStream() {
+    try {
+      final webSocketStream = fetchChannelPosts(widget.channel.id);
+      webSocketStream.listen((dynamic data) {
+        if (data is List<Post>) {
+          final List<PostSent> newPosts = data
+              .map((post) => PostSent(post: post, status: MessageStatus.done))
+              .toList();
 
-        // Remove posts that no longer exist on the server
-        posts.removeWhere((postSent) => !newPostIds.contains(postSent.post.id));
+          // Create a list of post IDs from the new posts
+          final List<String> newPostIds =
+              newPosts.map((post) => post.post.id).toList();
 
-        // Update the existing posts list with the new posts
-        for (var newPost in newPosts) {
-          final existingPostIndex =
-              posts.indexWhere((post) => post.post.id == newPost.post.id);
-          if (existingPostIndex != -1 && posts[existingPostIndex] != newPost) {
-            // If a post with the same ID already exists and newPost is not equal to it, then replace it with the new one
-            posts[existingPostIndex] = newPost;
-          } else {
-            posts.insert(0, newPost);
+          // Remove posts that no longer exist on the server
+          posts.removeWhere(
+              (postSent) => !newPostIds.contains(postSent.post.id));
+
+          // Update the existing posts list with the new posts
+          for (var newPost in newPosts) {
+            final existingPostIndex =
+                posts.indexWhere((post) => post.post.id == newPost.post.id);
+            if (existingPostIndex != -1 &&
+                posts[existingPostIndex] != newPost) {
+              // If a post with the same ID already exists and newPost is not equal to it, then replace it with the new one
+              posts[existingPostIndex] = newPost;
+            } else {
+              posts.insert(0, newPost);
+            }
+          }
+
+          if (!itemsController.isClosed) {
+            itemsController.add(posts);
           }
         }
-
-        if (!itemsController.isClosed) {
-          itemsController.add(posts);
-        }
+      });
+    } catch (e) {
+      if (e is TokenExpiredException) {
+        Navigator.of(context).pushNamedAndRemoveUntil(
+          '/login',
+          (Route<dynamic> route) => false,
+        );
       }
-    });
+      itemsController.addError(e);
+    }
   }
 
   @override
@@ -197,14 +213,42 @@ class _ChannelScreenState extends State<ChannelScreen> {
                     } else if (snapshot.hasError) {
                       isLoading = false;
                       // Handle the error state
-                      return const Center(
-                        child: Text(
-                          'There is an error.. Try again later',
-                          style: TextStyle(
-                            color: Colors.red,
-                            fontFamily: 'WorkSans',
-                            fontSize: 15,
-                          ),
+                      return Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text(
+                              'Oops! Something went wrong.\nPlease try again later.',
+                              style: TextStyle(
+                                color:
+                                    AppColors.lightGrey, // Change color to grey
+                                fontFamily: 'Poppins',
+                                fontSize: 18, // Increase font size
+                              ),
+                            ),
+                            const SizedBox(height: 15),
+                            ElevatedButton(
+                              onPressed: () {
+                                // Retry action when button is pressed
+                                _initializeStream();
+                              },
+                              style: ElevatedButton.styleFrom(
+                                fixedSize: const Size(150, 35),
+                                backgroundColor: AppColors.royalPurple,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(50),
+                                  side: const BorderSide(
+                                      color:
+                                          AppColors.royalPurple // When pressed
+                                      ),
+                                ),
+                              ),
+                              child: const Text(
+                                'Try Again',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          ],
                         ),
                       );
                     } else {

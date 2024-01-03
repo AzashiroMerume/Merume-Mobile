@@ -14,25 +14,25 @@ class CreatedChannelsScreen extends StatefulWidget {
 }
 
 class _CreatedChannelsScreenState extends State<CreatedChannelsScreen> {
-  late StreamController<List<Channel>> _streamController;
+  final itemsController = StreamController<List<Channel>>();
 
   @override
   void initState() {
     super.initState();
-    _streamController = StreamController<List<Channel>>();
     _initializeStream();
   }
 
   @override
   void dispose() {
-    _streamController.close();
+    itemsController.sink.close();
+    itemsController.close();
     super.dispose();
   }
 
   void _initializeStream() {
     try {
       final Stream<List<Channel>> dataStream = fetchOwnChannels();
-      _streamController.addStream(dataStream);
+      itemsController.addStream(dataStream);
     } catch (e) {
       if (e is TokenExpiredException) {
         Navigator.of(context).pushNamedAndRemoveUntil(
@@ -40,7 +40,7 @@ class _CreatedChannelsScreenState extends State<CreatedChannelsScreen> {
           (Route<dynamic> route) => false,
         );
       }
-      _streamController.addError(e);
+      itemsController.addError(e);
     }
   }
 
@@ -56,7 +56,7 @@ class _CreatedChannelsScreenState extends State<CreatedChannelsScreen> {
             children: [
               Expanded(
                 child: StreamBuilder<List<Channel>>(
-                  stream: _streamController.stream,
+                  stream: itemsController.stream,
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       if (snapshot.data!.isEmpty) {
@@ -81,15 +81,42 @@ class _CreatedChannelsScreenState extends State<CreatedChannelsScreen> {
                         ),
                       );
                     } else if (snapshot.hasError) {
-                      // Handle error for the user
-                      return const Center(
-                        child: Text(
-                          'There is an error.. Try again later',
-                          style: TextStyle(
-                            color: Colors.red,
-                            fontFamily: 'WorkSans',
-                            fontSize: 15,
-                          ),
+                      return Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text(
+                              'Oops! Something went wrong.\nPlease try again later.',
+                              style: TextStyle(
+                                color:
+                                    AppColors.lightGrey, // Change color to grey
+                                fontFamily: 'Poppins',
+                                fontSize: 18, // Increase font size
+                              ),
+                            ),
+                            const SizedBox(height: 15),
+                            ElevatedButton(
+                              onPressed: () {
+                                // Retry action when button is pressed
+                                _initializeStream();
+                              },
+                              style: ElevatedButton.styleFrom(
+                                fixedSize: const Size(150, 35),
+                                backgroundColor: AppColors.royalPurple,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(50),
+                                  side: const BorderSide(
+                                      color:
+                                          AppColors.royalPurple // When pressed
+                                      ),
+                                ),
+                              ),
+                              child: const Text(
+                                'Try Again',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          ],
                         ),
                       );
                     } else {
