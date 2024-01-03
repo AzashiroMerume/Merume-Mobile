@@ -198,7 +198,14 @@ class _ChannelScreenState extends State<ChannelScreen> {
                       isLoading = false;
                       // Handle the error state
                       return const Center(
-                        child: Text('There is an error.. Try again later'),
+                        child: Text(
+                          'There is an error.. Try again later',
+                          style: TextStyle(
+                            color: Colors.red,
+                            fontFamily: 'WorkSans',
+                            fontSize: 15,
+                          ),
+                        ),
                       );
                     } else {
                       isLoading = true;

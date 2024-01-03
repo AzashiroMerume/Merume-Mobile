@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:merume_mobile/other/colors.dart';
 import 'package:merume_mobile/models/channel_model.dart';
 import 'package:merume_mobile/api/user_api/user_channels_api/created_channels_api.dart/created_channels_api.dart';
+import 'package:merume_mobile/other/exceptions.dart';
 import 'package:merume_mobile/screens/main/channel_screens/channel_in_list_widget.dart';
 
 class CreatedChannelsScreen extends StatefulWidget {
@@ -33,6 +34,12 @@ class _CreatedChannelsScreenState extends State<CreatedChannelsScreen> {
       final Stream<List<Channel>> dataStream = fetchOwnChannels();
       _streamController.addStream(dataStream);
     } catch (e) {
+      if (e is TokenExpiredException) {
+        Navigator.of(context).pushNamedAndRemoveUntil(
+          '/login',
+          (Route<dynamic> route) => false,
+        );
+      }
       _streamController.addError(e);
     }
   }
@@ -75,7 +82,16 @@ class _CreatedChannelsScreenState extends State<CreatedChannelsScreen> {
                       );
                     } else if (snapshot.hasError) {
                       // Handle error for the user
-                      return Text('Error occurred: ${snapshot.error}');
+                      return const Center(
+                        child: Text(
+                          'There is an error.. Try again later',
+                          style: TextStyle(
+                            color: Colors.red,
+                            fontFamily: 'WorkSans',
+                            fontSize: 15,
+                          ),
+                        ),
+                      );
                     } else {
                       return const Center(child: CircularProgressIndicator());
                     }

@@ -1,14 +1,13 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
 import 'package:merume_mobile/api/auth_api/access_token_api.dart';
 import 'package:merume_mobile/other/api_config.dart';
 import 'package:merume_mobile/models/channel_model.dart';
 import 'package:merume_mobile/other/exceptions.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:web_socket_channel/web_socket_channel.dart';
 
 const storage = FlutterSecureStorage();
 
@@ -56,14 +55,10 @@ Stream<List<Channel>> fetchOwnChannels() async* {
 
       await channel.sink.close();
     } catch (e) {
-      if (e is WebSocketChannelException) {
-        // Handle WebSocket connection error
-        yield []; // Empty list or handle differently as needed
-      } else {
-        if (kDebugMode) {
-          print('Error: $e');
-        }
+      if (kDebugMode) {
+        print("Error in created_channels_api: $e");
       }
+      rethrow;
     }
   }
 }
