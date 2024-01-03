@@ -114,7 +114,6 @@ class _ChannelScreenState extends State<ChannelScreen> {
           (Route<dynamic> route) => false,
         );
       }
-      itemsController.addError(e);
     }
   }
 

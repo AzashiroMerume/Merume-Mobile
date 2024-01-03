@@ -5,6 +5,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:merume_mobile/api/auth_api/access_token_api.dart';
 import 'package:merume_mobile/other/api_config.dart';
 import '../../../other/exceptions.dart';
 import '../../../models/channel_model.dart';
@@ -46,7 +47,20 @@ Future<List<Channel>> fetchRecommendations(int page, {int limit = 10}) async {
         return recommendedChannels;
       case 401:
         await storage.delete(key: 'accessToken');
-        throw AuthenticationException('Unauthorized');
+        final responseData = json.decode(response.body);
+        if (responseData['error_message'] == 'Expired') {
+          final newAccessToken =
+              await getNewAccessToken(); // Get a new access token
+          if (newAccessToken != null) {
+            await storage.write(key: 'accessToken', value: newAccessToken);
+            return await fetchRecommendations(page,
+                limit: limit); // Retry with the new access token
+          } else {
+            throw TokenErrorException('Token authentication error');
+          }
+        } else {
+          throw TokenErrorException('Token authentication error');
+        }
       case 500:
         throw ServerException('Internal server error');
       default:
