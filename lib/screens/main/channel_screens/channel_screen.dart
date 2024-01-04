@@ -73,48 +73,50 @@ class _ChannelScreenState extends State<ChannelScreen> {
   }
 
   void _initializeStream() {
-    try {
-      final webSocketStream = fetchChannelPosts(widget.channel.id);
-      webSocketStream.listen((dynamic data) {
-        if (data is List<Post>) {
-          final List<PostSent> newPosts = data
-              .map((post) => PostSent(post: post, status: MessageStatus.done))
-              .toList();
+    final Stream<List<Post>> webSocketStream =
+        fetchChannelPosts(widget.channel.id);
+    webSocketStream.listen((dynamic data) {
+      if (data is List<Post>) {
+        final List<PostSent> newPosts = data
+            .map((post) => PostSent(post: post, status: MessageStatus.done))
+            .toList();
 
-          // Create a list of post IDs from the new posts
-          final List<String> newPostIds =
-              newPosts.map((post) => post.post.id).toList();
+        // Create a list of post IDs from the new posts
+        final List<String> newPostIds =
+            newPosts.map((post) => post.post.id).toList();
 
-          // Remove posts that no longer exist on the server
-          posts.removeWhere(
-              (postSent) => !newPostIds.contains(postSent.post.id));
+        // Remove posts that no longer exist on the server
+        posts.removeWhere((postSent) => !newPostIds.contains(postSent.post.id));
 
-          // Update the existing posts list with the new posts
-          for (var newPost in newPosts) {
-            final existingPostIndex =
-                posts.indexWhere((post) => post.post.id == newPost.post.id);
-            if (existingPostIndex != -1 &&
-                posts[existingPostIndex] != newPost) {
-              // If a post with the same ID already exists and newPost is not equal to it, then replace it with the new one
-              posts[existingPostIndex] = newPost;
-            } else {
-              posts.insert(0, newPost);
-            }
-          }
-
-          if (!itemsController.isClosed) {
-            itemsController.add(posts);
+        // Update the existing posts list with the new posts
+        for (var newPost in newPosts) {
+          final existingPostIndex =
+              posts.indexWhere((post) => post.post.id == newPost.post.id);
+          if (existingPostIndex != -1 && posts[existingPostIndex] != newPost) {
+            // If a post with the same ID already exists and newPost is not equal to it, then replace it with the new one
+            posts[existingPostIndex] = newPost;
+          } else {
+            posts.insert(0, newPost);
           }
         }
-      });
-    } catch (e) {
+
+        if (!itemsController.isClosed) {
+          itemsController.add(posts);
+        }
+      }
+    }, onError: (e) {
+      if (e is TokenErrorException) {
+        print("THE ERROR: ${e.message}");
+      }
+
       if (e is TokenExpiredException) {
         Navigator.of(context).pushNamedAndRemoveUntil(
           '/login',
           (Route<dynamic> route) => false,
         );
       }
-    }
+      itemsController.addError(e);
+    });
   }
 
   @override

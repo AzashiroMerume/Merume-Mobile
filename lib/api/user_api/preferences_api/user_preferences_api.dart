@@ -35,7 +35,6 @@ Future<bool> savePreferences(List<String> preferences) async {
     if (response.statusCode == 200) {
       return true;
     } else if (response.statusCode == 401) {
-      await storage.delete(key: 'accessToken');
       final responseData = json.decode(response.body);
       if (responseData['error_message'] == 'Expired') {
         final newAccessToken =
@@ -96,7 +95,6 @@ Future<List<String>?> getPreferences() async {
         throw Exception('Preferences retrieval failed');
       }
     } else if (response.statusCode == 401) {
-      await storage.delete(key: 'accessToken');
       throw TokenErrorException('Token authentication error');
     } else if (response.statusCode == 413) {
       throw ContentTooLargeException('Content too large');

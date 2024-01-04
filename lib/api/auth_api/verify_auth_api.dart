@@ -37,7 +37,6 @@ Future<User?> verifyAuth() async {
         final userInfo = User.fromJson(responseData['user_info']);
         return userInfo;
       case 401:
-        await storage.delete(key: 'accessToken');
         final responseData = json.decode(response.body);
         if (responseData['error_message'] == 'Expired') {
           final newAccessToken =

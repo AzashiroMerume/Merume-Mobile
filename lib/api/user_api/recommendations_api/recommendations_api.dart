@@ -46,7 +46,6 @@ Future<List<Channel>> fetchRecommendations(int page, {int limit = 10}) async {
         }).toList();
         return recommendedChannels;
       case 401:
-        await storage.delete(key: 'accessToken');
         final responseData = json.decode(response.body);
         if (responseData['error_message'] == 'Expired') {
           final newAccessToken =

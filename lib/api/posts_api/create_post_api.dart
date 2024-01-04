@@ -42,7 +42,6 @@ Future<void> createPost(String channelId, String postId, String postBody,
       case 201:
         break;
       case 401:
-        await storage.delete(key: 'accessToken');
         final responseData = json.decode(response.body);
         if (responseData['error_message'] == 'Expired') {
           final newAccessToken =

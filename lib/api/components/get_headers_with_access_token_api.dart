@@ -19,7 +19,6 @@ Future<Map<String, String>> getHeadersWithValidAccessToken() async {
     final errorResponse = json.decode(checkAuthResponse.body);
     if (errorResponse.containsKey('error_message') &&
         errorResponse['error_message'] == 'Expired') {
-      await storage.delete(key: 'accessToken');
       try {
         final newAccessToken = await getNewAccessToken();
 

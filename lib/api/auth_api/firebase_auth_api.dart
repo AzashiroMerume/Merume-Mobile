@@ -62,7 +62,6 @@ Future<bool> verifyAuthInFirebase() async {
 
     if (e is FirebaseAuthException) {
       if (e.code == 'customTokenExpired') {
-        await storage.delete(key: 'accessToken');
         try {
           final accessToken = await getNewAccessToken();
 
