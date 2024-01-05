@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:merume_mobile/api/auth_api/access_token_api.dart';
 import 'package:merume_mobile/other/exceptions.dart';
 
@@ -46,9 +47,8 @@ Future<void> logoutFromFirebase() async {
 
 Future<bool> verifyAuthInFirebase() async {
   const storage = FlutterSecureStorage();
+  final accessToken = await storage.read(key: 'accessToken');
   try {
-    final accessToken = await storage.read(key: 'accessToken');
-
     if (accessToken != null) {
       await FirebaseAuth.instance.signInWithCustomToken(accessToken);
       return true; // Authentication successful
@@ -61,21 +61,36 @@ Future<bool> verifyAuthInFirebase() async {
     }
 
     if (e is FirebaseAuthException) {
-      if (e.code == 'customTokenExpired') {
+      if (accessToken != null && isTokenExpired(accessToken)) {
         try {
           final accessToken = await getNewAccessToken();
 
           if (accessToken != null) {
             await FirebaseAuth.instance.signInWithCustomToken(accessToken);
+            if (FirebaseAuth.instance.currentUser != null) {
+              return true; // Authentication successful
+            } else {
+              return false; // Authentication failed
+            }
           } else {
             throw TokenErrorException('Token auth error');
           }
         } catch (accessTokenError) {
           rethrow;
         }
+      } else {
+        throw TokenErrorException('Token auth error');
       }
+    } else {
+      throw TokenErrorException('Token auth error');
     }
-
-    throw TokenErrorException('Token auth error');
   }
+}
+
+bool isTokenExpired(String token) {
+  final Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
+  final DateTime expirationDate =
+      DateTime.fromMillisecondsSinceEpoch(decodedToken['exp'] * 1000);
+  final DateTime now = DateTime.now();
+  return now.isAfter(expirationDate);
 }
