@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:merume_mobile/api/user_api/preferences_api/user_preferences_api.dart';
 import 'package:merume_mobile/other/colors.dart';
 import 'package:merume_mobile/other/exceptions.dart';
+import 'package:merume_mobile/screens/components/categories.dart';
 import 'package:merume_mobile/screens/components/confirmation_popup_widget.dart';
 import 'package:merume_mobile/other/error_custom_snackbar.dart';
 import 'package:merume_mobile/user_provider.dart';
 import 'package:provider/provider.dart';
-import '../components/categories.dart';
-import '../../api/user_api/preferences_api/user_preferences_api.dart';
 
 class PreferencesScreen extends StatefulWidget {
   const PreferencesScreen({super.key});
@@ -106,9 +106,7 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
                                         ? FontWeight.bold
                                         : FontWeight.normal,
                                     fontSize: 15,
-                                    color: isSelected
-                                        ? AppColors.royalPurple
-                                        : Colors.white,
+                                    color: Colors.white,
                                   ),
                                   textAlign: TextAlign.start,
                                 ),
