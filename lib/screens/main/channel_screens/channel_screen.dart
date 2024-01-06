@@ -54,7 +54,9 @@ class _ChannelScreenState extends State<ChannelScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => const ChannelDetailsScreen(),
+        builder: (context) => ChannelDetailsScreen(
+          channel: widget.channel,
+        ),
       ),
     );
   }
