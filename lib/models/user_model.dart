@@ -3,6 +3,7 @@ class User {
   final String nickname;
   final String username;
   final String email;
+  final String? pfpLink;
   final List<String>? preferences;
 
   User({
@@ -10,6 +11,7 @@ class User {
     required this.nickname,
     required this.username,
     required this.email,
+    this.pfpLink,
     this.preferences,
   });
 
@@ -19,6 +21,7 @@ class User {
       nickname: json['nickname'],
       username: json['username'],
       email: json['email'],
+      pfpLink: json['pfp_link'],
       preferences: json['preferences'] != null
           ? List<String>.from(json['preferences'])
           : null,
@@ -31,6 +34,7 @@ class User {
       nickname: nickname,
       username: username,
       email: email,
+      pfpLink: pfpLink,
       preferences: preferences ?? this.preferences,
     );
   }

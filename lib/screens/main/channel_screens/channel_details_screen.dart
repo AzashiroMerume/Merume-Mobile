@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:merume_mobile/api/channel_api/channel_followers_api.dart';
 import 'package:merume_mobile/models/channel_model.dart';
+import 'package:merume_mobile/models/user_model.dart';
 import 'package:merume_mobile/other/colors.dart';
 
 class ChannelDetailsScreen extends StatefulWidget {
@@ -12,6 +14,14 @@ class ChannelDetailsScreen extends StatefulWidget {
 }
 
 class _ChannelDetailsScreenState extends State<ChannelDetailsScreen> {
+  late Future<List<User>> _followersFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _followersFuture = getChannelFollowers(widget.channel.id);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -63,6 +73,29 @@ class _ChannelDetailsScreenState extends State<ChannelDetailsScreen> {
                   children: [
                     ListTile(
                       title: const Text(
+                        'Current Challenge Day',
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          fontFamily: 'Poppins',
+                          color: AppColors.mellowLemon,
+                        ),
+                      ),
+                      subtitle: Text(
+                        widget.channel.currentChallengeDay.toString(),
+                        style: const TextStyle(
+                          fontSize: 18.0,
+                          fontFamily: 'WorkSans',
+                          color: Colors.white,
+                        ),
+                        textAlign: TextAlign.justify,
+                      ),
+                    ),
+                    Divider(
+                      color: AppColors.lavenderHaze.withOpacity(0.5),
+                      thickness: 1,
+                    ),
+                    ListTile(
+                      title: const Text(
                         'Subscribers',
                         style: TextStyle(
                           fontSize: 16.0,
@@ -106,7 +139,62 @@ class _ChannelDetailsScreenState extends State<ChannelDetailsScreen> {
                       color: AppColors.lavenderHaze.withOpacity(0.5),
                       thickness: 1,
                     ),
-                    // Add more ListTiles or content here as needed
+                    ListTile(
+                      title: const Text(
+                        'Categories',
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          fontFamily: 'Poppins',
+                          color: AppColors.mellowLemon,
+                        ),
+                      ),
+                      subtitle: Text(
+                        widget.channel.categories.join(', '),
+                        style: const TextStyle(
+                          fontSize: 18.0,
+                          fontFamily: 'WorkSans',
+                          color: Colors.white,
+                        ),
+                        textAlign: TextAlign.justify,
+                      ),
+                    ),
+                    Divider(
+                      color: AppColors.lavenderHaze.withOpacity(0.5),
+                      thickness: 1,
+                    ),
+                    FutureBuilder<List<User>>(
+                      future: _followersFuture,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const CircularProgressIndicator(); // Show a loading indicator while fetching data
+                        } else if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        } else if (!snapshot.hasData ||
+                            snapshot.data!.isEmpty) {
+                          return const Text('No followers available');
+                        } else {
+                          // Display the list of followers here
+                          return Column(
+                            children: [
+                              const Text('Followers:',
+                                  style: TextStyle(fontSize: 18.0)),
+                              ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: snapshot.data!.length,
+                                itemBuilder: (context, index) {
+                                  final follower = snapshot.data![index];
+                                  return ListTile(
+                                    title: Text(follower.nickname),
+                                    subtitle: Text(follower.email),
+                                  );
+                                },
+                              ),
+                            ],
+                          );
+                        }
+                      },
+                    ),
                   ],
                 ),
               ),
