@@ -94,3 +94,21 @@ bool isTokenExpired(String token) {
   final DateTime now = DateTime.now();
   return now.isAfter(expirationDate);
 }
+
+Future<void> deleteCurrentFirebaseUser() async {
+  try {
+    // Get the current user from FirebaseAuth
+    final User? currentUser = FirebaseAuth.instance.currentUser;
+
+    if (currentUser != null) {
+      // Delete the user from FirebaseAuth
+      await currentUser.delete();
+    }
+  } catch (e) {
+    if (kDebugMode) {
+      print('Error deleting user from Firebase: $e');
+    }
+
+    rethrow;
+  }
+}
