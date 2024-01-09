@@ -5,6 +5,7 @@ class User {
   final String email;
   final String? pfpLink;
   final List<String>? preferences;
+  final bool isOnline;
 
   User({
     required this.id,
@@ -13,6 +14,7 @@ class User {
     required this.email,
     this.pfpLink,
     this.preferences,
+    required this.isOnline,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -25,6 +27,7 @@ class User {
       preferences: json['preferences'] != null
           ? List<String>.from(json['preferences'])
           : null,
+      isOnline: json['is_online'],
     );
   }
 
@@ -36,6 +39,7 @@ class User {
       email: email,
       pfpLink: pfpLink,
       preferences: preferences ?? this.preferences,
+      isOnline: isOnline,
     );
   }
 }

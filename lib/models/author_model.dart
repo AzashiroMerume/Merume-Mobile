@@ -3,12 +3,14 @@ class Author {
   final String nickname;
   final String username;
   final String? pfpLink;
+  final bool isOnline;
 
   Author({
     required this.id,
     required this.nickname,
     required this.username,
     this.pfpLink,
+    required this.isOnline,
   });
 
   factory Author.fromJson(Map<String, dynamic> json) {
@@ -17,6 +19,7 @@ class Author {
       nickname: json['nickname'],
       username: json['username'],
       pfpLink: json['pfp_link'],
+      isOnline: json['is_online'],
     );
   }
 }

@@ -318,7 +318,8 @@ class _ChannelScreenState extends State<ChannelScreen> {
                           Author author = Author(
                               id: widget.channel.author.id,
                               nickname: widget.channel.author.nickname,
-                              username: widget.channel.author.username);
+                              username: widget.channel.author.username,
+                              isOnline: true);
 
                           Post post = Post(
                             id: postId,
