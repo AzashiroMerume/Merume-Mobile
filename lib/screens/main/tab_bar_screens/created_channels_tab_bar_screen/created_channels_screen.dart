@@ -63,7 +63,7 @@ class _CreatedChannelsScreenState extends State<CreatedChannelsScreen> {
                         // If there are no channels, display the "No channels yet" message
                         return const Center(
                           child: Text(
-                            'No challenges yet..',
+                            'You do not have any challenges yet..',
                             style: TextStyle(
                               color: AppColors.mellowLemon,
                               fontFamily: 'WorkSans',
