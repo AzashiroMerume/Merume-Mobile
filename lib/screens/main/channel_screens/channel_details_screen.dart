@@ -4,6 +4,7 @@ import 'package:merume_mobile/api/channel_api/channel_followers_api.dart';
 import 'package:merume_mobile/models/author_model.dart';
 import 'package:merume_mobile/models/channel_model.dart';
 import 'package:merume_mobile/other/colors.dart';
+import 'package:merume_mobile/screens/components/last_time_online.dart';
 
 class ChannelDetailsScreen extends StatefulWidget {
   final Channel channel;
@@ -248,20 +249,39 @@ class _ChannelDetailsScreenState extends State<ChannelDetailsScreen> {
                               : const AssetImage('assets/images/isagi.jpg')
                                   as ImageProvider,
                         ),
-                        title: Text(
-                          follower.username,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontFamily: 'Poppins',
-                            fontSize: 15,
-                          ),
+                        title: Row(
+                          children: [
+                            Text(
+                              follower.username,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontFamily: 'Poppins',
+                                fontSize: 16.0,
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 8.0,
+                            ),
+                            Text(
+                              '@${follower.nickname}',
+                              style: const TextStyle(
+                                color: AppColors.mellowLemon,
+                                fontFamily: 'Poppins',
+                                fontSize: 14.0,
+                              ),
+                            ),
+                          ],
                         ),
                         subtitle: Text(
-                          '@${follower.nickname}',
-                          style: const TextStyle(
-                            color: Colors.white,
+                          follower.isOnline == true
+                              ? 'Online'
+                              : formatLastSeen(follower.lastTimeOnline),
+                          style: TextStyle(
+                            color: follower.isOnline == true
+                                ? Colors.green
+                                : AppColors.lightGrey,
                             fontFamily: 'Poppins',
-                            fontSize: 12,
+                            fontSize: 14.0,
                           ),
                         ),
                       ),

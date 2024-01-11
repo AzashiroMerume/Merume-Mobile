@@ -4,6 +4,7 @@ class Author {
   final String username;
   final String? pfpLink;
   final bool? isOnline;
+  final DateTime? lastTimeOnline;
 
   Author({
     required this.id,
@@ -11,6 +12,7 @@ class Author {
     required this.username,
     this.pfpLink,
     this.isOnline,
+    this.lastTimeOnline,
   });
 
   factory Author.fromJson(Map<String, dynamic> json) {
@@ -20,6 +22,9 @@ class Author {
       username: json['username'],
       pfpLink: json['pfp_link'],
       isOnline: json['is_online'],
+      lastTimeOnline: json['is_online'] != null
+          ? DateTime.parse(json['last_time_online']).toLocal()
+          : null,
     );
   }
 }

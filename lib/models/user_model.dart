@@ -6,6 +6,7 @@ class User {
   final String? pfpLink;
   final List<String>? preferences;
   final bool isOnline;
+  final DateTime lastTimeOnline;
 
   User({
     required this.id,
@@ -15,6 +16,7 @@ class User {
     this.pfpLink,
     this.preferences,
     required this.isOnline,
+    required this.lastTimeOnline,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -28,6 +30,7 @@ class User {
           ? List<String>.from(json['preferences'])
           : null,
       isOnline: json['is_online'],
+      lastTimeOnline: DateTime.parse(json['last_time_online']).toLocal(),
     );
   }
 
@@ -40,6 +43,7 @@ class User {
       pfpLink: pfpLink,
       preferences: preferences ?? this.preferences,
       isOnline: isOnline,
+      lastTimeOnline: lastTimeOnline,
     );
   }
 }
