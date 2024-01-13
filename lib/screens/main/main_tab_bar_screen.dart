@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:merume_mobile/api/user_api/heartbeat_api.dart';
 import 'package:merume_mobile/other/colors.dart';
+import 'package:merume_mobile/other/exceptions.dart';
 import 'package:merume_mobile/screens/main/add_channel_screens/add_channel_tab_screen.dart';
 import 'package:merume_mobile/screens/main/tab_bar_screens/account_tab_bar_screen/account_screen.dart';
 import 'package:merume_mobile/screens/main/tab_bar_screens/created_channels_tab_bar_screen/created_channels_screen.dart';
 import 'package:merume_mobile/screens/main/tab_bar_screens/followings_channels_tab_bar_screen/following_tab_screen.dart';
+import 'package:web_socket_channel/io.dart';
 
 class MainTabBarScreen extends StatefulWidget {
   const MainTabBarScreen({super.key});
@@ -27,6 +30,37 @@ class _MainTabBarScreenState extends State<MainTabBarScreen> {
     'Merume',
     style: TextStyle(fontFamily: "Franklin-Gothic-Medium"),
   );
+
+  late IOWebSocketChannel _webSocketChannel;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeStream();
+  }
+
+  @override
+  void dispose() {
+    print("DISPOSED");
+    // Check if the WebSocket connection is open before cancelling the subscription
+    _webSocketChannel.sink.close();
+    super.dispose();
+  }
+
+  void _initializeStream() async {
+    try {
+      _webSocketChannel = await heartbeat();
+    } catch (e) {
+      if (e is TokenExpiredException) {
+        if (context.mounted) {
+          Navigator.of(context).pushNamedAndRemoveUntil(
+            '/login',
+            (Route<dynamic> route) => false,
+          );
+        }
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
