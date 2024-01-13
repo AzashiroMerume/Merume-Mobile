@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:merume_mobile/api/user_api/heartbeat_api.dart';
 import 'package:merume_mobile/other/colors.dart';
@@ -41,8 +42,6 @@ class _MainTabBarScreenState extends State<MainTabBarScreen> {
 
   @override
   void dispose() {
-    print("DISPOSED");
-    // Check if the WebSocket connection is open before cancelling the subscription
     _webSocketChannel.sink.close();
     super.dispose();
   }
@@ -58,6 +57,10 @@ class _MainTabBarScreenState extends State<MainTabBarScreen> {
             (Route<dynamic> route) => false,
           );
         }
+      }
+
+      if (kDebugMode) {
+        print('Error in main_tab_bar_screen websocket: $e');
       }
     }
   }

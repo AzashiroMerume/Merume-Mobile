@@ -52,7 +52,7 @@ class _FollowingTabScreenState extends State<FollowingTabScreen> {
                   indicatorSize: TabBarIndicatorSize.tab,
                   tabs: [
                     Tab(text: 'Followings'),
-                    Tab(text: 'Recommendations'),
+                    Tab(text: 'For you'),
                   ],
                 ),
               ),
