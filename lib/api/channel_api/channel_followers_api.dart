@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:async';
 import 'dart:convert';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:merume_mobile/api/auth_api/access_token_api.dart';
 import 'package:merume_mobile/models/author_model.dart';
@@ -56,6 +57,10 @@ Future<List<Author>> getChannelFollowers(String channelId) async {
   } on SocketException {
     throw NetworkException('No internet connection');
   } catch (e) {
+    if (kDebugMode) {
+      print('Error in channel_followers_api: $e');
+    }
+
     rethrow;
   }
 }

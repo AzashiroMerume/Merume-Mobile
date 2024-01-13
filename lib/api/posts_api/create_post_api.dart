@@ -78,6 +78,10 @@ Future<void> createPost(String channelId, String postId, String postBody,
     } else if (e is http.ClientException) {
       throw NetworkException('Network error');
     } else {
+      if (kDebugMode) {
+        print('Error in create_post_api: $e');
+      }
+
       rethrow;
     }
   }

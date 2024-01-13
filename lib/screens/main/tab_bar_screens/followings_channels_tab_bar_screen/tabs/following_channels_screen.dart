@@ -71,8 +71,40 @@ class _FollowingChannelsScreenState extends State<FollowingChannelsScreen>
                         ),
                       );
                     } else if (snapshot.hasError) {
-                      //Handle err for user
-                      return const Text('Error occured!');
+                      return Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text(
+                              'Oops! Something went wrong.\nPlease try again later.',
+                              style: TextStyle(
+                                color: AppColors.lightGrey,
+                                fontFamily: 'Poppins',
+                                fontSize: 18,
+                              ),
+                            ),
+                            const SizedBox(height: 15),
+                            ElevatedButton(
+                              onPressed: () {
+                                _controller.initController();
+                              },
+                              style: ElevatedButton.styleFrom(
+                                fixedSize: const Size(150, 35),
+                                backgroundColor: AppColors.royalPurple,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(50),
+                                  side: const BorderSide(
+                                      color: AppColors.royalPurple),
+                                ),
+                              ),
+                              child: const Text(
+                                'Try Again',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
                     } else {
                       return const Center(child: CircularProgressIndicator());
                     }

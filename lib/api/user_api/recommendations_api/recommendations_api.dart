@@ -73,6 +73,10 @@ Future<List<Channel>> fetchRecommendations(int page, {int limit = 10}) async {
     } else if (e is http.ClientException) {
       throw NetworkException('Network error');
     } else {
+      if (kDebugMode) {
+        print("Error in recommendations_api: $e");
+      }
+
       rethrow; // Rethrow the caught exception
     }
   }

@@ -48,6 +48,10 @@ Future<String> getEmailByNickname(String nickname) async {
     } else if (e is http.ClientException) {
       throw NetworkException('Network error');
     } else {
+      if (kDebugMode) {
+        print("Error in get_email_api: $e");
+      }
+
       rethrow; // Rethrow the caught exception
     }
   }

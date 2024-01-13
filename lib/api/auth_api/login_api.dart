@@ -69,6 +69,10 @@ Future<User> login(String identifier, String password, bool byEmail,
     } else if (e is http.ClientException) {
       throw NetworkException('Network error');
     } else {
+      if (kDebugMode) {
+        print(e);
+      }
+
       rethrow; // Rethrow the caught exception
     }
   }

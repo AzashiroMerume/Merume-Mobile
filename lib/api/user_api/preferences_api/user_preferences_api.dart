@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:merume_mobile/api/auth_api/access_token_api.dart';
@@ -60,6 +61,12 @@ Future<bool> savePreferences(List<String> preferences) async {
     }
   } on SocketException {
     throw NetworkException('Network error');
+  } catch (e) {
+    if (kDebugMode) {
+      print("Error in save_preferences_api: $e");
+    }
+
+    rethrow;
   }
 }
 
@@ -71,6 +78,11 @@ Future<List<String>?> getPreferences() async {
   }
 
   try {
+    final connectivityResult = await Connectivity().checkConnectivity();
+    if (connectivityResult == ConnectivityResult.none) {
+      throw NetworkException('No internet connection');
+    }
+
     final response = await http.get(
       Uri.parse('http://localhost:8081/preferences'),
       headers: {
@@ -107,5 +119,11 @@ Future<List<String>?> getPreferences() async {
     }
   } on SocketException {
     throw NetworkException('Network error');
+  } catch (e) {
+    if (kDebugMode) {
+      print("Error in get_preferences_api: $e");
+    }
+
+    rethrow;
   }
 }

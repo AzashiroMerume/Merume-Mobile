@@ -88,6 +88,10 @@ Future<void> newChannel(
     } else if (e is http.ClientException) {
       throw NetworkException('Network error');
     } else {
+      if (kDebugMode) {
+        print("Error in new_channel_api: $e");
+      }
+
       rethrow; // Rethrow the caught exception
     }
   }

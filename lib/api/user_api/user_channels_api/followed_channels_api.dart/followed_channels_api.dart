@@ -31,7 +31,7 @@ Stream<List<Channel>> fetchFollowings() async* {
       await channel.sink.close();
     } catch (e) {
       if (kDebugMode) {
-        print('WebSocket error: $e');
+        print('Error in followed_channels_api: $e');
       }
 
       rethrow;

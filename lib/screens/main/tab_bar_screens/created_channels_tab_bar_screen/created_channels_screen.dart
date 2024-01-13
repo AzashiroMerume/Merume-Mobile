@@ -88,10 +88,9 @@ class _CreatedChannelsScreenState extends State<CreatedChannelsScreen> {
                             const Text(
                               'Oops! Something went wrong.\nPlease try again later.',
                               style: TextStyle(
-                                color:
-                                    AppColors.lightGrey, // Change color to grey
+                                color: AppColors.lightGrey,
                                 fontFamily: 'Poppins',
-                                fontSize: 18, // Increase font size
+                                fontSize: 18,
                               ),
                             ),
                             const SizedBox(height: 15),
@@ -106,9 +105,7 @@ class _CreatedChannelsScreenState extends State<CreatedChannelsScreen> {
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(50),
                                   side: const BorderSide(
-                                      color:
-                                          AppColors.royalPurple // When pressed
-                                      ),
+                                      color: AppColors.royalPurple),
                                 ),
                               ),
                               child: const Text(
