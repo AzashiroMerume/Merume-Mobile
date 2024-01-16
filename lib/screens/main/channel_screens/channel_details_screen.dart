@@ -4,7 +4,10 @@ import 'package:merume_mobile/api/channel_api/channel_followers_api.dart';
 import 'package:merume_mobile/models/author_model.dart';
 import 'package:merume_mobile/models/channel_model.dart';
 import 'package:merume_mobile/other/colors.dart';
+import 'package:merume_mobile/other/exceptions.dart';
 import 'package:merume_mobile/screens/components/last_time_online.dart';
+import 'package:merume_mobile/screens/main/other_user_screens/other_user_screen.dart';
+import 'package:merume_mobile/screens/main/tab_bar_screens/account_tab_bar_screen/account_screen.dart';
 
 class ChannelDetailsScreen extends StatefulWidget {
   final Channel channel;
@@ -20,12 +23,21 @@ class _ChannelDetailsScreenState extends State<ChannelDetailsScreen> {
 
   @override
   void initState() {
-    super.initState();
-    _followersFuture = getChannelFollowers(widget.channel.id); // Initial fetch
-    Timer.periodic(const Duration(seconds: 10), (Timer t) {
+    try {
+      super.initState();
       _followersFuture =
-          getChannelFollowers(widget.channel.id); // Fetch every 5 seconds
-    });
+          getChannelFollowers(widget.channel.id); // Initial fetch
+      Timer.periodic(const Duration(seconds: 5), (Timer t) {
+        _followersFuture = getChannelFollowers(widget.channel.id);
+      });
+    } catch (e) {
+      if (e is TokenErrorException) {
+        Navigator.of(context).pushNamedAndRemoveUntil(
+          '/login',
+          (Route<dynamic> route) => false,
+        );
+      }
+    }
   }
 
   @override
@@ -89,7 +101,7 @@ class _ChannelDetailsScreenState extends State<ChannelDetailsScreen> {
               radius: 80.0,
               backgroundImage: widget.channel.channelProfilePictureUrl != null
                   ? NetworkImage(widget.channel.channelProfilePictureUrl!)
-                  : const AssetImage('assets/images/isagi.jpg')
+                  : const AssetImage('assets/images/pfp_symbol.jpg')
                       as ImageProvider,
             ),
           ),
@@ -216,21 +228,22 @@ class _ChannelDetailsScreenState extends State<ChannelDetailsScreen> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
-          return Center(
-            child: Text(
-              'Error: ${snapshot.error}',
-              style: const TextStyle(color: AppColors.lightGrey),
-            ),
-          );
-        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
           return const Center(
-            child: Text(
-              'No followers available',
-              style: TextStyle(color: Colors.white),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Oops! Something went wrong.\nPlease try again later.',
+                  style: TextStyle(
+                    color: AppColors.lightGrey,
+                    fontFamily: 'Poppins',
+                    fontSize: 18,
+                  ),
+                ),
+              ],
             ),
           );
         } else {
-          // Display the list of followers here
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -239,14 +252,27 @@ class _ChannelDetailsScreenState extends State<ChannelDetailsScreen> {
                   itemCount: snapshot.data!.length,
                   itemBuilder: (context, index) {
                     final follower = snapshot.data![index];
+                    final isAuthor = follower.id == widget.channel.author.id;
+
                     return Padding(
                       padding: const EdgeInsets.symmetric(vertical: 16.0),
                       child: ListTile(
+                        onTap: () {
+                          // Navigate to AuthorScreen for the owner (author),
+                          // otherwise navigate to OtherUserScreen
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => isAuthor
+                                  ? const AccountScreen()
+                                  : OtherUserScreen(user: follower),
+                            ),
+                          );
+                        },
                         leading: CircleAvatar(
                           radius: 30.0,
                           backgroundImage: follower.pfpLink != null
                               ? NetworkImage(follower.pfpLink!)
-                              : const AssetImage('assets/images/isagi.jpg')
+                              : const AssetImage('assets/images/pfp_symbol.jpg')
                                   as ImageProvider,
                         ),
                         title: Row(
@@ -272,17 +298,31 @@ class _ChannelDetailsScreenState extends State<ChannelDetailsScreen> {
                             ),
                           ],
                         ),
-                        subtitle: Text(
-                          follower.isOnline == true
-                              ? 'Online'
-                              : formatLastSeen(follower.lastTimeOnline),
-                          style: TextStyle(
-                            color: follower.isOnline == true
-                                ? Colors.green
-                                : AppColors.lightGrey,
-                            fontFamily: 'Poppins',
-                            fontSize: 14.0,
-                          ),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            if (isAuthor)
+                              const Text(
+                                'Owner',
+                                style: TextStyle(
+                                  color: AppColors.royalPurple,
+                                  fontFamily: 'Poppins',
+                                  fontSize: 14.0,
+                                ),
+                              ),
+                            Text(
+                              follower.isOnline == true
+                                  ? 'Online'
+                                  : formatLastSeen(follower.lastTimeOnline),
+                              style: TextStyle(
+                                color: follower.isOnline == true
+                                    ? Colors.green
+                                    : AppColors.lightGrey,
+                                fontFamily: 'Poppins',
+                                fontSize: 14.0,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     );

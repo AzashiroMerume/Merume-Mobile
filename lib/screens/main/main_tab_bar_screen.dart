@@ -50,7 +50,7 @@ class _MainTabBarScreenState extends State<MainTabBarScreen> {
     try {
       _webSocketChannel = await heartbeat();
     } catch (e) {
-      if (e is TokenExpiredException) {
+      if (e is TokenErrorException) {
         if (context.mounted) {
           Navigator.of(context).pushNamedAndRemoveUntil(
             '/login',

@@ -4,12 +4,6 @@ class TokenErrorException implements Exception {
   TokenErrorException(this.message);
 }
 
-class TokenExpiredException implements Exception {
-  final String message;
-
-  TokenExpiredException(this.message);
-}
-
 class AuthenticationException implements Exception {
   final String message;
 

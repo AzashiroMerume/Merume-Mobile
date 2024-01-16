@@ -111,7 +111,7 @@ class _ChannelScreenState extends State<ChannelScreen> {
         print("THE ERROR: ${e.message}");
       }
 
-      if (e is TokenExpiredException) {
+      if (e is TokenErrorException) {
         Navigator.of(context).pushNamedAndRemoveUntil(
           '/login',
           (Route<dynamic> route) => false,

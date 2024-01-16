@@ -34,7 +34,7 @@ class _CreatedChannelsScreenState extends State<CreatedChannelsScreen> {
       final Stream<List<Channel>> dataStream = fetchOwnChannels();
       itemsController.addStream(dataStream);
     } catch (e) {
-      if (e is TokenExpiredException) {
+      if (e is TokenErrorException) {
         Navigator.of(context).pushNamedAndRemoveUntil(
           '/login',
           (Route<dynamic> route) => false,

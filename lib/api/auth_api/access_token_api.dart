@@ -45,7 +45,7 @@ Future<String?> getNewAccessToken() async {
         if (responseData['error_message'] == 'Expired') { */
         await storage.delete(key: 'accessToken');
         await storage.delete(key: 'refreshToken');
-        throw TokenExpiredException('Token expired');
+        throw TokenErrorException('Token expired');
       /* } else {
           throw TokenErrorException('Token authentication error');
         } */
