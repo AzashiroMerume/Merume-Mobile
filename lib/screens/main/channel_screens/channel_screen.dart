@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:merume_mobile/api/channel_api/channel_posts_api.dart';
 import 'package:merume_mobile/api/posts_api/create_post_api.dart';
@@ -77,44 +78,57 @@ class _ChannelScreenState extends State<ChannelScreen> {
   void _initializeStream() {
     final Stream<List<Post>> webSocketStream =
         fetchChannelPosts(widget.channel.id);
-    webSocketStream.listen((dynamic data) {
-      if (data is List<Post>) {
-        final List<PostSent> newPosts = data
-            .map((post) => PostSent(post: post, status: MessageStatus.done))
-            .toList();
+    webSocketStream.listen(
+      (dynamic data) {
+        if (data is List<Post>) {
+          final List<PostSent> newPosts = data
+              .map((post) => PostSent(post: post, status: MessageStatus.done))
+              .toList();
 
-        // Create a list of post IDs from the new posts
-        final List<String> newPostIds =
-            newPosts.map((post) => post.post.id).toList();
+          // Create a list of post IDs from the new posts
+          final List<String> newPostIds =
+              newPosts.map((post) => post.post.id).toList();
 
-        // Remove posts that no longer exist on the server
-        posts.removeWhere((postSent) => !newPostIds.contains(postSent.post.id));
+          // Remove posts that no longer exist on the server
+          posts.removeWhere(
+              (postSent) => !newPostIds.contains(postSent.post.id));
 
-        // Update the existing posts list with the new posts
-        for (var newPost in newPosts) {
-          final existingPostIndex =
-              posts.indexWhere((post) => post.post.id == newPost.post.id);
-          if (existingPostIndex != -1 && posts[existingPostIndex] != newPost) {
-            // If a post with the same ID already exists and newPost is not equal to it, then replace it with the new one
-            posts[existingPostIndex] = newPost;
-          } else {
-            posts.insert(0, newPost);
+          // Update the existing posts list with the new posts
+          for (var newPost in newPosts) {
+            final existingPostIndex =
+                posts.indexWhere((post) => post.post.id == newPost.post.id);
+            if (existingPostIndex != -1 &&
+                posts[existingPostIndex] != newPost) {
+              // If a post with the same ID already exists and newPost is not equal to it, then replace it with the new one
+              posts[existingPostIndex] = newPost;
+            } else {
+              posts.insert(0, newPost);
+            }
+          }
+
+          if (!itemsController.isClosed) {
+            itemsController.add(posts);
           }
         }
-
-        if (!itemsController.isClosed) {
-          itemsController.add(posts);
+      },
+      onError: (e) {
+        if (kDebugMode) {
+          print('Error in channel_screen: $e');
         }
-      }
-    }, onError: (e) {
-      if (e is TokenErrorException) {
-        Navigator.of(context).pushNamedAndRemoveUntil(
-          '/login',
-          (Route<dynamic> route) => false,
-        );
-      }
-      itemsController.addError(e);
-    });
+
+        if (e is TokenErrorException) {
+          Navigator.of(context).pushNamedAndRemoveUntil(
+            '/login',
+            (Route<dynamic> route) => false,
+          );
+        } else {
+          showCustomSnackBar(
+            context,
+            message: 'Oops! Something went wrong. Please try again later.',
+          );
+        }
+      },
+    );
   }
 
   @override
@@ -208,47 +222,6 @@ class _ChannelScreenState extends State<ChannelScreen> {
                             isSamePost: isSamePost,
                           );
                         },
-                      );
-                    } else if (snapshot.hasError) {
-                      isLoading = false;
-                      // Handle the error state
-                      return Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Text(
-                              'Oops! Something went wrong.\nPlease try again later.',
-                              style: TextStyle(
-                                color:
-                                    AppColors.lightGrey, // Change color to grey
-                                fontFamily: 'Poppins',
-                                fontSize: 18, // Increase font size
-                              ),
-                            ),
-                            const SizedBox(height: 15),
-                            ElevatedButton(
-                              onPressed: () {
-                                // Retry action when button is pressed
-                                _initializeStream();
-                              },
-                              style: ElevatedButton.styleFrom(
-                                fixedSize: const Size(150, 35),
-                                backgroundColor: AppColors.royalPurple,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(50),
-                                  side: const BorderSide(
-                                      color:
-                                          AppColors.royalPurple // When pressed
-                                      ),
-                                ),
-                              ),
-                              child: const Text(
-                                'Try Again',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ),
-                          ],
-                        ),
                       );
                     } else {
                       isLoading = true;
@@ -391,7 +364,11 @@ class _ChannelScreenState extends State<ChannelScreen> {
                                     'Network connection is poor. Please try again later.';
                               }
 
-                              showCustomSnackBar(context, errorMessage);
+                              showCustomSnackBar(
+                                context,
+                                message:
+                                    'Oops! Something went wrong. Please try again later.',
+                              );
                             });
                           }
                         }

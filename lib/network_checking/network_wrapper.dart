@@ -63,8 +63,8 @@ class NetworkWrapperState extends State<NetworkWrapper> {
                         await Connectivity().checkConnectivity();
                     if (connectivityResult == ConnectivityResult.none) {
                       if (context.mounted) {
-                        showCustomSnackBar(
-                            context, 'Please turn on your wifi or mobile data');
+                        showCustomSnackBar(context,
+                            message: 'Please turn on your wifi or mobile data');
                       }
                     } else {
                       if (context.mounted) {

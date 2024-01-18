@@ -179,7 +179,8 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
 
                                 if (context.mounted &&
                                     errorMessage.isNotEmpty) {
-                                  showCustomSnackBar(context, errorMessage);
+                                  showCustomSnackBar(context,
+                                      message: errorMessage);
                                 }
                               }
                             },

@@ -75,3 +75,9 @@ class FirebaseUploadException implements Exception {
 
   FirebaseUploadException(this.message);
 }
+
+class UnauthorizedAccessException implements Exception {
+  final String message;
+
+  UnauthorizedAccessException(this.message);
+}

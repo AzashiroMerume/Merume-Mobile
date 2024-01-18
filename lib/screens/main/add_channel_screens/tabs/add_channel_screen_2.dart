@@ -381,7 +381,8 @@ class _AddChannelScreenSecondState extends State<AddChannelScreenSecond> {
 
                                   if (context.mounted &&
                                       errorMessage.isNotEmpty) {
-                                    showCustomSnackBar(context, errorMessage);
+                                    showCustomSnackBar(context,
+                                        message: errorMessage);
                                     widget.onComplete(1);
                                   }
                                 }
