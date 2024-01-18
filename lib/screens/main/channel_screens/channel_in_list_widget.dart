@@ -63,7 +63,8 @@ class ChannelInListWidget extends StatelessWidget {
                   channel.name,
                   style: const TextStyle(
                     color: Colors.white,
-                    fontFamily: 'Poppins',
+                    fontFamily: 'WorkSans',
+                    fontWeight: FontWeight.bold,
                     fontSize: 15,
                   ),
                 ),
@@ -71,7 +72,7 @@ class ChannelInListWidget extends StatelessWidget {
                   channel.description,
                   style: const TextStyle(
                     color: Colors.white,
-                    fontFamily: 'Poppins',
+                    fontFamily: 'WorkSans',
                     fontSize: 12,
                   ),
                 )
