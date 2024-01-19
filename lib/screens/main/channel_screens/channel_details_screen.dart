@@ -20,6 +20,7 @@ class ChannelDetailsScreen extends StatefulWidget {
 
 class _ChannelDetailsScreenState extends State<ChannelDetailsScreen> {
   late Future<List<Author>> _followersFuture;
+  late Timer _timer;
 
   @override
   void initState() {
@@ -27,9 +28,7 @@ class _ChannelDetailsScreenState extends State<ChannelDetailsScreen> {
       super.initState();
       _followersFuture =
           getChannelFollowers(widget.channel.id); // Initial fetch
-      Timer.periodic(const Duration(seconds: 5), (Timer t) {
-        _followersFuture = getChannelFollowers(widget.channel.id);
-      });
+      _startTimer();
     } catch (e) {
       if (e is TokenErrorException) {
         Navigator.of(context).pushNamedAndRemoveUntil(
@@ -38,6 +37,18 @@ class _ChannelDetailsScreenState extends State<ChannelDetailsScreen> {
         );
       }
     }
+  }
+
+  void _startTimer() {
+    _timer = Timer.periodic(const Duration(seconds: 10), (Timer t) async {
+      await refreshFollowers();
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
   }
 
   @override
@@ -222,117 +233,141 @@ class _ChannelDetailsScreenState extends State<ChannelDetailsScreen> {
 
   Widget followersTab() {
     // FutureBuilder for followers list
-    return FutureBuilder<List<Author>>(
-      future: _followersFuture,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasError) {
-          return const Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'Oops! Something went wrong.\nPlease try again later.',
-                  style: TextStyle(
-                    color: AppColors.lightGrey,
-                    fontFamily: 'Poppins',
-                    fontSize: 18,
+    return RefreshIndicator(
+      onRefresh: () async {
+        // Trigger the refresh logic here
+        await refreshFollowers();
+      },
+      child: FutureBuilder<List<Author>>(
+        future: _followersFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return const Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Oops! Something went wrong.\nPlease try again later.',
+                    style: TextStyle(
+                      color: AppColors.lightGrey,
+                      fontFamily: 'Poppins',
+                      fontSize: 18,
+                    ),
                   ),
-                ),
-              ],
-            ),
-          );
-        } else {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: ListView.builder(
-                  itemCount: snapshot.data!.length,
-                  itemBuilder: (context, index) {
-                    final follower = snapshot.data![index];
-                    final isAuthor = follower.id == widget.channel.author.id;
+                ],
+              ),
+            );
+          } else {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: snapshot.data!.length,
+                    itemBuilder: (context, index) {
+                      final follower = snapshot.data![index];
+                      final isAuthor = follower.id == widget.channel.author.id;
 
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 16.0),
-                      child: ListTile(
-                        onTap: () {
-                          // Navigate to AuthorScreen for the owner (author),
-                          // otherwise navigate to OtherUserScreen
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => isAuthor
-                                  ? const AccountScreen()
-                                  : OtherUserScreen(user: follower),
-                            ),
-                          );
-                        },
-                        leading: CircleAvatar(
-                          radius: 30.0,
-                          backgroundImage: follower.pfpLink != null
-                              ? NetworkImage(follower.pfpLink!)
-                              : const AssetImage('assets/images/pfp_symbol.jpg')
-                                  as ImageProvider,
-                        ),
-                        title: Row(
-                          children: [
-                            Text(
-                              follower.username,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontFamily: 'Poppins',
-                                fontSize: 16.0,
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 16.0),
+                        child: ListTile(
+                          onTap: () {
+                            // Navigate to AuthorScreen for the owner (author),
+                            // otherwise navigate to OtherUserScreen
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => isAuthor
+                                    ? const AccountScreen()
+                                    : OtherUserScreen(user: follower),
                               ),
-                            ),
-                            const SizedBox(
-                              width: 8.0,
-                            ),
-                            Text(
-                              '@${follower.nickname}',
-                              style: const TextStyle(
-                                color: AppColors.mellowLemon,
-                                fontFamily: 'Poppins',
-                                fontSize: 14.0,
+                            );
+                          },
+                          leading: CircleAvatar(
+                            radius: 30.0,
+                            backgroundImage: follower.pfpLink != null
+                                ? NetworkImage(follower.pfpLink!)
+                                : const AssetImage(
+                                        'assets/images/pfp_symbol.jpg')
+                                    as ImageProvider,
+                          ),
+                          title: Row(
+                            children: [
+                              Text(
+                                follower.username,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontFamily: 'Poppins',
+                                  fontSize: 16.0,
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            if (isAuthor)
-                              const Text(
-                                'Owner',
-                                style: TextStyle(
-                                  color: AppColors.royalPurple,
+                              const SizedBox(
+                                width: 8.0,
+                              ),
+                              Text(
+                                '@${follower.nickname}',
+                                style: const TextStyle(
+                                  color: AppColors.mellowLemon,
                                   fontFamily: 'Poppins',
                                   fontSize: 14.0,
                                 ),
                               ),
-                            Text(
-                              follower.isOnline == true
-                                  ? 'Online'
-                                  : formatLastSeen(follower.lastTimeOnline),
-                              style: TextStyle(
-                                color: follower.isOnline == true
-                                    ? Colors.green
-                                    : AppColors.lightGrey,
-                                fontFamily: 'Poppins',
-                                fontSize: 14.0,
+                            ],
+                          ),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              if (isAuthor)
+                                const Text(
+                                  'Owner',
+                                  style: TextStyle(
+                                    color: AppColors.royalPurple,
+                                    fontFamily: 'Poppins',
+                                    fontSize: 14.0,
+                                  ),
+                                ),
+                              Text(
+                                follower.isOnline == true
+                                    ? 'Online'
+                                    : formatLastSeen(follower.lastTimeOnline),
+                                style: TextStyle(
+                                  color: follower.isOnline == true
+                                      ? Colors.green
+                                      : AppColors.lightGrey,
+                                  fontFamily: 'Poppins',
+                                  fontSize: 14.0,
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  ),
                 ),
-              ),
-            ],
-          );
-        }
-      },
+              ],
+            );
+          }
+        },
+      ),
     );
+  }
+
+  // Add this method to handle refreshing the followers
+  Future<void> refreshFollowers() async {
+    try {
+      // Fetch the updated followers list
+      final updatedFollowers = await getChannelFollowers(widget.channel.id);
+
+      // Update the state with the new followers list
+      setState(() {
+        _followersFuture = Future.value(updatedFollowers);
+      });
+    } catch (e) {
+      // Handle errors if necessary
+      print('Error refreshing followers: $e');
+      // You may want to show a snackbar or some UI indication of the error
+    }
   }
 }
