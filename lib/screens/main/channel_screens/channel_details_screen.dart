@@ -241,9 +241,7 @@ class _ChannelDetailsScreenState extends State<ChannelDetailsScreen> {
       child: FutureBuilder<List<User>>(
         future: _followersFuture,
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
+          if (snapshot.hasError) {
             return const Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
