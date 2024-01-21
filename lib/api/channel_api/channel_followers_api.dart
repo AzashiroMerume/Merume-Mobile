@@ -5,11 +5,11 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:merume_mobile/api/auth_api/access_token_api.dart';
-import 'package:merume_mobile/models/author_model.dart';
+import 'package:merume_mobile/models/user_model.dart';
 import 'package:merume_mobile/other/api_config.dart';
 import 'package:merume_mobile/other/exceptions.dart';
 
-Future<List<Author>> getChannelFollowers(String channelId) async {
+Future<List<User>> getChannelFollowers(String channelId) async {
   final accessToken = await storage.read(key: 'accessToken');
   try {
     final connectivityResult = await Connectivity().checkConnectivity();
@@ -28,8 +28,8 @@ Future<List<Author>> getChannelFollowers(String channelId) async {
       case 200:
         final responseData = jsonDecode(response.body);
         final followersData = responseData['data'] as List<dynamic>;
-        final List<Author> fetchedFollowers = followersData.map((follower) {
-          return Author.fromJson(follower);
+        final List<User> fetchedFollowers = followersData.map((follower) {
+          return User.fromJson(follower);
         }).toList();
         return fetchedFollowers;
       case 401:

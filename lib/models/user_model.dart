@@ -2,7 +2,7 @@ class User {
   final String id;
   final String nickname;
   final String username;
-  final String email;
+  final String? email;
   final String? pfpLink;
   final List<String>? preferences;
   final bool isOnline;
@@ -12,7 +12,7 @@ class User {
     required this.id,
     required this.nickname,
     required this.username,
-    required this.email,
+    this.email,
     this.pfpLink,
     this.preferences,
     required this.isOnline,

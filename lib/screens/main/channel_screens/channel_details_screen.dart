@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:merume_mobile/api/channel_api/channel_followers_api.dart';
-import 'package:merume_mobile/models/author_model.dart';
 import 'package:merume_mobile/models/channel_model.dart';
+import 'package:merume_mobile/models/user_model.dart';
 import 'package:merume_mobile/other/colors.dart';
 import 'package:merume_mobile/other/exceptions.dart';
 import 'package:merume_mobile/screens/components/last_time_online.dart';
@@ -19,7 +19,7 @@ class ChannelDetailsScreen extends StatefulWidget {
 }
 
 class _ChannelDetailsScreenState extends State<ChannelDetailsScreen> {
-  late Future<List<Author>> _followersFuture;
+  late Future<List<User>> _followersFuture;
   late Timer _timer;
 
   @override
@@ -112,7 +112,7 @@ class _ChannelDetailsScreenState extends State<ChannelDetailsScreen> {
               radius: 80.0,
               backgroundImage: widget.channel.channelProfilePictureUrl != null
                   ? NetworkImage(widget.channel.channelProfilePictureUrl!)
-                  : const AssetImage('assets/images/pfp_symbol.jpg')
+                  : const AssetImage('assets/images/pfp_outline.png')
                       as ImageProvider,
             ),
           ),
@@ -238,7 +238,7 @@ class _ChannelDetailsScreenState extends State<ChannelDetailsScreen> {
         // Trigger the refresh logic here
         await refreshFollowers();
       },
-      child: FutureBuilder<List<Author>>(
+      child: FutureBuilder<List<User>>(
         future: _followersFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -289,7 +289,7 @@ class _ChannelDetailsScreenState extends State<ChannelDetailsScreen> {
                             backgroundImage: follower.pfpLink != null
                                 ? NetworkImage(follower.pfpLink!)
                                 : const AssetImage(
-                                        'assets/images/pfp_symbol.jpg')
+                                        'assets/images/pfp_outline.png')
                                     as ImageProvider,
                           ),
                           title: Row(
