@@ -75,7 +75,7 @@ flutter:
   assets:
     - assets/images/background.png
     - assets/images/isagi.jpg
-    - assets/images/pfp_symbol.jpg
+    - assets/images/pfp_outline.png
     - assets/images/no_connection.png
     # An image asset can refer to one or more resolution-specific "variants", see
     # https://flutter.dev/assets-and-images/#resolution-aware
