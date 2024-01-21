@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:merume_mobile/api/auth_api/access_token_api.dart';
 import 'package:merume_mobile/other/api_config.dart';
 import 'package:http/http.dart' as http;
@@ -15,23 +14,16 @@ Future<Map<String, String>> getHeadersWithValidAccessToken() async {
   );
 
   if (checkAuthResponse.statusCode == 401) {
-    // Handle authentication error (token expired or invalid)
-    final errorResponse = json.decode(checkAuthResponse.body);
-    if (errorResponse.containsKey('error_message') &&
-        errorResponse['error_message'] == 'Expired') {
-      try {
-        final newAccessToken = await getNewAccessToken();
+    try {
+      final newAccessToken = await getNewAccessToken();
 
-        if (newAccessToken != null) {
-          headers['access_token'] = newAccessToken;
-        } else {
-          throw TokenErrorException('Token auth error');
-        }
-      } catch (accessTokenError) {
-        rethrow;
+      if (newAccessToken != null) {
+        headers['access_token'] = newAccessToken;
+      } else {
+        throw TokenErrorException('Token auth error');
       }
-    } else {
-      throw TokenErrorException('Token auth error');
+    } catch (accessTokenError) {
+      rethrow;
     }
   }
 

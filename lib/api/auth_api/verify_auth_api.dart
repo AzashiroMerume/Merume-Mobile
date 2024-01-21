@@ -37,19 +37,15 @@ Future<User?> verifyAuth() async {
         final userInfo = User.fromJson(responseData['user_info']);
         return userInfo;
       case 401:
-        final responseData = json.decode(response.body);
-        if (responseData['error_message'] == 'Expired') {
-          final newAccessToken =
-              await getNewAccessToken(); // Get a new access token
-          if (newAccessToken != null) {
-            await storage.write(key: 'accessToken', value: newAccessToken);
-            return await verifyAuth(); // Retry with the new access token
-          } else {
-            throw TokenErrorException('Token authentication error');
-          }
+        final newAccessToken =
+            await getNewAccessToken(); // Get a new access token
+        if (newAccessToken != null) {
+          await storage.write(key: 'accessToken', value: newAccessToken);
+          return await verifyAuth(); // Retry with the new access token
         } else {
           throw TokenErrorException('Token authentication error');
         }
+
       case 500:
         throw ServerException('Internal server error');
       default:

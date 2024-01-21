@@ -33,24 +33,20 @@ Future<List<User>> getChannelFollowers(String channelId) async {
         }).toList();
         return fetchedFollowers;
       case 401:
-        final responseData = json.decode(response.body);
-        if (responseData['error_message'] == 'Expired') {
-          try {
-            final newAccessToken =
-                await getNewAccessToken(); // Get a new access token
-            if (newAccessToken != null) {
-              await storage.write(key: 'accessToken', value: newAccessToken);
-              return await getChannelFollowers(
-                  channelId); // Retry with the new access token
-            } else {
-              throw TokenErrorException('Token authentication error');
-            }
-          } catch (e) {
-            rethrow;
+        try {
+          final newAccessToken =
+              await getNewAccessToken(); // Get a new access token
+          if (newAccessToken != null) {
+            await storage.write(key: 'accessToken', value: newAccessToken);
+            return await getChannelFollowers(
+                channelId); // Retry with the new access token
+          } else {
+            throw TokenErrorException('Token authentication error');
           }
-        } else {
-          throw TokenErrorException('Token authentication error');
+        } catch (e) {
+          rethrow;
         }
+
       case 404:
         throw HttpException('Data not found');
       case 500:

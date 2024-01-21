@@ -46,20 +46,16 @@ Future<List<Channel>> fetchRecommendations(int page, {int limit = 10}) async {
         }).toList();
         return recommendedChannels;
       case 401:
-        final responseData = json.decode(response.body);
-        if (responseData['error_message'] == 'Expired') {
-          final newAccessToken =
-              await getNewAccessToken(); // Get a new access token
-          if (newAccessToken != null) {
-            await storage.write(key: 'accessToken', value: newAccessToken);
-            return await fetchRecommendations(page,
-                limit: limit); // Retry with the new access token
-          } else {
-            throw TokenErrorException('Token authentication error');
-          }
+        final newAccessToken =
+            await getNewAccessToken(); // Get a new access token
+        if (newAccessToken != null) {
+          await storage.write(key: 'accessToken', value: newAccessToken);
+          return await fetchRecommendations(page,
+              limit: limit); // Retry with the new access token
         } else {
           throw TokenErrorException('Token authentication error');
         }
+
       case 500:
         throw ServerException('Internal server error');
       default:

@@ -42,20 +42,16 @@ Future<void> createPost(String channelId, String postId, String postBody,
       case 201:
         break;
       case 401:
-        final responseData = json.decode(response.body);
-        if (responseData['error_message'] == 'Expired') {
-          final newAccessToken =
-              await getNewAccessToken(); // Get a new access token
-          if (newAccessToken != null) {
-            await storage.write(key: 'accessToken', value: newAccessToken);
-            return await createPost(channelId, postId, postBody,
-                postImages); // Retry with the new access token
-          } else {
-            throw TokenErrorException('Token authentication error');
-          }
+        final newAccessToken =
+            await getNewAccessToken(); // Get a new access token
+        if (newAccessToken != null) {
+          await storage.write(key: 'accessToken', value: newAccessToken);
+          return await createPost(channelId, postId, postBody,
+              postImages); // Retry with the new access token
         } else {
           throw TokenErrorException('Token authentication error');
         }
+
       case 404:
         throw NotFoundException('The channel not found');
       case 409:

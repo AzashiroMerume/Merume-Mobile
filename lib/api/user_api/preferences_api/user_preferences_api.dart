@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:merume_mobile/api/auth_api/access_token_api.dart';
 import 'package:merume_mobile/other/api_config.dart';
-import '../../../other/exceptions.dart';
+import 'package:merume_mobile/other/exceptions.dart';
 
 const storage = FlutterSecureStorage();
 
@@ -36,17 +36,12 @@ Future<bool> savePreferences(List<String> preferences) async {
     if (response.statusCode == 200) {
       return true;
     } else if (response.statusCode == 401) {
-      final responseData = json.decode(response.body);
-      if (responseData['error_message'] == 'Expired') {
-        final newAccessToken =
-            await getNewAccessToken(); // Get a new access token
-        if (newAccessToken != null) {
-          await storage.write(key: 'accessToken', value: newAccessToken);
-          return await savePreferences(
-              preferences); // Retry with the new access token
-        } else {
-          throw TokenErrorException('Token authentication error');
-        }
+      final newAccessToken =
+          await getNewAccessToken(); // Get a new access token
+      if (newAccessToken != null) {
+        await storage.write(key: 'accessToken', value: newAccessToken);
+        return await savePreferences(
+            preferences); // Retry with the new access token
       } else {
         throw TokenErrorException('Token authentication error');
       }
