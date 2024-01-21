@@ -44,7 +44,7 @@ class ChannelInListWidget extends StatelessWidget {
                             fit: BoxFit.cover,
                           )
                         : Image.asset(
-                            'assets/images/pfp_symbol.jpg',
+                            'assets/images/pfp_outline.png',
                             height: 60.0,
                             width: 60.0,
                             fit: BoxFit.cover,

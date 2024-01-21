@@ -27,6 +27,7 @@ class _MainTabBarScreenState extends State<MainTabBarScreen> {
 
   Icon customIcon = const Icon(Icons.search);
   Icon addIcon = const Icon(Icons.add);
+  Icon settingsIcon = const Icon(Icons.settings);
   Widget customSearchBar = const Text(
     'Merume',
     style: TextStyle(fontFamily: "Franklin-Gothic-Medium"),
@@ -118,9 +119,9 @@ class _MainTabBarScreenState extends State<MainTabBarScreen> {
                       icon: customIcon,
                     ),
                   ),
-                  if (customIcon.icon ==
-                      Icons
-                          .search) // Only show the "Add" icon when search is not active
+                  if (customIcon.icon == Icons.search &&
+                      _currentIndex ==
+                          0) // Only show the "Add" icon when search is not active
                     Container(
                       padding: const EdgeInsets.only(right: 10.0),
                       child: IconButton(
@@ -133,6 +134,14 @@ class _MainTabBarScreenState extends State<MainTabBarScreen> {
                           );
                         },
                         icon: addIcon,
+                      ),
+                    ),
+                  if (customIcon.icon == Icons.search && _currentIndex == 2)
+                    Container(
+                      padding: const EdgeInsets.only(right: 10.0),
+                      child: IconButton(
+                        onPressed: () {},
+                        icon: settingsIcon,
                       ),
                     ),
                 ],

@@ -12,6 +12,6 @@ String formatLastSeen(DateTime? lastTimeOnline) {
   } else if (timeSinceLastOnline.inHours < 24) {
     return 'Last seen ${timeSinceLastOnline.inHours} hours ago';
   } else {
-    return 'Last seen on ${DateFormat('dd/MM/yyyy').format(lastTimeOnline)}';
+    return 'Last seen on ${DateFormat('dd MMM yyyy').format(lastTimeOnline)}';
   }
 }
