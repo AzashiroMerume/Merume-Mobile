@@ -257,7 +257,7 @@ class _ChannelDetailsScreenState extends State<ChannelDetailsScreen> {
                 ],
               ),
             );
-          } else {
+          } else if (snapshot.hasData && snapshot.data != null) {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -345,6 +345,10 @@ class _ChannelDetailsScreenState extends State<ChannelDetailsScreen> {
                   ),
                 ),
               ],
+            );
+          } else {
+            return const Center(
+              child: CircularProgressIndicator(),
             );
           }
         },
