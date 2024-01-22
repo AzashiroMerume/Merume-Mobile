@@ -38,7 +38,9 @@ Future<List<Channel>?> getUserChannels(String userId) async {
         final data = responseData['channels'];
 
         if (data != null) {
-          List<Channel> channels = List<Channel>.from(data);
+          List<Channel> channels = List<Channel>.from(
+            data.map((channelData) => Channel.fromJson(channelData)),
+          );
           return channels;
         } else {
           return null;
