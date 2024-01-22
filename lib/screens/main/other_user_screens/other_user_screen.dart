@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:merume_mobile/api/user_api/get_user_channels_api.dart';
@@ -18,11 +20,25 @@ class OtherUserScreen extends StatefulWidget {
 
 class _OtherUserScreenState extends State<OtherUserScreen> {
   List<Channel>? userChannels;
+  late Timer _timer;
 
   @override
   void initState() {
     super.initState();
-    fetchUserChannels();
+    fetchUserChannels(); // Initial fetch
+    _startTimer();
+  }
+
+  void _startTimer() {
+    _timer = Timer.periodic(const Duration(seconds: 5), (Timer t) async {
+      await fetchUserChannels();
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
   }
 
   Future<void> fetchUserChannels() async {
