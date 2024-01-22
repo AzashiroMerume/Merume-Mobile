@@ -37,57 +37,55 @@ class _AccountScreenState extends State<AccountScreen> {
         centerTitle: true,
       ),
       body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          child: Align(
-            alignment: Alignment.center,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const SizedBox(height: 20.0),
-                CircleAvatar(
-                  radius: 80.0,
-                  backgroundImage: user.pfpLink != null
-                      ? NetworkImage(user.pfpLink!)
-                      : const AssetImage('assets/images/pfp_outline.png')
-                          as ImageProvider,
-                ),
-                const SizedBox(height: 20.0),
+        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+        child: Align(
+          alignment: Alignment.center,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const SizedBox(height: 20.0),
+              CircleAvatar(
+                radius: 80.0,
+                backgroundImage: user.pfpLink != null
+                    ? NetworkImage(user.pfpLink!)
+                    : const AssetImage('assets/images/pfp_outline.png')
+                        as ImageProvider,
+              ),
+              const SizedBox(height: 20.0),
+              Text(
+                user.username,
+                style: const TextStyle(
+                    fontSize: 24.0,
+                    color: AppColors.mellowLemon,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'WorkSans'),
+              ),
+              const SizedBox(height: 5.0),
+              Text(
+                '@${user.nickname}',
+                style: const TextStyle(
+                    fontSize: 18.0,
+                    color: AppColors.lightGrey,
+                    fontFamily: 'Poppins'),
+              ),
+              const SizedBox(height: 5.0),
+              if (user.isOnline)
+                const Text(
+                  'Online',
+                  style: TextStyle(
+                      fontSize: 16.0,
+                      color: Colors.green,
+                      fontFamily: 'Poppins'),
+                )
+              else
                 Text(
-                  user.username,
+                  formatLastSeen(user.lastTimeOnline),
                   style: const TextStyle(
-                      fontSize: 24.0,
-                      color: AppColors.mellowLemon,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'WorkSans'),
-                ),
-                const SizedBox(height: 5.0),
-                Text(
-                  '@${user.nickname}',
-                  style: const TextStyle(
-                      fontSize: 18.0,
-                      color: AppColors.lightGrey,
+                      fontSize: 16.0,
+                      color: Colors.grey,
                       fontFamily: 'Poppins'),
                 ),
-                const SizedBox(height: 5.0),
-                if (user.isOnline)
-                  const Text(
-                    'Online',
-                    style: TextStyle(
-                        fontSize: 16.0,
-                        color: Colors.green,
-                        fontFamily: 'Poppins'),
-                  )
-                else
-                  Text(
-                    formatLastSeen(user.lastTimeOnline),
-                    style: const TextStyle(
-                        fontSize: 16.0,
-                        color: Colors.grey,
-                        fontFamily: 'Poppins'),
-                  ),
-              ],
-            ),
+            ],
           ),
         ),
       ),

@@ -267,9 +267,8 @@ class _ChannelDetailsScreenState extends State<ChannelDetailsScreen> {
                     itemBuilder: (context, index) {
                       final follower = snapshot.data![index];
                       final isAuthor = follower.id == widget.channel.author.id;
-
                       return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 16.0),
+                        padding: const EdgeInsets.symmetric(vertical: 20.0),
                         child: ListTile(
                           onTap: () {
                             // Navigate to AuthorScreen for the owner (author),
