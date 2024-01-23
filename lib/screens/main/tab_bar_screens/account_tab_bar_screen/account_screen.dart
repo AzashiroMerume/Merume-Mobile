@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:merume_mobile/api/auth_api/firebase_auth_api.dart';
+import 'package:merume_mobile/api/auth_api/logout_api.dart';
 import 'package:merume_mobile/other/colors.dart';
 import 'package:merume_mobile/screens/components/last_time_online.dart';
 import 'package:merume_mobile/user_provider.dart';
@@ -14,9 +16,10 @@ class AccountScreen extends StatefulWidget {
 class _AccountScreenState extends State<AccountScreen> {
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<UserProvider>(context, listen: true).userInfo;
+    NavigatorState state = Navigator.of(context);
+    final user = Provider.of<UserProvider>(context, listen: true);
 
-    if (user == null) {
+    if (user.userInfo == null) {
       return const Scaffold(
         body: Center(
           child: Text(
@@ -30,9 +33,12 @@ class _AccountScreenState extends State<AccountScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          user.nickname,
+          user.userInfo?.nickname ?? '', // Use null-aware operator here
           style: const TextStyle(
-              fontFamily: 'Poppins', color: Colors.white, fontSize: 20.0),
+            fontFamily: 'Poppins',
+            color: Colors.white,
+            fontSize: 20.0,
+          ),
         ),
         centerTitle: true,
       ),
@@ -46,45 +52,66 @@ class _AccountScreenState extends State<AccountScreen> {
               const SizedBox(height: 20.0),
               CircleAvatar(
                 radius: 80.0,
-                backgroundImage: user.pfpLink != null
-                    ? NetworkImage(user.pfpLink!)
+                backgroundImage: user.userInfo?.pfpLink != null
+                    ? NetworkImage(user.userInfo!.pfpLink!)
                     : const AssetImage('assets/images/pfp_outline.png')
                         as ImageProvider,
               ),
               const SizedBox(height: 20.0),
               Text(
-                user.username,
+                user.userInfo?.username ?? '', // Use null-aware operator here
                 style: const TextStyle(
-                    fontSize: 24.0,
-                    color: AppColors.mellowLemon,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'WorkSans'),
+                  fontSize: 24.0,
+                  color: AppColors.mellowLemon,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'WorkSans',
+                ),
               ),
               const SizedBox(height: 5.0),
               Text(
-                '@${user.nickname}',
+                '@${user.userInfo?.nickname ?? ''}', // Use null-aware operator here
                 style: const TextStyle(
-                    fontSize: 18.0,
-                    color: AppColors.lightGrey,
-                    fontFamily: 'Poppins'),
+                  fontSize: 18.0,
+                  color: AppColors.lightGrey,
+                  fontFamily: 'Poppins',
+                ),
               ),
               const SizedBox(height: 5.0),
-              if (user.isOnline)
+              if (user.userInfo?.isOnline ??
+                  false) // Use null-aware operator here
                 const Text(
                   'Online',
                   style: TextStyle(
-                      fontSize: 16.0,
-                      color: Colors.green,
-                      fontFamily: 'Poppins'),
+                    fontSize: 16.0,
+                    color: Colors.green,
+                    fontFamily: 'Poppins',
+                  ),
                 )
               else
                 Text(
-                  formatLastSeen(user.lastTimeOnline),
+                  formatLastSeen(user.userInfo?.lastTimeOnline),
                   style: const TextStyle(
-                      fontSize: 16.0,
-                      color: Colors.grey,
-                      fontFamily: 'Poppins'),
+                    fontSize: 16.0,
+                    color: Colors.grey,
+                    fontFamily: 'Poppins',
+                  ),
                 ),
+              Center(
+                child: ElevatedButton(
+                  onPressed: () async {
+                    final loggedOut = await logout();
+
+                    await logoutFromFirebase();
+
+                    if (loggedOut) {
+                      user.setUser(null);
+                      // Navigate to the login screen
+                      state.pushNamedAndRemoveUntil('/login', (route) => false);
+                    }
+                  },
+                  child: const Text("Log out"),
+                ),
+              ),
             ],
           ),
         ),
