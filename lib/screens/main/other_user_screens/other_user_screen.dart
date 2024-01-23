@@ -6,6 +6,7 @@ import 'package:merume_mobile/api/user_api/get_user_channels_api.dart';
 import 'package:merume_mobile/models/channel_model.dart';
 import 'package:merume_mobile/models/user_model.dart';
 import 'package:merume_mobile/other/colors.dart';
+import 'package:merume_mobile/other/exceptions.dart';
 import 'package:merume_mobile/screens/components/last_time_online.dart';
 import 'package:merume_mobile/screens/main/components/channel_card_widget.dart';
 
@@ -24,9 +25,18 @@ class _OtherUserScreenState extends State<OtherUserScreen> {
 
   @override
   void initState() {
-    super.initState();
-    fetchUserChannels(); // Initial fetch
-    _startTimer();
+    try {
+      super.initState();
+      fetchUserChannels(); // Initial fetch
+      _startTimer();
+    } catch (e) {
+      if (e is TokenErrorException) {
+        Navigator.of(context).pushNamedAndRemoveUntil(
+          '/login',
+          (Route<dynamic> route) => false,
+        );
+      }
+    }
   }
 
   void _startTimer() {
@@ -45,13 +55,17 @@ class _OtherUserScreenState extends State<OtherUserScreen> {
     try {
       List<Channel>? channels =
           await getUserChannels(widget.user.id.toString());
-      setState(() {
-        userChannels = channels;
-      });
+      if (mounted) {
+        setState(() {
+          userChannels = channels;
+        });
+      }
     } catch (e) {
       if (kDebugMode) {
         print('Error in other_user_screen: $e');
       }
+
+      rethrow;
     }
   }
 

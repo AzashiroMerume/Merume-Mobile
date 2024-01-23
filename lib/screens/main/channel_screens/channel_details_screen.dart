@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:merume_mobile/api/channel_api/channel_followers_api.dart';
 import 'package:merume_mobile/models/channel_model.dart';
@@ -49,6 +50,24 @@ class _ChannelDetailsScreenState extends State<ChannelDetailsScreen> {
   void dispose() {
     _timer.cancel();
     super.dispose();
+  }
+
+  Future<void> refreshFollowers() async {
+    try {
+      final updatedFollowers = await getChannelFollowers(widget.channel.id);
+
+      if (mounted) {
+        setState(() {
+          _followersFuture = Future.value(updatedFollowers);
+        });
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error in channel details refresh followers: $e');
+      }
+
+      rethrow;
+    }
   }
 
   @override
@@ -356,22 +375,5 @@ class _ChannelDetailsScreenState extends State<ChannelDetailsScreen> {
         },
       ),
     );
-  }
-
-  // Add this method to handle refreshing the followers
-  Future<void> refreshFollowers() async {
-    try {
-      // Fetch the updated followers list
-      final updatedFollowers = await getChannelFollowers(widget.channel.id);
-
-      // Update the state with the new followers list
-      setState(() {
-        _followersFuture = Future.value(updatedFollowers);
-      });
-    } catch (e) {
-      // Handle errors if necessary
-      print('Error refreshing followers: $e');
-      // You may want to show a snackbar or some UI indication of the error
-    }
   }
 }
