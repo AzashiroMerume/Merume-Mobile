@@ -41,10 +41,11 @@ class Channel {
       channelVisibility: json['channel_visibility'],
       description: json['description'],
       categories: List<String>.from(json['categories']),
-      contributors:
-          (json['contributors'] != null && json['contributors'] is List)
-              ? List<String>.from(json['contributors'])
-              : null,
+      contributors: (json['contributors'] != null &&
+              json['contributors'] is List)
+          ? List<String>.from(
+              json['contributors'].map((contributor) => contributor['\$oid']))
+          : null,
       followers: Followers.fromJson(json['followers']),
       currentChallengeDay: json['current_challenge_day'],
       channelProfilePictureUrl: json['channel_profile_picture_url'],
