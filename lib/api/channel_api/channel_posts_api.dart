@@ -5,6 +5,8 @@ import 'package:merume_mobile/api/components/get_headers_with_access_token_api.d
 import 'package:merume_mobile/other/api_config.dart';
 import 'package:merume_mobile/models/post_model.dart';
 import 'package:merume_mobile/other/exceptions.dart';
+import 'package:merume_mobile/screens/main/channel_screens/models/post_sent_model.dart';
+import 'package:merume_mobile/screens/main/components/enums.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -12,7 +14,7 @@ const storage = FlutterSecureStorage();
 
 class WebSocketResponse {
   final bool success;
-  final List<Post> data;
+  final Map<String, List<List<Post>>>? data;
   final String errorMessage;
 
   WebSocketResponse({
@@ -24,19 +26,26 @@ class WebSocketResponse {
   factory WebSocketResponse.fromJson(Map<String, dynamic> json) {
     return WebSocketResponse(
       success: json['success'],
-      data: (json['data'] as List<dynamic>?)?.map((postJson) {
-            return Post.fromJson(postJson);
-          }).toList() ??
-          [],
+      data: (json['data'] as Map<String, dynamic>?)?.map((key, value) {
+            return MapEntry(
+                key,
+                (value as List<dynamic>).map((postList) {
+                  return (postList as List<dynamic>).map((postJson) {
+                    return Post.fromJson(postJson);
+                  }).toList();
+                }).toList());
+          }) ??
+          {},
       errorMessage: json['error_message'] ?? '',
     );
   }
 }
 
-Stream<List<Post>> fetchChannelPosts(String channelId) async* {
+Stream<Map<String, List<List<PostSent>>>> fetchChannelPosts(
+    String channelId) async* {
   String channelUrl = '${ConfigAPI.wsURL}channels/$channelId/content';
 
-  final controller = StreamController<List<Post>>();
+  final controller = StreamController<Map<String, List<List<PostSent>>>>();
 
   try {
     final headers = await getHeadersWithValidAccessToken();
@@ -51,7 +60,21 @@ Stream<List<Post>> fetchChannelPosts(String channelId) async* {
             WebSocketResponse.fromJson(responseJson);
 
         if (response.success) {
-          controller.add(response.data);
+          // Ensure data is not null before adding to the stream
+          if (response.data != null) {
+            // Transform the received posts to PostSent objects
+            final transformedData = response.data!.map((key, value) {
+              final List<List<PostSent>> transformedLists =
+                  value.map((innerList) {
+                return innerList.map((post) {
+                  return PostSent(post: post, status: MessageStatus.done);
+                }).toList();
+              }).toList();
+              return MapEntry(key, transformedLists);
+            });
+
+            controller.add(transformedData);
+          }
         } else {
           if (response.errorMessage == 'Unauthorized access') {
             controller
