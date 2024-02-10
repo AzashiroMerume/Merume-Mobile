@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 
-class Triangle extends CustomPainter {
+class MessageBubble extends CustomPainter {
   final Color bgColor;
 
-  Triangle(this.bgColor);
+  MessageBubble(this.bgColor);
 
   @override
   void paint(Canvas canvas, Size size) {
     var paint = Paint()..color = bgColor;
 
     var path = Path();
-    path.lineTo(-5, 0);
-    path.lineTo(0, 10);
-    path.lineTo(5, 0);
+    path.lineTo(-10, 0); // Move left to make wider
+    path.lineTo(0, 15); // Increase height
+    path.lineTo(10, 0); // Move right to make wider
     canvas.drawPath(path, paint);
   }
 

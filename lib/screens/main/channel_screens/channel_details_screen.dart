@@ -6,7 +6,7 @@ import 'package:merume_mobile/models/channel_model.dart';
 import 'package:merume_mobile/models/user_model.dart';
 import 'package:merume_mobile/other/colors.dart';
 import 'package:merume_mobile/other/exceptions.dart';
-import 'package:merume_mobile/screens/components/last_time_online.dart';
+import 'package:merume_mobile/screens/shared/last_time_online.dart';
 import 'package:merume_mobile/screens/main/other_user_screens/other_user_screen.dart';
 import 'package:merume_mobile/screens/main/tab_bar_screens/account_tab_bar_screen/account_screen.dart';
 

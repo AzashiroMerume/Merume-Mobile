@@ -9,9 +9,9 @@ import 'package:merume_mobile/api/user_api/user_channels_api/new_channel_api.dar
 import 'package:merume_mobile/other/colors.dart';
 import 'package:merume_mobile/other/exceptions.dart';
 import 'package:merume_mobile/other/error_custom_snackbar.dart';
-import 'package:merume_mobile/screens/components/pfp_load_image_widget.dart';
+import 'package:merume_mobile/screens/shared/pfp_load_image_widget.dart';
 import 'package:merume_mobile/screens/main/components/category_popup_widget.dart';
-import 'package:merume_mobile/screens/components/categories.dart';
+import 'package:merume_mobile/screens/shared/categories.dart';
 import 'package:merume_mobile/screens/main/components/enums.dart';
 import 'package:objectid/objectid.dart';
 

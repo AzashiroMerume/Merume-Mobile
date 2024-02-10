@@ -51,11 +51,10 @@ Future<void> createPost(String channelId, String postId, String postBody,
         } else {
           throw TokenErrorException('Token authentication error');
         }
-
+      case 403:
+        throw PostAuthorConflictException('The user is not channel\'s owner');
       case 404:
         throw NotFoundException('The channel not found');
-      case 409:
-        throw PostAuthorConflictException('The user is not channel\'s owner');
       case 413:
         throw ContentTooLargeException('The request payload is too large');
       case 422:
