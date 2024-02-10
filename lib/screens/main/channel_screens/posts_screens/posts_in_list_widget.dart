@@ -103,8 +103,10 @@ class PostsInListWidget extends StatelessWidget {
                                         width: 10.0,
                                       ),
                                       CustomPaint(
-                                          painter:
-                                              MessageBubble(Colors.grey[900]!)),
+                                        painter: MessageBubble(
+                                            Colors.grey[900]!,
+                                            direction: false),
+                                      ),
                                     ],
                                   )
                                 : const Row(
@@ -114,11 +116,13 @@ class PostsInListWidget extends StatelessWidget {
                         Expanded(
                           flex: 4,
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
+                            mainAxisAlignment: byMe
+                                ? MainAxisAlignment.end
+                                : MainAxisAlignment.start,
                             children: [
                               Container(
                                 padding: const EdgeInsets.symmetric(
-                                    vertical: 10.0, horizontal: 12.0),
+                                    vertical: 10.0, horizontal: 15.0),
                                 decoration: BoxDecoration(
                                   color: AppColors.postMain,
                                   borderRadius: BorderRadius.circular(8.0),
@@ -210,27 +214,30 @@ class PostsInListWidget extends StatelessWidget {
                         ),
                         if (byMe)
                           Expanded(
-                              flex: 1,
-                              child: (byMe && !listIsNotSingleElement) ||
-                                      (byMe &&
-                                          listIsNotSingleElement &&
-                                          isLastMessage)
-                                  ? Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        CustomPaint(
-                                            painter: MessageBubble(
-                                                Colors.grey[900]!)),
-                                        const SizedBox(
-                                          width: 10.0,
-                                        ),
-                                        buildMinimizedPfp(postSent.post, 30),
-                                      ],
-                                    )
-                                  : const Row(
-                                      children: [],
-                                    ))
+                            flex: 1,
+                            child: (byMe && !listIsNotSingleElement) ||
+                                    (byMe &&
+                                        listIsNotSingleElement &&
+                                        isLastMessage)
+                                ? Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      CustomPaint(
+                                        painter: MessageBubble(
+                                            Colors.grey[900]!,
+                                            direction: true),
+                                      ),
+                                      const SizedBox(
+                                        width: 10.0,
+                                      ),
+                                      buildMinimizedPfp(postSent.post, 30),
+                                    ],
+                                  )
+                                : const Row(
+                                    children: [],
+                                  ),
+                          ),
                       ],
                     )
                   ],
