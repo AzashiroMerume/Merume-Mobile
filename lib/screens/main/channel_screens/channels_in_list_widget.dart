@@ -3,10 +3,10 @@ import 'package:merume_mobile/other/colors.dart';
 import 'package:merume_mobile/models/channel_model.dart';
 import 'package:merume_mobile/screens/main/channel_screens/channel_screen.dart';
 
-class ChannelInListWidget extends StatelessWidget {
+class ChannelsInListWidget extends StatelessWidget {
   final Channel channel;
 
-  const ChannelInListWidget({super.key, required this.channel});
+  const ChannelsInListWidget({super.key, required this.channel});
 
   @override
   Widget build(BuildContext context) {

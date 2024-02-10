@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:merume_mobile/other/colors.dart';
 import 'package:merume_mobile/models/channel_model.dart';
-import 'package:merume_mobile/screens/main/channel_screens/channel_in_list_widget.dart';
+import 'package:merume_mobile/screens/main/channel_screens/channels_in_list_widget.dart';
 import 'package:merume_mobile/screens/main/tab_bar_screens/followings_channels_tab_bar_screen/followings_channels_controller.dart';
 
 class FollowingChannelsScreen extends StatefulWidget {
@@ -66,7 +66,7 @@ class _FollowingChannelsScreenState extends State<FollowingChannelsScreen>
                       final channels = snapshot.data!;
                       return ListView.builder(
                         itemCount: channels.length,
-                        itemBuilder: (_, index) => ChannelInListWidget(
+                        itemBuilder: (_, index) => ChannelsInListWidget(
                           channel: channels[index],
                         ),
                       );

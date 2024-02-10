@@ -4,7 +4,7 @@ import 'package:merume_mobile/other/colors.dart';
 import 'package:merume_mobile/other/exceptions.dart';
 import 'package:merume_mobile/models/channel_model.dart';
 import 'package:merume_mobile/api/user_api/recommendations_api/recommendations_api.dart';
-import 'package:merume_mobile/screens/main/channel_screens/channel_in_list_widget.dart';
+import 'package:merume_mobile/screens/main/channel_screens/channels_in_list_widget.dart';
 import 'package:merume_mobile/screens/settings/preferences_screen.dart';
 
 class RecommendationScreen extends StatefulWidget {
@@ -250,7 +250,7 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
                           itemCount: recommendations!.length,
                           itemBuilder: (context, index) {
                             final channel = recommendations![index];
-                            return ChannelInListWidget(channel: channel);
+                            return ChannelsInListWidget(channel: channel);
                           },
                         ),
                 ),
