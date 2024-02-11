@@ -10,41 +10,13 @@ class PostsInListWidget extends StatelessWidget {
   final List<PostSent> postList;
   final DateTime sentDay;
   final bool byMe;
-  final bool shouldShowDate;
 
   const PostsInListWidget({
     super.key,
     required this.postList,
     required this.sentDay,
     required this.byMe,
-    required this.shouldShowDate,
   });
-
-  String formatPostDate(DateTime sentDay) {
-    final now = DateTime.now();
-    final fullDateFormat = DateFormat("dd MMM yyyy");
-    final sentDayFormat = DateFormat("dd MMM");
-    if (now.year == sentDay.year &&
-        now.month == sentDay.month &&
-        now.day == sentDay.day) {
-      // Post was sent today
-      return 'Today';
-    } else {
-      final yesterday = now.subtract(const Duration(days: 1));
-      if (yesterday.year == sentDay.year &&
-          yesterday.month == sentDay.month &&
-          yesterday.day == sentDay.day) {
-        // Post was sent yesterday
-        return 'Yesterday';
-      } else if (now.year == sentDay.year) {
-        // Show the date without the year
-        return sentDayFormat.format(sentDay).toString();
-      } else {
-        // Show the full date with the year
-        return fullDateFormat.format(sentDay).toString();
-      }
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +32,6 @@ class PostsInListWidget extends StatelessWidget {
               final timeDateFormat = DateFormat("HH:mm");
               final timeDate =
                   timeDateFormat.format(postSent.post.createdAt).toString();
-              final fullDate = formatPostDate(sentDay);
               final isLastMessage =
                   postList.indexOf(postSent) == postList.length - 1;
               final listIsNotSingleElement = postList.length > 1;
@@ -68,21 +39,6 @@ class PostsInListWidget extends StatelessWidget {
                 margin: const EdgeInsets.symmetric(vertical: 7.5),
                 child: Column(
                   children: [
-                    if (shouldShowDate)
-                      Column(
-                        children: [
-                          Text(
-                            fullDate,
-                            style: const TextStyle(
-                              color: AppColors.lavenderHaze,
-                              fontSize: 12,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 15.0,
-                          ),
-                        ],
-                      ),
                     Row(
                       mainAxisSize: MainAxisSize.max,
                       crossAxisAlignment: CrossAxisAlignment.end,

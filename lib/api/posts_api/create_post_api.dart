@@ -12,7 +12,7 @@ import '../../other/exceptions.dart';
 const storage = FlutterSecureStorage();
 
 Future<void> createPost(String channelId, String postId, String postBody,
-    List<String> postImages) async {
+    List<String>? postImages) async {
   final accessToken = await storage.read(key: 'accessToken');
 
   try {

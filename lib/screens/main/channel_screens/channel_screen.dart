@@ -8,6 +8,7 @@ import 'package:merume_mobile/other/colors.dart';
 import 'package:merume_mobile/models/author_model.dart';
 import 'package:merume_mobile/other/error_custom_snackbar.dart';
 import 'package:merume_mobile/screens/main/channel_screens/channel_details_screen.dart';
+import 'package:merume_mobile/screens/main/channel_screens/components/post_day_formation_widget.dart';
 import 'package:merume_mobile/screens/main/channel_screens/models/post_sent_model.dart';
 import 'package:merume_mobile/screens/main/components/enums.dart';
 import 'package:merume_mobile/other/exceptions.dart';
@@ -37,7 +38,7 @@ class _ChannelScreenState extends State<ChannelScreen> {
   final itemsController = StreamController<Map<String, List<List<PostSent>>>>();
 
   String postBody = '';
-  List<String> postImages = [];
+  List<String>? postImages;
 
   bool isLoading = true;
 
@@ -75,36 +76,35 @@ class _ChannelScreenState extends State<ChannelScreen> {
         fetchChannelPosts(widget.channel.id);
     webSocketStream.listen(
       (Map<String, List<List<PostSent>>> data) {
+        // Merge received data with existing posts
         data.forEach((date, arrayOfPostArrays) {
-          // Update or add new posts
           if (posts.containsKey(date)) {
-            // Update existing posts
-            for (var existingPostList in posts[date]!) {
-              existingPostList.removeWhere((existingPost) =>
-                  !arrayOfPostArrays.any((newPostList) => newPostList.any(
-                      (newPost) => newPost.post.id == existingPost.post.id)));
-            }
+            // Update existing posts or add new ones
             for (var newPostList in arrayOfPostArrays) {
-              final existingPostListIndex = posts[date]!.indexWhere(
-                  (existingPostList) => existingPostList.any((existingPost) =>
-                      newPostList.any((newPost) =>
-                          newPost.post.id == existingPost.post.id)));
-              if (existingPostListIndex != -1) {
-                // Update existing post
-                final existingPostList = posts[date]![existingPostListIndex];
-                for (var newPost in newPostList) {
-                  final existingPostIndex = existingPostList.indexWhere(
-                      (existingPost) =>
+              final existingPostList = posts[date]!;
+              for (var newPost in newPostList) {
+                // Find if the new post exists in the existing list
+                final existingPostIndex = existingPostList.indexWhere(
+                    (existingPostSentList) => existingPostSentList.any(
+                        (existingPost) =>
+                            existingPost.post.id == newPost.post.id));
+                if (existingPostIndex != -1) {
+                  // Update existing post
+                  final existingPostListToUpdate =
+                      existingPostList[existingPostIndex];
+                  final existingPostToUpdateIndex =
+                      existingPostListToUpdate.indexWhere((existingPost) =>
                           existingPost.post.id == newPost.post.id);
-                  if (existingPostIndex != -1) {
-                    existingPostList[existingPostIndex] = newPost;
+                  if (existingPostToUpdateIndex != -1) {
+                    existingPostListToUpdate[existingPostToUpdateIndex] =
+                        newPost;
                   } else {
-                    existingPostList.add(newPost);
+                    existingPostListToUpdate.add(newPost);
                   }
+                } else {
+                  // Add new post
+                  existingPostList.add([newPost]);
                 }
-              } else {
-                // Add new post list
-                posts[date]!.add(newPostList);
               }
             }
           } else {
@@ -115,12 +115,12 @@ class _ChannelScreenState extends State<ChannelScreen> {
 
         // Remove deleted posts
         posts.forEach((date, arrayOfPostArrays) {
-          arrayOfPostArrays.forEach((postList) {
+          for (var postList in arrayOfPostArrays) {
             postList.removeWhere((postSent) =>
                 !data.containsKey(date) ||
                 !data[date]!.any((newPostList) => newPostList
                     .any((newPost) => newPost.post.id == postSent.post.id)));
-          });
+          }
         });
 
         // Add data to the stream
@@ -208,23 +208,32 @@ class _ChannelScreenState extends State<ChannelScreen> {
                             DateTime sentDay = DateTime.parse(date);
 
                             return Column(
-                              children:
-                                  arrayOfPostLists.asMap().entries.map((entry) {
-                                final int postListIndex = entry.key;
-                                final List<PostSent> postList = entry.value;
-
-                                // Determine if this is the first element of the postList
-                                final bool shouldShowDate = postListIndex == 0;
-
-                                return PostsInListWidget(
-                                  postList: postList,
-                                  sentDay: sentDay,
-                                  byMe: postList.isNotEmpty &&
-                                      userInfo!.id ==
-                                          postList.first.post.author.id,
-                                  shouldShowDate: shouldShowDate,
-                                );
-                              }).toList(),
+                              children: [
+                                Column(
+                                  children: [
+                                    Text(
+                                      formatPostDate(sentDay),
+                                      style: const TextStyle(
+                                        color: AppColors.lavenderHaze,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 15.0,
+                                    ),
+                                  ],
+                                ),
+                                ...arrayOfPostLists.asMap().entries.map(
+                                      (entry) => PostsInListWidget(
+                                        postList: entry.value,
+                                        sentDay: sentDay,
+                                        byMe: entry.value.isNotEmpty &&
+                                            userInfo!.id ==
+                                                entry
+                                                    .value.first.post.author.id,
+                                      ),
+                                    ),
+                              ],
                             );
                           },
                         );
@@ -295,7 +304,7 @@ class _ChannelScreenState extends State<ChannelScreen> {
                   ),
                   onPressed: !isLoading ||
                           postBody.isNotEmpty ||
-                          postImages.isNotEmpty
+                          postImages != null
                       ? () async {
                           final String postId = ObjectId().hexString;
                           DateTime now = DateTime.now();
@@ -345,7 +354,7 @@ class _ChannelScreenState extends State<ChannelScreen> {
                           // Clear postBody and postImages after sending the message
                           setState(() {
                             postBody = '';
-                            postImages.clear();
+                            postImages = null;
                           });
 
                           try {
