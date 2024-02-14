@@ -211,6 +211,9 @@ class _ChannelScreenState extends State<ChannelScreen> {
                               children: [
                                 Column(
                                   children: [
+                                    const SizedBox(
+                                      height: 15.0,
+                                    ),
                                     Text(
                                       formatPostDate(sentDay),
                                       style: const TextStyle(
@@ -341,10 +344,27 @@ class _ChannelScreenState extends State<ChannelScreen> {
                               posts[formattedDate] = [];
                             }
 
-                            // Add the postSent to today's date entry
+                            // Check if there are existing posts for today
+                            if (posts[formattedDate]!.isNotEmpty) {
+                              final lastPostList = posts[formattedDate]!.last;
+                              final lastPost = lastPostList.last;
+                              final timeDifference =
+                                  now.difference(lastPost.post.createdAt);
+                              if (timeDifference.inMinutes <= 5) {
+                                // Add the new post to the last list if within 5 minutes
+                                lastPostList.add(
+                                  PostSent(
+                                      post: post,
+                                      status: MessageStatus.waiting),
+                                );
+                                return; // Exit the function since post is added
+                              }
+                            }
+
+                            // Create a new list and add the new post if not within 5 minutes
                             posts[formattedDate]!.add([
                               PostSent(
-                                  post: post, status: MessageStatus.waiting)
+                                  post: post, status: MessageStatus.waiting),
                             ]);
                           });
 
