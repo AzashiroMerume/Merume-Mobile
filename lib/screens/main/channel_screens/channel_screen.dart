@@ -318,151 +318,155 @@ class _ChannelScreenState extends State<ChannelScreen> {
                     Icons.send,
                     color: AppColors.mellowLemon,
                   ),
-                  onPressed: !isLoading ||
-                          postBody.isNotEmpty ||
-                          postImages != null
+                  onPressed: (!isLoading &&
+                          (postBody.isNotEmpty || postImages != null))
                       ? () async {
-                          final String postId = ObjectId().hexString;
-                          DateTime now = DateTime.now();
-                          String formattedDate =
-                              DateFormat('yyyy-MM-dd').format(now);
+                          // Check if the message body is not empty
+                          if (postBody.isNotEmpty) {
+                            final String postId = ObjectId().hexString;
+                            DateTime now = DateTime.now();
+                            String formattedDate =
+                                DateFormat('yyyy-MM-dd').format(now);
 
-                          textEditingController.clear();
+                            textEditingController.clear();
 
-                          Author author = Author(
-                              id: widget.channel.author.id,
-                              nickname: widget.channel.author.nickname,
-                              username: widget.channel.author.username,
-                              isOnline: true);
+                            Author author = Author(
+                                id: widget.channel.author.id,
+                                nickname: widget.channel.author.nickname,
+                                username: widget.channel.author.username,
+                                isOnline: true);
 
-                          Post post = Post(
-                            id: postId,
-                            author: author,
-                            channelId: widget.channel.id,
-                            body: postBody,
-                            images: postImages,
-                            writtenChallengeDay:
-                                widget.channel.currentChallengeDay,
-                            likes: 0,
-                            dislikes: 0,
-                            alreadyChanged: false,
-                            createdAt: now,
-                            updatedAt: now,
-                          );
+                            Post post = Post(
+                              id: postId,
+                              author: author,
+                              channelId: widget.channel.id,
+                              body: postBody,
+                              images: postImages,
+                              writtenChallengeDay:
+                                  widget.channel.currentChallengeDay,
+                              likes: 0,
+                              dislikes: 0,
+                              alreadyChanged: false,
+                              createdAt: now,
+                              updatedAt: now,
+                            );
 
-                          // Set the status to waiting when a message is sent
-                          setState(() {
-                            // Check if today's date already exists in posts, if not, create it
-                            if (!posts.containsKey(formattedDate)) {
-                              posts[formattedDate] = [];
-                            }
-
-                            // Check if there are existing posts for today
-                            if (posts[formattedDate]!.isNotEmpty) {
-                              final lastPostList = posts[formattedDate]!.last;
-                              final lastPost = lastPostList.last;
-                              final timeDifference =
-                                  now.difference(lastPost.post.createdAt);
-                              if (timeDifference.inMinutes <= 5) {
-                                // Add the new post to the last list if within 5 minutes
-                                lastPostList.add(
-                                  PostSent(
-                                      post: post,
-                                      status: MessageStatus.waiting),
-                                );
-                                return; // Exit the function since post is added
-                              }
-                            }
-
-                            // Create a new list and add the new post if not within 5 minutes
-                            posts[formattedDate]!.add([
-                              PostSent(
-                                  post: post, status: MessageStatus.waiting),
-                            ]);
-                          });
-
-                          _scrollToNewPost();
-
-                          final tempPostBody = postBody;
-                          final tempPostImages = postImages;
-
-                          // Clear postBody and postImages after sending the message
-                          setState(() {
-                            postBody = '';
-                            postImages = null;
-                          });
-
-                          try {
-                            await createPost(widget.channel.id, postId,
-                                tempPostBody, tempPostImages);
-                          } catch (e) {
+                            // Set the status to waiting when a message is sent
                             setState(() {
-                              if (posts.containsKey(formattedDate)) {
-                                // Iterate over the list of post lists for the date
-                                for (final postList in posts[formattedDate]!) {
-                                  // Iterate over each `PostSent` object in the post list
-                                  for (final postSent in postList) {
-                                    // Check if the conditions match for the `PostSent` object
-                                    if (postSent.status ==
-                                            MessageStatus.waiting &&
-                                        postSent.post.id == post.id) {
-                                      // Update the status to error
-                                      postSent.status = MessageStatus.error;
-                                      return; // Exit the function since we found the matching post
+                              // Check if today's date already exists in posts, if not, create it
+                              if (!posts.containsKey(formattedDate)) {
+                                posts[formattedDate] = [];
+                              }
+
+                              // Check if there are existing posts for today
+                              if (posts[formattedDate]!.isNotEmpty) {
+                                final lastPostList = posts[formattedDate]!.last;
+                                final lastPost = lastPostList.last;
+                                final timeDifference =
+                                    now.difference(lastPost.post.createdAt);
+                                if (timeDifference.inMinutes <= 5) {
+                                  // Add the new post to the last list if within 5 minutes
+                                  lastPostList.add(
+                                    PostSent(
+                                        post: post,
+                                        status: MessageStatus.waiting),
+                                  );
+                                  return; // Exit the function since post is added
+                                }
+                              }
+
+                              // Create a new list and add the new post if not within 5 minutes
+                              posts[formattedDate]!.add([
+                                PostSent(
+                                    post: post, status: MessageStatus.waiting),
+                              ]);
+                            });
+
+                            _scrollToNewPost();
+
+                            final tempPostBody = postBody;
+                            final tempPostImages = postImages;
+
+                            // Clear postBody and postImages after sending the message
+                            setState(() {
+                              postBody = '';
+                              postImages = null;
+                            });
+
+                            try {
+                              await createPost(widget.channel.id, postId,
+                                  tempPostBody, tempPostImages);
+                            } catch (e) {
+                              setState(() {
+                                if (posts.containsKey(formattedDate)) {
+                                  // Iterate over the list of post lists for the date
+                                  for (final postList
+                                      in posts[formattedDate]!) {
+                                    // Iterate over each `PostSent` object in the post list
+                                    for (final postSent in postList) {
+                                      // Check if the conditions match for the `PostSent` object
+                                      if (postSent.status ==
+                                              MessageStatus.waiting &&
+                                          postSent.post.id == post.id) {
+                                        // Update the status to error
+                                        postSent.status = MessageStatus.error;
+                                        return; // Exit the function since we found the matching post
+                                      }
                                     }
                                   }
-                                }
 
-                                // If the waiting post is not found, add a new error post
-                                setState(() {
-                                  posts[formattedDate]!.add([
-                                    PostSent(
-                                        post: post, status: MessageStatus.error)
-                                  ]);
-                                });
-                              } else {
-                                // If the date entry doesn't exist, create it and add the error post
-                                setState(() {
-                                  posts[formattedDate] = [
-                                    [
+                                  // If the waiting post is not found, add a new error post
+                                  setState(() {
+                                    posts[formattedDate]!.add([
                                       PostSent(
                                           post: post,
                                           status: MessageStatus.error)
-                                    ]
-                                  ];
-                                });
-                              }
+                                    ]);
+                                  });
+                                } else {
+                                  // If the date entry doesn't exist, create it and add the error post
+                                  setState(() {
+                                    posts[formattedDate] = [
+                                      [
+                                        PostSent(
+                                            post: post,
+                                            status: MessageStatus.error)
+                                      ]
+                                    ];
+                                  });
+                                }
 
-                              if (e is TokenErrorException) {
-                                errorMessage =
-                                    'Token authentication error. Please try to relogin.';
-                              } else if (e is NotFoundException) {
-                                errorMessage =
-                                    'Channel not found. Please try again later.';
-                              } else if (e is PostAuthorConflictException) {
-                                errorMessage =
-                                    'You have no rights to post here.';
-                              } else if (e is UnprocessableEntityException) {
-                                errorMessage =
-                                    'Invalid input data. Please follow the requirements.';
-                              } else if (e is ServerException ||
-                                  e is HttpException) {
-                                errorMessage =
-                                    'There was an error on the server side. Please try again later.';
-                              } else if (e is NetworkException) {
-                                errorMessage =
-                                    'A network error has occurred. Please check your internet connection.';
-                              } else if (e is TimeoutException) {
-                                errorMessage =
-                                    'Network connection is poor. Please try again later.';
-                              }
+                                if (e is TokenErrorException) {
+                                  errorMessage =
+                                      'Token authentication error. Please try to relogin.';
+                                } else if (e is NotFoundException) {
+                                  errorMessage =
+                                      'Channel not found. Please try again later.';
+                                } else if (e is PostAuthorConflictException) {
+                                  errorMessage =
+                                      'You have no rights to post here.';
+                                } else if (e is UnprocessableEntityException) {
+                                  errorMessage =
+                                      'Invalid input data. Please follow the requirements.';
+                                } else if (e is ServerException ||
+                                    e is HttpException) {
+                                  errorMessage =
+                                      'There was an error on the server side. Please try again later.';
+                                } else if (e is NetworkException) {
+                                  errorMessage =
+                                      'A network error has occurred. Please check your internet connection.';
+                                } else if (e is TimeoutException) {
+                                  errorMessage =
+                                      'Network connection is poor. Please try again later.';
+                                }
 
-                              showCustomSnackBar(
-                                context,
-                                message:
-                                    'Oops! Something went wrong. Please try again later.',
-                              );
-                            });
+                                showCustomSnackBar(
+                                  context,
+                                  message:
+                                      'Oops! Something went wrong. Please try again later.',
+                                );
+                              });
+                            }
                           }
                         }
                       : null, // Disable the button when conditions are not met
