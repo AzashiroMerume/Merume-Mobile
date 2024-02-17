@@ -34,6 +34,8 @@ class _CreatedChannelsScreenState extends State<CreatedChannelsScreen> {
       final Stream<List<Channel>> dataStream = fetchOwnChannels();
       itemsController.addStream(dataStream);
     } catch (e) {
+      print('Error in created channels: $e');
+
       if (e is TokenErrorException) {
         Navigator.of(context).pushNamedAndRemoveUntil(
           '/login',

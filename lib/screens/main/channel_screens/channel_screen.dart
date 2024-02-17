@@ -29,6 +29,8 @@ class ChannelScreen extends StatefulWidget {
 }
 
 class _ChannelScreenState extends State<ChannelScreen> {
+  late ScrollController _scrollController;
+
   bool isAuthor = false;
 
   TextEditingController textEditingController = TextEditingController();
@@ -44,9 +46,6 @@ class _ChannelScreenState extends State<ChannelScreen> {
 
   String errorMessage = '';
 
-  bool newDate = false;
-  DateTime? previousDate;
-
   void _handleAppBarPress() {
     Navigator.push(
       context,
@@ -59,16 +58,29 @@ class _ChannelScreenState extends State<ChannelScreen> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController();
+    _initializeStream();
+  }
+
+  @override
   void dispose() {
     itemsController.sink.close();
     itemsController.close();
     super.dispose();
   }
 
-  @override
-  void initState() {
-    super.initState();
-    _initializeStream();
+  void _scrollToNewPost() {
+    if (_scrollController.hasClients) {
+      // Check if ScrollController has attached to a scrollable widget
+      final double position = _scrollController.position.maxScrollExtent;
+      _scrollController.animateTo(
+        position,
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.easeInOut,
+      );
+    }
   }
 
   void _initializeStream() {
@@ -201,6 +213,7 @@ class _ChannelScreenState extends State<ChannelScreen> {
                       if (posts.isNotEmpty) {
                         isLoading = false;
                         return ListView.builder(
+                          controller: _scrollController,
                           itemCount: posts.length,
                           itemBuilder: (_, index) {
                             final date = posts.keys.elementAt(index);
@@ -367,6 +380,8 @@ class _ChannelScreenState extends State<ChannelScreen> {
                                   post: post, status: MessageStatus.waiting),
                             ]);
                           });
+
+                          _scrollToNewPost();
 
                           final tempPostBody = postBody;
                           final tempPostImages = postImages;
