@@ -13,6 +13,12 @@ const storage = FlutterSecureStorage();
 
 Future<void> createPost(String channelId, String postId, String postBody,
     List<String>? postImages) async {
+  if (channelId.isEmpty ||
+      postId.isEmpty ||
+      (postBody.isEmpty && (postImages == null || postImages.isEmpty))) {
+    throw UnprocessableEntityException('The request data is invalid');
+  }
+
   final accessToken = await storage.read(key: 'accessToken');
 
   try {

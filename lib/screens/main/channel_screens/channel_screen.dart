@@ -198,86 +198,144 @@ class _ChannelScreenState extends State<ChannelScreen> {
         ),
       ),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.only(top: 20.0, right: 15.0, left: 15.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Expanded(
-                child: StreamBuilder<Map<String, List<List<PostSent>>>>(
-                  stream: itemsController.stream,
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      // Check if posts contains any data
-                      if (posts.isNotEmpty) {
-                        isLoading = false;
-                        return ListView.builder(
-                          controller: _scrollController,
-                          itemCount: posts.length,
-                          itemBuilder: (_, index) {
-                            final date = posts.keys.elementAt(index);
-                            final arrayOfPostLists = posts[date]!;
-                            DateTime sentDay = DateTime.parse(date);
+        child: Stack(
+          children: [
+            Padding(
+              padding:
+                  const EdgeInsets.only(top: 20.0, right: 15.0, left: 15.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: StreamBuilder<Map<String, List<List<PostSent>>>>(
+                      stream: itemsController.stream,
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          // Check if posts contains any data
+                          if (posts.isNotEmpty) {
+                            isLoading = false;
+                            return ListView.builder(
+                              controller: _scrollController,
+                              itemCount: posts.length,
+                              itemBuilder: (_, index) {
+                                final date = posts.keys.elementAt(index);
+                                final arrayOfPostLists = posts[date]!;
+                                DateTime sentDay = DateTime.parse(date);
 
-                            return Column(
-                              children: [
-                                Column(
-                                  children: [
-                                    const SizedBox(
-                                      height: 15.0,
-                                    ),
-                                    Text(
-                                      formatPostDate(sentDay),
-                                      style: const TextStyle(
-                                        color: AppColors.lavenderHaze,
-                                        fontSize: 12,
+                                // Check if there are any remaining posts for this date
+                                final bool hasPostsForDate = arrayOfPostLists
+                                    .any((postList) => postList.isNotEmpty);
+
+                                // Only show the date if there are remaining posts for this date
+                                if (hasPostsForDate) {
+                                  return Column(
+                                    children: [
+                                      Column(
+                                        children: [
+                                          const SizedBox(
+                                            height: 10.0,
+                                          ),
+                                          Container(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 10.0,
+                                                vertical: 5.0),
+                                            decoration: BoxDecoration(
+                                              color: AppColors.postMain,
+                                              borderRadius:
+                                                  BorderRadius.circular(8.0),
+                                            ),
+                                            child: Text(
+                                              formatPostDate(sentDay),
+                                              style: const TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 12,
+                                              ),
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            height: 5.0,
+                                          ),
+                                        ],
                                       ),
-                                    ),
-                                    const SizedBox(
-                                      height: 15.0,
-                                    ),
-                                  ],
-                                ),
-                                ...arrayOfPostLists.asMap().entries.map(
-                                      (entry) => PostsInListWidget(
-                                        postList: entry.value,
-                                        sentDay: sentDay,
-                                        byMe: entry.value.isNotEmpty &&
-                                            userInfo!.id ==
-                                                entry
-                                                    .value.first.post.author.id,
-                                      ),
-                                    ),
-                              ],
+                                      ...arrayOfPostLists.asMap().entries.map(
+                                            (entry) => PostsInListWidget(
+                                              postList: entry.value,
+                                              sentDay: sentDay,
+                                              byMe: entry.value.isNotEmpty &&
+                                                  userInfo!.id ==
+                                                      entry.value.first.post
+                                                          .author.id,
+                                            ),
+                                          ),
+                                    ],
+                                  );
+                                } else {
+                                  // If there are no remaining posts for this date, don't display the date
+                                  return Column(
+                                    children: [
+                                      ...arrayOfPostLists.asMap().entries.map(
+                                            (entry) => PostsInListWidget(
+                                              postList: entry.value,
+                                              sentDay: sentDay,
+                                              byMe: entry.value.isNotEmpty &&
+                                                  userInfo!.id ==
+                                                      entry.value.first.post
+                                                          .author.id,
+                                            ),
+                                          ),
+                                    ],
+                                  );
+                                }
+                              },
                             );
-                          },
-                        );
-                      } else {
-                        // If posts is empty, display the "No posts yet" message
-                        return const Center(
-                          child: Text(
-                            'No posts yet..',
-                            style: TextStyle(
-                              color: AppColors.mellowLemon,
-                              fontFamily: 'WorkSans',
-                              fontSize: 15,
-                            ),
-                          ),
-                        );
-                      }
-                    } else {
-                      isLoading = true;
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    }
-                  },
-                ),
+                          } else {
+                            // If posts is empty, display the "No posts yet" message
+                            return const Center(
+                              child: Text(
+                                'No posts yet..',
+                                style: TextStyle(
+                                  color: AppColors.mellowLemon,
+                                  fontFamily: 'WorkSans',
+                                  fontSize: 15,
+                                ),
+                              ),
+                            );
+                          }
+                        } else {
+                          isLoading = true;
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+                      },
+                    ),
+                  ),
+                  _buildChatInputBox(),
+                ],
               ),
-              _buildChatInputBox(),
-            ],
-          ),
+            ),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.center,
+            //   children: [
+            //     Container(
+            //       padding: const EdgeInsets.symmetric(
+            //           horizontal: 10.0, vertical: 5.0),
+            //       decoration: BoxDecoration(
+            //         color: AppColors.postMain,
+            //         borderRadius: BorderRadius.circular(8.0),
+            //       ),
+            //       child: const Text(
+            //         /*  formatPostDate(sentDay) */ 'dude',
+            //         style: TextStyle(
+            //           color: Colors.white,
+            //           fontSize: 12,
+            //         ),
+            //       ),
+            //     ),
+            //   ],
+            // ),
+          ],
         ),
       ),
     );
