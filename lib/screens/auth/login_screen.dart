@@ -8,6 +8,7 @@ import 'dart:async';
 import 'package:email_validator/email_validator.dart';
 import 'package:merume_mobile/api/auth_api/login_api.dart';
 import 'package:merume_mobile/other/exceptions.dart';
+import 'package:merume_mobile/screens/shared/basic/basic_elevated_button_widget.dart';
 import 'package:merume_mobile/user_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -192,133 +193,107 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               const SizedBox(height: 32.0),
               Center(
-                child: ElevatedButton(
-                  onPressed: isPressed
-                      ? null
-                      : () async {
-                          validateFields();
+                child: BasicElevatedButtonWidget(
+                    buttonText: 'Login',
+                    onPressed: isPressed
+                        ? null
+                        : () async {
+                            validateFields();
 
-                          if (errors.isNotEmpty) {
-                            isPressed = false;
-                          } else {
-                            isPressed = true;
-                          }
+                            if (errors.isNotEmpty) {
+                              isPressed = false;
+                            } else {
+                              isPressed = true;
+                            }
 
-                          setState(() {
-                            errorMessage = '';
-                          });
+                            setState(() {
+                              errorMessage = '';
+                            });
 
-                          if (errors.isEmpty) {
-                            String? firebaseUserId;
-                            try {
-                              if (!useEmailLogin) {
-                                String userEmail =
-                                    await getEmailByNickname(identifier);
+                            if (errors.isEmpty) {
+                              String? firebaseUserId;
+                              try {
+                                if (!useEmailLogin) {
+                                  String userEmail =
+                                      await getEmailByNickname(identifier);
 
-                                firebaseUserId =
-                                    await loginInFirebase(userEmail, password);
-                              } else {
-                                firebaseUserId =
-                                    await loginInFirebase(identifier, password);
-                              }
+                                  firebaseUserId = await loginInFirebase(
+                                      userEmail, password);
+                                } else {
+                                  firebaseUserId = await loginInFirebase(
+                                      identifier, password);
+                                }
 
-                              final user = await login(identifier, password,
-                                  useEmailLogin, firebaseUserId!);
+                                final user = await login(identifier, password,
+                                    useEmailLogin, firebaseUserId!);
 
-                              userInfoProvider.setUser(user);
+                                userInfoProvider.setUser(user);
 
-                              state.pushNamedAndRemoveUntil(
-                                '/main',
-                                (Route<dynamic> route) => false,
-                              );
-                            } catch (e) {
-                              setState(() {
-                                if (e is AuthenticationException) {
-                                  if (useEmailLogin) {
+                                state.pushNamedAndRemoveUntil(
+                                  '/main',
+                                  (Route<dynamic> route) => false,
+                                );
+                              } catch (e) {
+                                setState(() {
+                                  if (e is AuthenticationException) {
+                                    if (useEmailLogin) {
+                                      errorMessage =
+                                          'Email or password is incorrect, please try a different email or sign up for a new account.';
+                                    } else {
+                                      errorMessage =
+                                          'Nickname or password is incorrect, please try a different nickname or sign up for a new account.';
+                                    }
+                                  } else if (e
+                                      is fire_base.FirebaseAuthException) {
+                                    if (e.code == 'user-not-found' ||
+                                        e.code == 'wrong-password') {
+                                      errorMessage =
+                                          'Email or password is incorrect, please try a different email or sign up for a new account.';
+                                    } else if (e.code == 'invalid-email') {
+                                      errorMessage =
+                                          'Invalid email format. Please provide a valid email address.';
+                                    } else {
+                                      errorMessage =
+                                          'An unexpected error occurred. Please try again later.';
+                                    }
+                                  } else if (e is NotFoundException) {
+                                    if (useEmailLogin) {
+                                      errorMessage =
+                                          'Email not found, try to sign up.';
+                                    } else {
+                                      errorMessage =
+                                          'Nickname not found, try to sign up.';
+                                    }
+                                  } else if (e
+                                          is UnprocessableEntityException ||
+                                      e is ContentTooLargeException) {
                                     errorMessage =
-                                        'Email or password is incorrect, please try a different email or sign up for a new account.';
+                                        'Invalid input data. Please follow the requirements.';
+                                  } else if (e is NetworkException) {
+                                    errorMessage =
+                                        'A network error has occurred. Please check your internet connection.';
+                                  } else if (e is ServerException ||
+                                      e is HttpException) {
+                                    errorMessage =
+                                        'There was an error on the server side. Please try again later.';
+                                  } else if (e is TimeoutException) {
+                                    errorMessage =
+                                        'Network connection is poor. Please try again later.';
                                   } else {
-                                    errorMessage =
-                                        'Nickname or password is incorrect, please try a different nickname or sign up for a new account.';
-                                  }
-                                } else if (e
-                                    is fire_base.FirebaseAuthException) {
-                                  if (e.code == 'user-not-found' ||
-                                      e.code == 'wrong-password') {
-                                    errorMessage =
-                                        'Email or password is incorrect, please try a different email or sign up for a new account.';
-                                  } else if (e.code == 'invalid-email') {
-                                    errorMessage =
-                                        'Invalid email format. Please provide a valid email address.';
-                                  } else {
+                                    if (kDebugMode) {
+                                      print(e);
+                                    }
+
                                     errorMessage =
                                         'An unexpected error occurred. Please try again later.';
                                   }
-                                } else if (e is NotFoundException) {
-                                  if (useEmailLogin) {
-                                    errorMessage =
-                                        'Email not found, try to sign up.';
-                                  } else {
-                                    errorMessage =
-                                        'Nickname not found, try to sign up.';
-                                  }
-                                } else if (e is UnprocessableEntityException ||
-                                    e is ContentTooLargeException) {
-                                  errorMessage =
-                                      'Invalid input data. Please follow the requirements.';
-                                } else if (e is NetworkException) {
-                                  errorMessage =
-                                      'A network error has occurred. Please check your internet connection.';
-                                } else if (e is ServerException ||
-                                    e is HttpException) {
-                                  errorMessage =
-                                      'There was an error on the server side. Please try again later.';
-                                } else if (e is TimeoutException) {
-                                  errorMessage =
-                                      'Network connection is poor. Please try again later.';
-                                } else {
-                                  if (kDebugMode) {
-                                    print(e);
-                                  }
-
-                                  errorMessage =
-                                      'An unexpected error occurred. Please try again later.';
-                                }
-                              });
-                            } finally {
-                              isPressed = false;
+                                });
+                              } finally {
+                                isPressed = false;
+                              }
                             }
-                          }
-                        },
-                  style: ElevatedButton.styleFrom(
-                    fixedSize: const Size(178, 38),
-                    backgroundColor: AppColors.royalPurple,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(50),
-                      side: BorderSide(
-                        color: isPressed
-                            ? AppColors.royalPurple // When pressed
-                            : Colors.transparent, // Default border color
-                      ),
-                    ),
-                  ),
-                  child: isPressed
-                      ? const SizedBox(
-                          width: 20.0,
-                          height: 20.0,
-                          child: CircularProgressIndicator(
-                            color: AppColors.lavenderHaze,
-                          ),
-                        )
-                      : const Text(
-                          'Login',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontFamily: 'WorkSans',
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                ),
+                          },
+                    isPressed: isPressed),
               ),
               const SizedBox(height: 24.0),
               TextButton(

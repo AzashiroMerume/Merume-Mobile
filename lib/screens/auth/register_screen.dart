@@ -1,14 +1,15 @@
 import 'dart:async';
+import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fire_base;
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:merume_mobile/api/auth_api/firebase_auth_api.dart';
 import 'package:merume_mobile/other/colors.dart';
 import 'package:merume_mobile/api/auth_api/register_api.dart';
 import 'package:merume_mobile/other/exceptions.dart';
 import 'package:merume_mobile/user_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:merume_mobile/screens/shared/basic/basic_elevated_button_widget.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -215,7 +216,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 const SizedBox(height: 40.0),
                 Center(
-                  child: ElevatedButton(
+                  child: BasicElevatedButtonWidget(
+                    buttonText: 'Sign up',
                     onPressed: isPressed
                         ? null
                         : () async {
@@ -290,40 +292,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               }
                             }
                           },
-                    style: ElevatedButton.styleFrom(
-                      fixedSize: const Size(178, 38),
-                      backgroundColor: AppColors.royalPurple,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(50),
-                        side: BorderSide(
-                          color: isPressed
-                              ? AppColors.royalPurple // When pressed
-                              : Colors.transparent, // Default border color
-                        ),
-                      ),
-                    ),
-                    child: isPressed
-                        ? const SizedBox(
-                            width: 20.0,
-                            height: 20.0,
-                            child: CircularProgressIndicator(
-                              color: AppColors.lavenderHaze,
-                            ),
-                          )
-                        : const Text(
-                            'Sign up',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: 'WorkSans',
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
+                    isPressed: isPressed,
                   ),
                 ),
                 const SizedBox(height: 24.0),
                 TextButton(
-                  onPressed: (() =>
-                      Navigator.of(context).pushReplacementNamed('/login')),
+                  onPressed: () =>
+                      Navigator.of(context).pushReplacementNamed('/login'),
                   child: const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
