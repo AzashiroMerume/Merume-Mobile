@@ -47,6 +47,17 @@ class _MainTabBarScreenState extends State<MainTabBarScreen> {
     super.dispose();
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final passedTabIndex = ModalRoute.of(context)!.settings.arguments as int?;
+    if (passedTabIndex != null && (passedTabIndex > -1 && passedTabIndex < 3)) {
+      setState(() {
+        _currentIndex = passedTabIndex;
+      });
+    }
+  }
+
   void _initializeStream() async {
     try {
       _webSocketChannel = await heartbeat();
@@ -68,11 +79,6 @@ class _MainTabBarScreenState extends State<MainTabBarScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final passedTabIndex = ModalRoute.of(context)!.settings.arguments as int?;
-    if (passedTabIndex != null && (passedTabIndex > -1 && passedTabIndex < 3)) {
-      _currentIndex = passedTabIndex;
-    }
-
     return SafeArea(
       child: Scaffold(
         appBar: _currentIndex == 1

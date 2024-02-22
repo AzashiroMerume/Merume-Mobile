@@ -31,17 +31,6 @@ class _AccountScreenState extends State<AccountScreen> {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          user.userInfo?.nickname ?? '', // Use null-aware operator here
-          style: const TextStyle(
-            fontFamily: 'Poppins',
-            color: Colors.white,
-            fontSize: 20.0,
-          ),
-        ),
-        centerTitle: true,
-      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
         child: Align(
