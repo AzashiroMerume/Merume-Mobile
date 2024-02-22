@@ -37,7 +37,7 @@ void main() async {
     isAuthenticated = await verifyAuthInFirebase();
   } catch (e) {
     if (kDebugMode) {
-      print(e);
+      print('Error in verifyAuthInFirebase: $e');
     }
     isAuthenticated = false;
   }
