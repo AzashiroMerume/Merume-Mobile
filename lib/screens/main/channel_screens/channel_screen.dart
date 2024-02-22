@@ -212,9 +212,9 @@ class _ChannelScreenState extends State<ChannelScreen> {
                       stream: itemsController.stream,
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
+                          isLoading = false;
                           // Check if posts contains any data
                           if (posts.isNotEmpty) {
-                            isLoading = false;
                             return ListView.builder(
                               controller: _scrollController,
                               itemCount: posts.length,
