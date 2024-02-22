@@ -8,7 +8,6 @@ import 'package:merume_mobile/other/colors.dart';
 import 'package:merume_mobile/other/exceptions.dart';
 import 'package:merume_mobile/screens/shared/last_time_online.dart';
 import 'package:merume_mobile/screens/main/other_user_screens/other_user_screen.dart';
-import 'package:merume_mobile/screens/main/tab_bar_screens/account_tab_bar_screen/account_screen.dart';
 
 class ChannelDetailsScreen extends StatefulWidget {
   final Channel channel;
@@ -293,15 +292,20 @@ class _ChannelDetailsScreenState extends State<ChannelDetailsScreen> {
                         padding: const EdgeInsets.symmetric(vertical: 10.0),
                         child: ListTile(
                           onTap: () {
-                            // Navigate to AuthorScreen for the owner (author),
-                            // otherwise navigate to OtherUserScreen
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => isAuthor
-                                    ? const AccountScreen()
-                                    : OtherUserScreen(user: follower),
-                              ),
-                            );
+                            if (isAuthor) {
+                              // Navigate to MainTabBarScreen with index 2 for the author
+                              Navigator.pushNamed(context, '/main',
+                                  arguments: 2);
+                            } else {
+                              // Navigate to OtherUserScreen for non-author users
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      OtherUserScreen(user: follower),
+                                ),
+                              );
+                            }
                           },
                           leading: CircleAvatar(
                             radius: 30.0,

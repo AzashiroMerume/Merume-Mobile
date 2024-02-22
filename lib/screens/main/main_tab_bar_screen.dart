@@ -52,22 +52,27 @@ class _MainTabBarScreenState extends State<MainTabBarScreen> {
       _webSocketChannel = await heartbeat();
     } catch (e) {
       if (e is TokenErrorException) {
-        if (context.mounted) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
           Navigator.of(context).pushNamedAndRemoveUntil(
             '/login',
             (Route<dynamic> route) => false,
           );
-        }
+        });
       }
 
       if (kDebugMode) {
-        print('Error in main_tab_bar_screen websocket: $e');
+        print('Error in heartbeat websocket: $e');
       }
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final passedTabIndex = ModalRoute.of(context)!.settings.arguments as int?;
+    if (passedTabIndex != null && (passedTabIndex > -1 && passedTabIndex < 3)) {
+      _currentIndex = passedTabIndex;
+    }
+
     return SafeArea(
       child: Scaffold(
         appBar: _currentIndex == 1
