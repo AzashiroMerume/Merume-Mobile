@@ -30,7 +30,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   String errorMessage = '';
 
-  bool useEmailLogin = true;
+  bool useEmailLogin = false;
 
   @override
   void dispose() {
@@ -326,7 +326,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    useEmailLogin ? 'Login by' : 'Login by unique',
+                    useEmailLogin ? 'Login by unique' : 'Login by',
                     style: const TextStyle(
                       fontFamily: 'WorkSans',
                       fontSize: 16,
