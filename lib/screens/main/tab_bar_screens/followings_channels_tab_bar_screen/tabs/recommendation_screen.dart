@@ -6,6 +6,7 @@ import 'package:merume_mobile/models/channel_model.dart';
 import 'package:merume_mobile/api/user_api/recommendations_api/recommendations_api.dart';
 import 'package:merume_mobile/screens/main/channel_screens/channels_list_widget.dart';
 import 'package:merume_mobile/screens/settings/preferences_screen.dart';
+import 'package:merume_mobile/screens/shared/basic/basic_elevated_button_widget.dart';
 
 class RecommendationScreen extends StatefulWidget {
   final List<String>? preferences;
@@ -180,7 +181,9 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
                         const SizedBox(
                           width: 12.0,
                         ),
-                        ElevatedButton(
+                        BasicElevatedButtonWidget(
+                          width: 100,
+                          height: 35,
                           onPressed: () {
                             Navigator.push(
                               context,
@@ -189,17 +192,7 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
                               ),
                             );
                           },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.royalPurple,
-                          ),
-                          child: const Text(
-                            'Select',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: 'WorkSans',
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
+                          buttonText: 'Select',
                         ),
                       ],
                     ),

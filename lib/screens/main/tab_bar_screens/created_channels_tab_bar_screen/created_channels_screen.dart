@@ -5,6 +5,7 @@ import 'package:merume_mobile/models/channel_model.dart';
 import 'package:merume_mobile/api/user_api/user_channels_api/created_channels_api.dart/created_channels_api.dart';
 import 'package:merume_mobile/other/exceptions.dart';
 import 'package:merume_mobile/screens/main/channel_screens/channels_list_widget.dart';
+import 'package:merume_mobile/screens/shared/basic/basic_elevated_button_widget.dart';
 
 class CreatedChannelsScreen extends StatefulWidget {
   const CreatedChannelsScreen({super.key});
@@ -15,6 +16,8 @@ class CreatedChannelsScreen extends StatefulWidget {
 
 class _CreatedChannelsScreenState extends State<CreatedChannelsScreen> {
   final itemsController = StreamController<List<Channel>>();
+
+  bool _isButtonPressed = false;
 
   @override
   void initState() {
@@ -83,6 +86,9 @@ class _CreatedChannelsScreenState extends State<CreatedChannelsScreen> {
                         ),
                       );
                     } else if (snapshot.hasError) {
+                      if (_isButtonPressed) {
+                        _isButtonPressed = false;
+                      }
                       return Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -96,24 +102,16 @@ class _CreatedChannelsScreenState extends State<CreatedChannelsScreen> {
                               ),
                             ),
                             const SizedBox(height: 15),
-                            ElevatedButton(
+                            BasicElevatedButtonWidget(
                               onPressed: () {
+                                setState(() {
+                                  _isButtonPressed = true;
+                                });
                                 // Retry action when button is pressed
                                 _initializeStream();
                               },
-                              style: ElevatedButton.styleFrom(
-                                fixedSize: const Size(150, 35),
-                                backgroundColor: AppColors.royalPurple,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(50),
-                                  side: const BorderSide(
-                                      color: AppColors.royalPurple),
-                                ),
-                              ),
-                              child: const Text(
-                                'Try Again',
-                                style: TextStyle(color: Colors.white),
-                              ),
+                              buttonText: 'Try Again',
+                              isPressed: _isButtonPressed,
                             ),
                           ],
                         ),

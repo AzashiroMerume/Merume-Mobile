@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:merume_mobile/screens/shared/basic/basic_elevated_button_widget.dart';
 
 class NetworkErrorPopupWidget extends StatelessWidget {
   const NetworkErrorPopupWidget({super.key, this.onPressed});
@@ -41,15 +42,11 @@ class NetworkErrorPopupWidget extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 16),
-          ElevatedButton(
+          BasicElevatedButtonWidget(
             onPressed: onPressed,
-            style: ElevatedButton.styleFrom(
-                // Add any specific button styling here
-                ),
-            child: const Text(
-              "Try Again",
-              style: TextStyle(fontFamily: "WorkSans"),
-            ),
+            buttonText: 'Try Again',
+            width: 120,
+            height: 35,
           )
         ],
       ),

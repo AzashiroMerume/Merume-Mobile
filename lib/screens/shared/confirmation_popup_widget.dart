@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:merume_mobile/other/colors.dart';
+import 'package:merume_mobile/screens/shared/basic/basic_elevated_button_widget.dart';
 
 class ConfirmationDialog extends StatelessWidget {
   final VoidCallback onCancel;
@@ -45,19 +46,11 @@ class ConfirmationDialog extends StatelessWidget {
             ),
           ),
         ),
-        ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.royalPurple,
-          ),
+        BasicElevatedButtonWidget(
+          buttonText: 'SAVE',
           onPressed: onSave,
-          child: const Text(
-            "SAVE",
-            style: TextStyle(
-              color: Colors.white,
-              fontFamily: 'WorkSans',
-              fontSize: 16,
-            ),
-          ),
+          width: 100,
+          height: 35,
         ),
       ],
     );
