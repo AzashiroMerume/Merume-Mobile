@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:merume_mobile/other/colors.dart';
+import 'package:merume_mobile/screens/shared/basic/basic_elevated_button_widget.dart';
 
 class CategoryPopup extends StatefulWidget {
   final List<String> categories;
@@ -75,28 +76,11 @@ class CategoryPopupState extends State<CategoryPopup> {
           ),
           Container(
             padding: const EdgeInsets.all(16.0),
-            child: ElevatedButton(
+            child: BasicElevatedButtonWidget(
               onPressed: () {
                 Navigator.of(context).pop(_updatedCategories);
               },
-              style: ElevatedButton.styleFrom(
-                fixedSize: const Size(178, 38),
-                backgroundColor: AppColors.royalPurple,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(50),
-                  side: const BorderSide(
-                    color: AppColors.royalPurple, // When pressed
-                  ),
-                ),
-              ),
-              child: const Text(
-                "Confirm",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontFamily: 'WorkSans',
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
+              buttonText: "Confirm",
             ),
           ),
         ],

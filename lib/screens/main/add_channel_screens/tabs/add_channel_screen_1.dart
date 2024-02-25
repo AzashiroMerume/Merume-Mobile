@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:merume_mobile/other/colors.dart';
 import 'package:merume_mobile/screens/main/components/enums.dart';
+import 'package:merume_mobile/screens/shared/basic/basic_elevated_button_widget.dart';
 
 class AddChannelScreenFirst extends StatefulWidget {
   final VoidCallback onComplete;
@@ -165,27 +166,10 @@ class _AddChannelScreenFirstState extends State<AddChannelScreenFirst> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          if (selectedItem != null) {
-                            widget.onComplete();
-                          }
-                        },
-                        style: ElevatedButton.styleFrom(
-                          fixedSize: const Size(178, 38),
-                          backgroundColor: AppColors.royalPurple,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(50),
-                          ),
-                        ),
-                        child: const Text(
-                          "Next",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontFamily: 'WorkSans',
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
+                      BasicElevatedButtonWidget(
+                        buttonText: 'Next',
+                        onPressed:
+                            selectedItem != null ? widget.onComplete : null,
                       ),
                     ],
                   )

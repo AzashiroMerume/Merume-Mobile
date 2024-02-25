@@ -3,6 +3,7 @@ import 'package:merume_mobile/other/colors.dart';
 import 'package:merume_mobile/models/channel_model.dart';
 import 'package:merume_mobile/screens/main/channel_screens/channels_list_widget.dart';
 import 'package:merume_mobile/screens/main/tab_bar_screens/followings_channels_tab_bar_screen/followings_channels_controller.dart';
+import 'package:merume_mobile/screens/shared/basic/basic_elevated_button_widget.dart';
 
 class FollowingChannelsScreen extends StatefulWidget {
   final FollowingChannelsController controller;
@@ -17,6 +18,7 @@ class FollowingChannelsScreen extends StatefulWidget {
 class _FollowingChannelsScreenState extends State<FollowingChannelsScreen>
     with AutomaticKeepAliveClientMixin {
   late FollowingChannelsController _controller;
+  bool _isButtonPressed = false;
 
   @override
   void initState() {
@@ -71,6 +73,10 @@ class _FollowingChannelsScreenState extends State<FollowingChannelsScreen>
                         ),
                       );
                     } else if (snapshot.hasError) {
+                      if (_isButtonPressed == true) {
+                        _isButtonPressed = false;
+                      }
+
                       return Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -84,23 +90,15 @@ class _FollowingChannelsScreenState extends State<FollowingChannelsScreen>
                               ),
                             ),
                             const SizedBox(height: 15),
-                            ElevatedButton(
+                            BasicElevatedButtonWidget(
                               onPressed: () {
+                                setState(() {
+                                  _isButtonPressed = true;
+                                });
                                 _controller.initController();
                               },
-                              style: ElevatedButton.styleFrom(
-                                fixedSize: const Size(150, 35),
-                                backgroundColor: AppColors.royalPurple,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(50),
-                                  side: const BorderSide(
-                                      color: AppColors.royalPurple),
-                                ),
-                              ),
-                              child: const Text(
-                                'Try Again',
-                                style: TextStyle(color: Colors.white),
-                              ),
+                              buttonText: 'Try Again',
+                              isPressed: _isButtonPressed,
                             ),
                           ],
                         ),

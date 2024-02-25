@@ -15,13 +15,12 @@ class NetworkWrapper extends StatefulWidget {
 
 class NetworkWrapperState extends State<NetworkWrapper> {
   bool? isConnected;
-  late Timer _connectivityTimer; // Add a Timer variable
+  late Timer _connectivityTimer;
 
   @override
   void initState() {
     super.initState();
     _initConnectivity();
-    // Initialize the timer and store it in the variable
     _connectivityTimer = Timer.periodic(const Duration(seconds: 5), (_) {
       _initConnectivity();
     });
@@ -38,7 +37,7 @@ class NetworkWrapperState extends State<NetworkWrapper> {
 
   @override
   void dispose() {
-    _connectivityTimer.cancel(); // Cancel the timer in dispose
+    _connectivityTimer.cancel();
     super.dispose();
   }
 
@@ -47,7 +46,7 @@ class NetworkWrapperState extends State<NetworkWrapper> {
     if (isConnected == null) {
       return const Scaffold(
         body: Center(
-          child: CircularProgressIndicator(), // Or any loading indicator
+          child: CircularProgressIndicator(),
         ),
       );
     }

@@ -28,7 +28,7 @@ class FollowingChannelsController {
             _channelStreamController.addError(error);
           }
         },
-        cancelOnError: true, // Stop listening on error
+        cancelOnError: true,
       );
     } catch (error) {
       if (!_channelStreamController.isClosed) {

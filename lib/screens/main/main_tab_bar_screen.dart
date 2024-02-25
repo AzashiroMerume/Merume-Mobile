@@ -33,7 +33,7 @@ class _MainTabBarScreenState extends State<MainTabBarScreen> {
     style: TextStyle(fontFamily: "Franklin-Gothic-Medium"),
   );
 
-  late IOWebSocketChannel _webSocketChannel;
+  IOWebSocketChannel? hearbeatWebsocketChannel;
 
   @override
   void initState() {
@@ -43,7 +43,9 @@ class _MainTabBarScreenState extends State<MainTabBarScreen> {
 
   @override
   void dispose() {
-    _webSocketChannel.sink.close();
+    if (hearbeatWebsocketChannel != null) {
+      hearbeatWebsocketChannel!.sink.close();
+    }
     super.dispose();
   }
 
@@ -60,7 +62,7 @@ class _MainTabBarScreenState extends State<MainTabBarScreen> {
 
   void _initializeStream() async {
     try {
-      _webSocketChannel = await heartbeat();
+      hearbeatWebsocketChannel = await heartbeat();
     } catch (e) {
       if (e is TokenErrorException) {
         WidgetsBinding.instance.addPostFrameCallback((_) {

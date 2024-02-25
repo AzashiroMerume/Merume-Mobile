@@ -9,6 +9,7 @@ import 'package:merume_mobile/api/user_api/user_channels_api/new_channel_api.dar
 import 'package:merume_mobile/other/colors.dart';
 import 'package:merume_mobile/other/exceptions.dart';
 import 'package:merume_mobile/other/error_custom_snackbar.dart';
+import 'package:merume_mobile/screens/shared/basic/basic_elevated_button_widget.dart';
 import 'package:merume_mobile/screens/shared/pfp_load_image_widget.dart';
 import 'package:merume_mobile/screens/main/components/category_popup_widget.dart';
 import 'package:merume_mobile/screens/shared/categories.dart';
@@ -307,7 +308,8 @@ class _AddChannelScreenSecondState extends State<AddChannelScreenSecond> {
                 ),
                 const SizedBox(height: 50.0),
                 Center(
-                  child: ElevatedButton(
+                  child: BasicElevatedButtonWidget(
+                    buttonText: 'Confirm',
                     onPressed: isPressed
                         ? null
                         : () async {
@@ -386,34 +388,8 @@ class _AddChannelScreenSecondState extends State<AddChannelScreenSecond> {
                               }
                             }
                           },
-                    style: ElevatedButton.styleFrom(
-                      fixedSize: const Size(178, 38),
-                      backgroundColor: AppColors.royalPurple,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(50),
-                        side: BorderSide(
-                          color: isPressed
-                              ? AppColors.royalPurple // When pressed
-                              : Colors.transparent, // Default border color
-                        ),
-                      ),
-                    ),
-                    child: isPressed
-                        ? const SizedBox(
-                            width: 20.0,
-                            height: 20.0,
-                            child: CircularProgressIndicator(
-                              color: AppColors.lavenderHaze,
-                            ),
-                          )
-                        : const Text(
-                            'Confirm',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: 'WorkSans',
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
+                    isPressed: isPressed,
+                    backgroundColor: AppColors.royalPurple,
                   ),
                 ),
                 const SizedBox(height: 32.0),
