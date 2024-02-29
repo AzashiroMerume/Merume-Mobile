@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:merume_mobile/api/auth_api/access_token_api.dart';
-import 'package:merume_mobile/other/exceptions.dart';
+import 'package:merume_mobile/utils/exceptions.dart';
 
 Future<String?> loginInFirebase(String email, String password) async {
   try {

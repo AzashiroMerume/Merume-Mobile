@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:merume_mobile/api/user_api/get_user_channels_api.dart';
 import 'package:merume_mobile/models/channel_model.dart';
 import 'package:merume_mobile/models/user_model.dart';
-import 'package:merume_mobile/other/colors.dart';
-import 'package:merume_mobile/other/exceptions.dart';
+import 'package:merume_mobile/utils/colors.dart';
+import 'package:merume_mobile/utils/exceptions.dart';
 import 'package:merume_mobile/screens/shared/last_time_online.dart';
 import 'package:merume_mobile/screens/main/components/channel_card_widget.dart';
 

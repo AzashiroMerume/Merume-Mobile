@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:merume_mobile/api/user_api/preferences_api/user_preferences_api.dart';
-import 'package:merume_mobile/other/colors.dart';
-import 'package:merume_mobile/other/exceptions.dart';
+import 'package:merume_mobile/utils/colors.dart';
+import 'package:merume_mobile/utils/exceptions.dart';
 import 'package:merume_mobile/screens/shared/categories.dart';
 import 'package:merume_mobile/screens/shared/confirmation_popup_widget.dart';
-import 'package:merume_mobile/other/error_custom_snackbar.dart';
+import 'package:merume_mobile/utils/error_custom_snackbar.dart';
 import 'package:merume_mobile/user_provider.dart';
 import 'package:provider/provider.dart';
 

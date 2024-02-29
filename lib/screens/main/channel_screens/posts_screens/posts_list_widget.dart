@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:merume_mobile/other/colors.dart';
+import 'package:merume_mobile/utils/colors.dart';
 import 'package:merume_mobile/screens/main/channel_screens/posts_screens/components/minimized_pfp_widget.dart';
 import 'package:merume_mobile/screens/main/channel_screens/models/post_sent_model.dart';
 import 'package:merume_mobile/screens/main/components/enums.dart';

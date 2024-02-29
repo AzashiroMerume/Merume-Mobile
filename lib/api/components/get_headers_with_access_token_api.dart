@@ -1,7 +1,7 @@
 import 'package:merume_mobile/api/auth_api/access_token_api.dart';
-import 'package:merume_mobile/other/api_config.dart';
+import 'package:merume_mobile/utils/api_config.dart';
 import 'package:http/http.dart' as http;
-import 'package:merume_mobile/other/exceptions.dart';
+import 'package:merume_mobile/utils/exceptions.dart';
 
 Future<Map<String, String>> getHeadersWithValidAccessToken() async {
   final accessToken = await storage.read(key: 'accessToken');

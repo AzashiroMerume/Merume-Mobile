@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:merume_mobile/other/colors.dart';
+import 'package:merume_mobile/utils/colors.dart';
 import 'package:merume_mobile/models/channel_model.dart';
 import 'package:merume_mobile/screens/main/channel_screens/channels_list_widget.dart';
 import 'package:merume_mobile/screens/main/tab_bar_screens/followings_channels_tab_bar_screen/followings_channels_controller.dart';
@@ -73,10 +73,6 @@ class _FollowingChannelsScreenState extends State<FollowingChannelsScreen>
                         ),
                       );
                     } else if (snapshot.hasError) {
-                      if (_isButtonPressed == true) {
-                        _isButtonPressed = false;
-                      }
-
                       return Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,

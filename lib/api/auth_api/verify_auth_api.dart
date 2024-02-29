@@ -3,9 +3,9 @@ import 'dart:convert';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:merume_mobile/other/api_config.dart';
+import 'package:merume_mobile/utils/api_config.dart';
 import 'package:merume_mobile/models/user_model.dart';
-import 'package:merume_mobile/other/exceptions.dart';
+import 'package:merume_mobile/utils/exceptions.dart';
 import 'package:merume_mobile/api/auth_api/access_token_api.dart'; // Import for getNewAccessToken
 
 const storage = FlutterSecureStorage();

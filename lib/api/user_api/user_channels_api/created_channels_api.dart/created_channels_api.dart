@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
-import 'package:merume_mobile/other/api_config.dart';
+import 'package:merume_mobile/utils/api_config.dart';
 import 'package:merume_mobile/models/channel_model.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';

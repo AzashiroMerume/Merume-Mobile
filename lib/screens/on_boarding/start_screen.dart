@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:merume_mobile/other/colors.dart';
+import 'package:merume_mobile/utils/colors.dart';
 
 class StartScreen extends StatefulWidget {
   const StartScreen({super.key});
