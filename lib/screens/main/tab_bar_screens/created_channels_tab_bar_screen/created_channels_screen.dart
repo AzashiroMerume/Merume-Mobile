@@ -1,11 +1,10 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:merume_mobile/other/colors.dart';
+import 'package:merume_mobile/utils/colors.dart';
 import 'package:merume_mobile/models/channel_model.dart';
 import 'package:merume_mobile/api/user_api/user_channels_api/created_channels_api.dart/created_channels_api.dart';
-import 'package:merume_mobile/other/exceptions.dart';
+import 'package:merume_mobile/utils/exceptions.dart';
 import 'package:merume_mobile/screens/main/channel_screens/channels_list_widget.dart';
-import 'package:merume_mobile/screens/shared/basic/basic_elevated_button_widget.dart';
 
 class CreatedChannelsScreen extends StatefulWidget {
   const CreatedChannelsScreen({super.key});
@@ -16,8 +15,6 @@ class CreatedChannelsScreen extends StatefulWidget {
 
 class _CreatedChannelsScreenState extends State<CreatedChannelsScreen> {
   final itemsController = StreamController<List<Channel>>();
-
-  bool _isButtonPressed = false;
 
   @override
   void initState() {
@@ -33,19 +30,36 @@ class _CreatedChannelsScreenState extends State<CreatedChannelsScreen> {
   }
 
   void _initializeStream() {
-    try {
-      final Stream<List<Channel>> dataStream = fetchOwnChannels();
-      itemsController.addStream(dataStream);
-    } catch (e) {
-      print('Error in created channels: $e');
+    final Stream<List<Channel>> dataStream =
+        fetchOwnChannels().handleError((error) {
+      print('Error in created channels: $error');
 
-      if (e is TokenErrorException) {
-        Navigator.of(context).pushNamedAndRemoveUntil(
-          '/login',
-          (Route<dynamic> route) => false,
-        );
+      if (error is TokenErrorException) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          Navigator.of(context).pushNamedAndRemoveUntil(
+            '/login',
+            (Route<dynamic> route) => false,
+          );
+        });
       }
-      itemsController.addError(e);
+
+      // Retry the initialization after 10 seconds
+      Future.delayed(const Duration(seconds: 10), () {
+        _initializeStream();
+      });
+
+      // Check if the stream controller's sink is not closed before adding an error
+      if (!itemsController.isClosed) {
+        itemsController.addError(error);
+      }
+
+      // Returning an empty list here to ensure the stream continues to emit, albeit with empty data
+      return [];
+    });
+
+    // Add the data stream to the controller if the controller's sink is not closed
+    if (!itemsController.isClosed) {
+      itemsController.addStream(dataStream);
     }
   }
 
@@ -86,34 +100,14 @@ class _CreatedChannelsScreenState extends State<CreatedChannelsScreen> {
                         ),
                       );
                     } else if (snapshot.hasError) {
-                      if (_isButtonPressed) {
-                        _isButtonPressed = false;
-                      }
-                      return Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Text(
-                              'Oops! Something went wrong.\nPlease try again later.',
-                              style: TextStyle(
-                                color: AppColors.lightGrey,
-                                fontFamily: 'Poppins',
-                                fontSize: 18,
-                              ),
-                            ),
-                            const SizedBox(height: 15),
-                            BasicElevatedButtonWidget(
-                              onPressed: () {
-                                setState(() {
-                                  _isButtonPressed = true;
-                                });
-                                // Retry action when button is pressed
-                                _initializeStream();
-                              },
-                              buttonText: 'Try Again',
-                              isPressed: _isButtonPressed,
-                            ),
-                          ],
+                      return const Center(
+                        child: Text(
+                          'Oops! Something went wrong.\nPlease try again later.',
+                          style: TextStyle(
+                            color: AppColors.lightGrey,
+                            fontFamily: 'Poppins',
+                            fontSize: 18,
+                          ),
                         ),
                       );
                     } else {
