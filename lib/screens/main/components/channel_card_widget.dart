@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:merume_mobile/models/channel_model.dart';
 import 'package:merume_mobile/utils/colors.dart';
 import 'package:merume_mobile/screens/main/channel_screens/channel_screen.dart';
+import 'package:merume_mobile/utils/text_styles.dart';
 
 class ChannelCard extends StatelessWidget {
   final Channel channel;
@@ -62,15 +63,9 @@ class ChannelCard extends StatelessWidget {
                     fontFamily: 'WorkSans',
                     color: Colors.white),
               ),
-              // const SizedBox(
-              //   height: 5.0,
-              // ),
               Text(
                 'Subscribers: ${channel.followers.currentFollowing.toString()}',
-                style: const TextStyle(
-                    fontSize: 14.0,
-                    fontFamily: 'WorkSans',
-                    color: Colors.white),
+                style: TextStyles.subtle,
               )
             ],
           ),

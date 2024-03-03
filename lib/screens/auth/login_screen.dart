@@ -9,7 +9,7 @@ import 'package:email_validator/email_validator.dart';
 import 'package:merume_mobile/api/auth_api/login_api.dart';
 import 'package:merume_mobile/utils/exceptions.dart';
 import 'package:merume_mobile/screens/shared/basic/basic_elevated_button_widget.dart';
-import 'package:merume_mobile/user_provider.dart';
+import 'package:merume_mobile/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:merume_mobile/utils/colors.dart';
 import 'package:merume_mobile/screens/main/components/enums.dart';
 import 'package:merume_mobile/screens/shared/basic/basic_elevated_button_widget.dart';
+import 'package:merume_mobile/utils/text_styles.dart';
 
 class AddChannelScreenFirst extends StatefulWidget {
   final VoidCallback onComplete;
@@ -95,13 +96,8 @@ class _AddChannelScreenFirstState extends State<AddChannelScreenFirst> {
                             height: 8.0,
                           ),
                           const Text(
-                            "Create a dedicated space for continuous improvement in your chosen field. Set your channel duration for an extended period, allowing members to commit to ongoing growth and progress over 1000 days or more. Share, learn, and evolve together in this focused and dedicated environment.",
-                            style: TextStyle(
-                              fontFamily: "WorkSans",
-                              fontSize: 14.0,
-                              color: Colors.white,
-                            ),
-                          ),
+                              "Create a dedicated space for continuous improvement in your chosen field. Set your channel duration for an extended period, allowing members to commit to ongoing growth and progress over 1000 days or more. Share, learn, and evolve together in this focused and dedicated environment.",
+                              style: TextStyles.subtle),
                         ],
                       ),
                     ),
@@ -149,13 +145,8 @@ class _AddChannelScreenFirstState extends State<AddChannelScreenFirst> {
                             height: 16.0,
                           ),
                           const Text(
-                            "Create a dedicated space for continuous improvement in your chosen field. Set your channel duration for an extended period, allowing members to commit to ongoing growth and progress over 1000 days or more. Share, learn, and evolve together in this focused and dedicated environment.",
-                            style: TextStyle(
-                              fontFamily: "WorkSans",
-                              fontSize: 14.0,
-                              color: Colors.white,
-                            ),
-                          ),
+                              "Create a dedicated space for continuous improvement in your chosen field. Set your channel duration for an extended period, allowing members to commit to ongoing growth and progress over 1000 days or more. Share, learn, and evolve together in this focused and dedicated environment.",
+                              style: TextStyles.subtle),
                         ],
                       ),
                     ),

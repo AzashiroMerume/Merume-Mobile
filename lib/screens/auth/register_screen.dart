@@ -7,7 +7,7 @@ import 'package:merume_mobile/api/auth_api/firebase_auth_api.dart';
 import 'package:merume_mobile/utils/colors.dart';
 import 'package:merume_mobile/api/auth_api/register_api.dart';
 import 'package:merume_mobile/utils/exceptions.dart';
-import 'package:merume_mobile/user_provider.dart';
+import 'package:merume_mobile/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:merume_mobile/screens/shared/basic/basic_elevated_button_widget.dart';
 

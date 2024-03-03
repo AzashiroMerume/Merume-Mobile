@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:merume_mobile/utils/colors.dart';
+import 'package:merume_mobile/providers/error_provider.dart';
 import 'package:merume_mobile/models/channel_model.dart';
 import 'package:merume_mobile/api/user_api/user_channels_api/created_channels_api.dart/created_channels_api.dart';
 import 'package:merume_mobile/utils/exceptions.dart';
 import 'package:merume_mobile/screens/main/channel_screens/channels_list_widget.dart';
+import 'package:merume_mobile/utils/text_styles.dart';
+import 'package:provider/provider.dart';
 
 class CreatedChannelsScreen extends StatefulWidget {
   const CreatedChannelsScreen({super.key});
@@ -15,10 +17,12 @@ class CreatedChannelsScreen extends StatefulWidget {
 
 class _CreatedChannelsScreenState extends State<CreatedChannelsScreen> {
   final itemsController = StreamController<List<Channel>>();
+  late ErrorProvider errorProvider;
 
   @override
   void initState() {
     super.initState();
+    errorProvider = Provider.of<ErrorProvider>(context, listen: false);
     _initializeStream();
   }
 
@@ -30,37 +34,40 @@ class _CreatedChannelsScreenState extends State<CreatedChannelsScreen> {
   }
 
   void _initializeStream() {
-    final Stream<List<Channel>> dataStream =
-        fetchOwnChannels().handleError((error) {
-      print('Error in created channels: $error');
+    fetchOwnChannels().listen(
+      (List<Channel> channels) {
+        // Data received successfully
+        if (errorProvider.showError) {
+          errorProvider.clearError();
+        }
 
-      if (error is TokenErrorException) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          Navigator.of(context).pushNamedAndRemoveUntil(
-            '/login',
-            (Route<dynamic> route) => false,
-          );
+        if (!itemsController.isClosed) {
+          itemsController.add(channels);
+        }
+      },
+      onError: (error) {
+        print('Error in created channels: $error');
+
+        if (error is TokenErrorException) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            Navigator.of(context).pushNamedAndRemoveUntil(
+              '/login',
+              (Route<dynamic> route) => false,
+            );
+          });
+        }
+
+        errorProvider.setError(10);
+
+        Future.delayed(const Duration(seconds: 10), () {
+          _initializeStream();
         });
-      }
 
-      // Retry the initialization after 10 seconds
-      Future.delayed(const Duration(seconds: 10), () {
-        _initializeStream();
-      });
-
-      // Check if the stream controller's sink is not closed before adding an error
-      if (!itemsController.isClosed) {
-        itemsController.addError(error);
-      }
-
-      // Returning an empty list here to ensure the stream continues to emit, albeit with empty data
-      return [];
-    });
-
-    // Add the data stream to the controller if the controller's sink is not closed
-    if (!itemsController.isClosed) {
-      itemsController.addStream(dataStream);
-    }
+        if (!itemsController.isClosed) {
+          itemsController.addError(error);
+        }
+      },
+    );
   }
 
   @override
@@ -79,16 +86,9 @@ class _CreatedChannelsScreenState extends State<CreatedChannelsScreen> {
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       if (snapshot.data!.isEmpty) {
-                        // If there are no channels, display the "No channels yet" message
                         return const Center(
-                          child: Text(
-                            'You do not have any challenges yet..',
-                            style: TextStyle(
-                              color: AppColors.mellowLemon,
-                              fontFamily: 'WorkSans',
-                              fontSize: 15,
-                            ),
-                          ),
+                          child: Text('You do not have any challenges yet..',
+                              style: TextStyles.errorSmall),
                         );
                       }
 
@@ -102,12 +102,8 @@ class _CreatedChannelsScreenState extends State<CreatedChannelsScreen> {
                     } else if (snapshot.hasError) {
                       return const Center(
                         child: Text(
-                          'Oops! Something went wrong.\nPlease try again later.',
-                          style: TextStyle(
-                            color: AppColors.lightGrey,
-                            fontFamily: 'Poppins',
-                            fontSize: 18,
-                          ),
+                          'Oops! Something went wrong...',
+                          style: TextStyles.errorBig,
                         ),
                       );
                     } else {

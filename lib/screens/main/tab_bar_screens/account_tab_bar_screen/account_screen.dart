@@ -3,7 +3,7 @@ import 'package:merume_mobile/api/auth_api/firebase_auth_api.dart';
 import 'package:merume_mobile/api/auth_api/logout_api.dart';
 import 'package:merume_mobile/utils/colors.dart';
 import 'package:merume_mobile/screens/shared/last_time_online.dart';
-import 'package:merume_mobile/user_provider.dart';
+import 'package:merume_mobile/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
 class AccountScreen extends StatefulWidget {

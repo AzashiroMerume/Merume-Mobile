@@ -5,7 +5,7 @@ import 'package:merume_mobile/utils/exceptions.dart';
 import 'package:merume_mobile/screens/shared/categories.dart';
 import 'package:merume_mobile/screens/shared/confirmation_popup_widget.dart';
 import 'package:merume_mobile/utils/error_custom_snackbar.dart';
-import 'package:merume_mobile/user_provider.dart';
+import 'package:merume_mobile/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
 class PreferencesScreen extends StatefulWidget {
