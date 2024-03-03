@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:merume_mobile/utils/colors.dart';
 import 'package:merume_mobile/models/channel_model.dart';
 import 'package:merume_mobile/screens/main/channel_screens/channels_list_widget.dart';
 import 'package:merume_mobile/screens/main/tab_bar_screens/followings_channels_tab_bar_screen/followings_channels_controller.dart';
 import 'package:merume_mobile/screens/shared/basic/basic_elevated_button_widget.dart';
+import 'package:merume_mobile/utils/text_styles.dart';
 
 class FollowingChannelsScreen extends StatefulWidget {
   final FollowingChannelsController controller;
@@ -56,11 +56,7 @@ class _FollowingChannelsScreenState extends State<FollowingChannelsScreen>
                         return const Center(
                           child: Text(
                             'No channels yet..',
-                            style: TextStyle(
-                              color: AppColors.mellowLemon,
-                              fontFamily: 'WorkSans',
-                              fontSize: 15,
-                            ),
+                            style: TextStyles.errorSmall,
                           ),
                         );
                       }
@@ -78,12 +74,8 @@ class _FollowingChannelsScreenState extends State<FollowingChannelsScreen>
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             const Text(
-                              'Oops! Something went wrong.\nPlease try again later.',
-                              style: TextStyle(
-                                color: AppColors.lightGrey,
-                                fontFamily: 'Poppins',
-                                fontSize: 18,
-                              ),
+                              'Oops! Something went wrong.',
+                              style: TextStyles.errorBig,
                             ),
                             const SizedBox(height: 15),
                             BasicElevatedButtonWidget(

@@ -87,8 +87,10 @@ class _CreatedChannelsScreenState extends State<CreatedChannelsScreen> {
                     if (snapshot.hasData) {
                       if (snapshot.data!.isEmpty) {
                         return const Center(
-                          child: Text('You do not have any challenges yet..',
-                              style: TextStyles.errorSmall),
+                          child: Text(
+                            'You do not have any challenges yet..',
+                            style: TextStyles.errorSmall,
+                          ),
                         );
                       }
 
