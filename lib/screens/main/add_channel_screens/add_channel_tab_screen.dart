@@ -14,7 +14,7 @@ class AddChannelTabScreen extends StatefulWidget {
 class _AddChannelTabScreenState extends State<AddChannelTabScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  int colorStep = 0; // Track the current step
+  int colorStep = 0;
   ChannelType? _selectedItem;
 
   @override
@@ -33,7 +33,7 @@ class _AddChannelTabScreenState extends State<AddChannelTabScreen>
     setState(() {
       colorStep = step;
       if (colorStep == 1) {
-        _tabController.animateTo(1); // Switch to the second tab
+        _tabController.animateTo(1);
       }
     });
   }
@@ -63,12 +63,10 @@ class _AddChannelTabScreenState extends State<AddChannelTabScreen>
                 children: [
                   AddChannelScreenFirst(
                     onComplete: () {
-                      _updateStep(1); // Move to the next step
+                      _updateStep(1);
                     },
                     onItemSelected: (selectedItem) {
-                      // Update the selected item in AddChannelTabScreen when it changes
                       setState(() {
-                        // Store the selected item in AddChannelTabScreen
                         _selectedItem = selectedItem;
                       });
                     },
@@ -77,7 +75,7 @@ class _AddChannelTabScreenState extends State<AddChannelTabScreen>
                   AddChannelScreenSecond(
                     selectedChannelType: _selectedItem,
                     onComplete: (step) {
-                      _updateStep(step); // Move to the next step
+                      _updateStep(step);
                     },
                   ),
                 ],

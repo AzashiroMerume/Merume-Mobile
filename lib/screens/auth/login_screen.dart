@@ -10,6 +10,7 @@ import 'package:merume_mobile/api/auth_api/login_api.dart';
 import 'package:merume_mobile/utils/exceptions.dart';
 import 'package:merume_mobile/screens/shared/basic/basic_elevated_button_widget.dart';
 import 'package:merume_mobile/providers/user_provider.dart';
+import 'package:merume_mobile/utils/text_styles.dart';
 import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -95,11 +96,7 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(height: 24.0),
               const Text(
                 'Welcome to Merume!',
-                style: TextStyle(
-                  fontFamily: 'WorkSans',
-                  fontSize: 16,
-                  color: Colors.white,
-                ),
+                style: TextStyles.body,
               ),
               const SizedBox(height: 50.0),
               if (errorMessage.isNotEmpty)
@@ -183,11 +180,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   onPressed: () {},
                   child: const Text(
                     'Forgot password?',
-                    style: TextStyle(
-                      color: AppColors.mellowLemon,
-                      fontFamily: 'WorkSans',
-                      fontSize: 15,
-                    ),
+                    style: TextStyles.errorSmall,
                   ),
                 ),
               ),
@@ -302,22 +295,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      'I don\'t have an account ',
-                      style: TextStyle(
-                        fontFamily: 'WorkSans',
-                        fontSize: 16,
-                        color: Colors.white,
-                      ),
-                    ),
+                    Text('I don\'t have an account ', style: TextStyles.body),
                     Text(
                       'Sign up',
-                      style: TextStyle(
-                        fontFamily: 'WorkSans',
-                        fontSize: 16,
-                        color: AppColors.mellowLemon,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: TextStyles.hintedText,
                     ),
                   ],
                 ),
@@ -327,11 +308,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 children: [
                   Text(
                     useEmailLogin ? 'Login by unique' : 'Login by',
-                    style: const TextStyle(
-                      fontFamily: 'WorkSans',
-                      fontSize: 16,
-                      color: Colors.white,
-                    ),
+                    style: TextStyles.body,
                   ),
                   TextButton(
                     onPressed: () {
@@ -341,12 +318,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     },
                     child: Text(
                       useEmailLogin ? 'Nickname' : 'Email',
-                      style: const TextStyle(
-                        fontFamily: 'WorkSans',
-                        fontSize: 16,
-                        color: AppColors.mellowLemon,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: TextStyles.hintedText,
                     ),
                   ),
                 ],

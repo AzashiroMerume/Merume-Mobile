@@ -26,7 +26,7 @@ class _OtherUserScreenState extends State<OtherUserScreen> {
   void initState() {
     try {
       super.initState();
-      fetchUserChannels(); // Initial fetch
+      fetchUserChannels();
       _startTimer();
     } catch (e) {
       if (e is TokenErrorException) {

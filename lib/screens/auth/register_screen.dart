@@ -8,6 +8,7 @@ import 'package:merume_mobile/utils/colors.dart';
 import 'package:merume_mobile/api/auth_api/register_api.dart';
 import 'package:merume_mobile/utils/exceptions.dart';
 import 'package:merume_mobile/providers/user_provider.dart';
+import 'package:merume_mobile/utils/text_styles.dart';
 import 'package:provider/provider.dart';
 import 'package:merume_mobile/screens/shared/basic/basic_elevated_button_widget.dart';
 
@@ -107,10 +108,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 const SizedBox(height: 24.0),
                 const Text(
                   'Welcome to Merume!',
-                  style: TextStyle(
-                      fontFamily: 'WorkSans',
-                      fontSize: 16,
-                      color: Colors.white),
+                  style: TextStyles.body,
                 ),
                 const SizedBox(height: 40.0),
                 if (errorMessage.isNotEmpty)
@@ -304,20 +302,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     children: [
                       Text(
                         'I already have an account ',
-                        style: TextStyle(
-                          fontFamily: 'WorkSans',
-                          fontSize: 16,
-                          color: Colors.white,
-                        ),
+                        style: TextStyles.body,
                       ),
                       Text(
                         'Sign in',
-                        style: TextStyle(
-                          fontFamily: 'WorkSans',
-                          fontSize: 16,
-                          color: AppColors.mellowLemon,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: TextStyles.hintedText,
                       ),
                     ],
                   ),

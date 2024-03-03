@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:merume_mobile/utils/colors.dart';
 import 'package:merume_mobile/screens/shared/basic/basic_elevated_button_widget.dart';
+import 'package:merume_mobile/utils/text_styles.dart';
 
 class ConfirmationDialog extends StatelessWidget {
   final VoidCallback onCancel;
@@ -28,22 +29,14 @@ class ConfirmationDialog extends StatelessWidget {
       ),
       content: const Text(
         "Do you want to save your preferences?",
-        style: TextStyle(
-          color: Colors.white,
-          fontFamily: 'WorkSans',
-          fontSize: 16,
-        ),
+        style: TextStyles.body,
       ),
       actions: [
         TextButton(
           onPressed: onCancel,
           child: const Text(
             "CANCEL",
-            style: TextStyle(
-              color: Colors.white,
-              fontFamily: 'WorkSans',
-              fontSize: 16,
-            ),
+            style: TextStyles.body,
           ),
         ),
         BasicElevatedButtonWidget(

@@ -13,9 +13,15 @@ class TextStyles {
     fontFamily: 'Poppins',
   );
 
+  static const TextStyle hintedText = TextStyle(
+    fontSize: 16.0,
+    color: AppColors.mellowLemon,
+    fontFamily: 'WorkSans',
+  );
+
   static const TextStyle body = TextStyle(
     fontSize: 16.0,
-    color: Colors.black,
+    color: Colors.white,
     fontFamily: 'WorkSans',
   );
 

@@ -68,7 +68,7 @@ class _StartScreenState extends State<StartScreen> {
                 'Merume',
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 26,
+                  fontSize: 26.0,
                   fontFamily: 'Franklin-Gothic-Medium',
                   fontWeight: FontWeight.w500,
                 ),
