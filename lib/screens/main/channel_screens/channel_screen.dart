@@ -16,6 +16,7 @@ import 'package:merume_mobile/models/channel_model.dart';
 import 'package:merume_mobile/models/post_model.dart';
 import 'package:merume_mobile/screens/main/channel_screens/posts_screens/posts_list_widget.dart';
 import 'package:merume_mobile/providers/user_provider.dart';
+import 'package:merume_mobile/utils/navigate_to_login.dart';
 import 'package:objectid/objectid.dart';
 import 'package:provider/provider.dart';
 
@@ -147,10 +148,7 @@ class _ChannelScreenState extends State<ChannelScreen> {
         }
 
         if (e is TokenErrorException) {
-          Navigator.of(context).pushNamedAndRemoveUntil(
-            '/login',
-            (Route<dynamic> route) => false,
-          );
+          navigateToLogin(context);
         } else {
           showCustomSnackBar(
             context,

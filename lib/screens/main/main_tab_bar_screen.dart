@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:merume_mobile/providers/error_provider.dart';
 import 'package:merume_mobile/screens/main/components/error_consumer_display_widget.dart';
+import 'package:merume_mobile/utils/navigate_to_login.dart';
 import 'package:merume_mobile/utils/text_styles.dart';
 import 'package:provider/provider.dart';
 import 'package:merume_mobile/api/user_api/heartbeat_api.dart';
@@ -72,12 +73,9 @@ class _MainTabBarScreenState extends State<MainTabBarScreen> {
       hearbeatWebsocketChannel = await heartbeat();
     } catch (e) {
       if (e is TokenErrorException) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          Navigator.of(context).pushNamedAndRemoveUntil(
-            '/login',
-            (Route<dynamic> route) => false,
-          );
-        });
+        if (mounted) {
+          navigateToLogin(context);
+        }
       }
 
       if (kDebugMode) {

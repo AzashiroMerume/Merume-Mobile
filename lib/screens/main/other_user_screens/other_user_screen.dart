@@ -8,6 +8,7 @@ import 'package:merume_mobile/utils/colors.dart';
 import 'package:merume_mobile/utils/exceptions.dart';
 import 'package:merume_mobile/screens/shared/last_time_online.dart';
 import 'package:merume_mobile/screens/main/components/channel_card_widget.dart';
+import 'package:merume_mobile/utils/navigate_to_login.dart';
 
 class OtherUserScreen extends StatefulWidget {
   final User user;
@@ -30,10 +31,7 @@ class _OtherUserScreenState extends State<OtherUserScreen> {
       _startTimer();
     } catch (e) {
       if (e is TokenErrorException) {
-        Navigator.of(context).pushNamedAndRemoveUntil(
-          '/login',
-          (Route<dynamic> route) => false,
-        );
+        navigateToLogin(context);
       }
     }
   }
