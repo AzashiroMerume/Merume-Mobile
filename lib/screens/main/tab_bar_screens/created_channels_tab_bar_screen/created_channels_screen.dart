@@ -5,6 +5,7 @@ import 'package:merume_mobile/models/channel_model.dart';
 import 'package:merume_mobile/api/user_api/user_channels_api/created_channels_api.dart/created_channels_api.dart';
 import 'package:merume_mobile/utils/exceptions.dart';
 import 'package:merume_mobile/screens/main/channel_screens/channels_list_widget.dart';
+import 'package:merume_mobile/utils/navigate_to_login.dart';
 import 'package:merume_mobile/utils/text_styles.dart';
 import 'package:provider/provider.dart';
 
@@ -49,12 +50,7 @@ class _CreatedChannelsScreenState extends State<CreatedChannelsScreen> {
         print('Error in created channels: $error');
 
         if (error is TokenErrorException) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            Navigator.of(context).pushNamedAndRemoveUntil(
-              '/login',
-              (Route<dynamic> route) => false,
-            );
-          });
+          navigateToLogin(context);
         }
 
         errorProvider.setError(10);

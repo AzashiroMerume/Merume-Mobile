@@ -28,7 +28,7 @@ class ErrorConsumerDisplay extends StatelessWidget {
                       ),
                     ],
                   ),
-                if (provider.retrySeconds < 0)
+                if (provider.retrySeconds == 0)
                   Container(
                     margin: const EdgeInsets.only(top: 10),
                     height: 15,
