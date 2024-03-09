@@ -19,6 +19,7 @@ class CreatedChannelsScreen extends StatefulWidget {
 class _CreatedChannelsScreenState extends State<CreatedChannelsScreen> {
   final itemsController = StreamController<List<Channel>>();
   late ErrorProvider errorProvider;
+  late Timer _retryTimer;
 
   @override
   void initState() {
@@ -31,10 +32,15 @@ class _CreatedChannelsScreenState extends State<CreatedChannelsScreen> {
   void dispose() {
     itemsController.sink.close();
     itemsController.close();
+    _retryTimer.cancel();
     super.dispose();
   }
 
   void _initializeStream() {
+    _fetchChannels();
+  }
+
+  void _fetchChannels() {
     fetchOwnChannels().listen(
       (List<Channel> channels) {
         // Data received successfully
@@ -55,8 +61,11 @@ class _CreatedChannelsScreenState extends State<CreatedChannelsScreen> {
 
         errorProvider.setError(10);
 
-        Future.delayed(const Duration(seconds: 10), () {
-          _initializeStream();
+        // Retry fetching channels with a timer
+        _retryTimer = Timer(const Duration(seconds: 10), () {
+          if (!itemsController.isClosed) {
+            _fetchChannels();
+          }
         });
 
         if (!itemsController.isClosed) {

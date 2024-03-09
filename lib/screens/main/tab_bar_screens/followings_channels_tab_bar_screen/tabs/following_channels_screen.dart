@@ -1,14 +1,16 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:merume_mobile/api/user_api/user_channels_api/followed_channels_api.dart/followed_channels_api.dart';
 import 'package:merume_mobile/models/channel_model.dart';
+import 'package:merume_mobile/providers/error_provider.dart';
 import 'package:merume_mobile/screens/main/channel_screens/channels_list_widget.dart';
-import 'package:merume_mobile/screens/main/tab_bar_screens/followings_channels_tab_bar_screen/followings_channels_controller.dart';
-import 'package:merume_mobile/screens/shared/basic/basic_elevated_button_widget.dart';
+import 'package:merume_mobile/utils/exceptions.dart';
+import 'package:merume_mobile/utils/navigate_to_login.dart';
 import 'package:merume_mobile/utils/text_styles.dart';
+import 'package:provider/provider.dart';
 
 class FollowingChannelsScreen extends StatefulWidget {
-  final FollowingChannelsController controller;
-
-  const FollowingChannelsScreen({super.key, required this.controller});
+  const FollowingChannelsScreen({super.key});
 
   @override
   State<FollowingChannelsScreen> createState() =>
@@ -17,20 +19,62 @@ class FollowingChannelsScreen extends StatefulWidget {
 
 class _FollowingChannelsScreenState extends State<FollowingChannelsScreen>
     with AutomaticKeepAliveClientMixin {
-  late FollowingChannelsController _controller;
-  bool _isButtonPressed = false;
+  final itemsController = StreamController<List<Channel>>();
+  late ErrorProvider errorProvider;
+  late Timer _retryTimer;
 
   @override
   void initState() {
     super.initState();
-    _controller = widget.controller;
-    _controller.initController();
+    errorProvider = Provider.of<ErrorProvider>(context, listen: false);
+    _initializeStream();
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    itemsController.sink.close();
+    itemsController.close();
+    _retryTimer.cancel();
     super.dispose();
+  }
+
+  void _initializeStream() {
+    _fetchChannels();
+  }
+
+  void _fetchChannels() {
+    fetchFollowings().listen(
+      (List<Channel> channels) {
+        // Data received successfully
+        if (errorProvider.showError) {
+          errorProvider.clearError();
+        }
+
+        if (!itemsController.isClosed) {
+          itemsController.add(channels);
+        }
+      },
+      onError: (error) {
+        print('Error in created channels: $error');
+
+        if (error is TokenErrorException) {
+          navigateToLogin(context);
+        }
+
+        errorProvider.setError(10);
+
+        // Retry fetching channels with a timer
+        _retryTimer = Timer(const Duration(seconds: 10), () {
+          if (!itemsController.isClosed) {
+            _fetchChannels();
+          }
+        });
+
+        if (!itemsController.isClosed) {
+          itemsController.addError(error);
+        }
+      },
+    );
   }
 
   @override
@@ -48,7 +92,7 @@ class _FollowingChannelsScreenState extends State<FollowingChannelsScreen>
               const SizedBox(height: 16),
               Expanded(
                 child: StreamBuilder<List<Channel>>(
-                  stream: widget.controller.channelStream,
+                  stream: itemsController.stream,
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       if (snapshot.data!.isEmpty) {
@@ -69,26 +113,10 @@ class _FollowingChannelsScreenState extends State<FollowingChannelsScreen>
                         ),
                       );
                     } else if (snapshot.hasError) {
-                      return Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Text(
-                              'Oops! Something went wrong.',
-                              style: TextStyles.errorBig,
-                            ),
-                            const SizedBox(height: 15),
-                            BasicElevatedButtonWidget(
-                              onPressed: () {
-                                setState(() {
-                                  _isButtonPressed = true;
-                                });
-                                _controller.initController();
-                              },
-                              buttonText: 'Try Again',
-                              isPressed: _isButtonPressed,
-                            ),
-                          ],
+                      return const Center(
+                        child: Text(
+                          'Oops! Something went wrong...',
+                          style: TextStyles.errorBig,
                         ),
                       );
                     } else {
