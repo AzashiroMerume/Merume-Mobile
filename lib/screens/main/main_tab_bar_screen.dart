@@ -26,10 +26,14 @@ class _MainTabBarScreenState extends State<MainTabBarScreen> {
   int _oldCurrentIndex = 0;
 
   final ErrorProvider errorProvider = ErrorProvider();
+  static const ErrorConsumerDisplay errorConsumerDisplay =
+      ErrorConsumerDisplay();
 
   final List<Widget> _screens = [
-    const CreatedChannelsScreen(),
-    const FollowingTabScreen(),
+    const CreatedChannelsScreen(
+      errorDisplayWidget: errorConsumerDisplay,
+    ),
+    const FollowingTabScreen(errorDisplayWidget: errorConsumerDisplay),
     const AccountScreen(),
   ];
 
@@ -170,7 +174,6 @@ class _MainTabBarScreenState extends State<MainTabBarScreen> {
           body: Stack(
             children: [
               _screens[_currentIndex],
-              const ErrorConsumerDisplay(),
             ],
           ),
           bottomNavigationBar: Container(

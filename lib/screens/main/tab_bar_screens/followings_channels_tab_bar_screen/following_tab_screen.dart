@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:merume_mobile/screens/main/components/error_consumer_display_widget.dart';
 import 'package:merume_mobile/utils/colors.dart';
 import 'package:merume_mobile/screens/main/tab_bar_screens/followings_channels_tab_bar_screen/tabs/following_channels_screen.dart';
 import 'package:merume_mobile/screens/main/tab_bar_screens/followings_channels_tab_bar_screen/tabs/recommendation_screen.dart';
@@ -6,7 +7,9 @@ import 'package:merume_mobile/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
 class FollowingTabScreen extends StatefulWidget {
-  const FollowingTabScreen({super.key});
+  final ErrorConsumerDisplay? errorDisplayWidget;
+
+  const FollowingTabScreen({super.key, this.errorDisplayWidget});
 
   @override
   State<FollowingTabScreen> createState() => _FollowingTabScreenState();
@@ -59,7 +62,8 @@ class _FollowingTabScreenState extends State<FollowingTabScreen> {
   }
 
   Widget buildFollowingsTab() {
-    return const FollowingChannelsScreen();
+    return FollowingChannelsScreen(
+        errorDisplayWidget: widget.errorDisplayWidget);
   }
 
   Widget buildRecommendationsTab(List<String>? preferences) {
