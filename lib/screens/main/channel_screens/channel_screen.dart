@@ -4,14 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:merume_mobile/api/channel_api/channel_posts_api.dart';
 import 'package:merume_mobile/api/posts_api/create_post_api.dart';
-import 'package:merume_mobile/utils/colors.dart';
+import 'package:merume_mobile/models/user_model.dart';
+import 'package:merume_mobile/providers/error_provider.dart';
+import 'package:merume_mobile/screens/shared/error_consumer_display_widget.dart';
+import 'package:merume_mobile/constants/colors.dart';
 import 'package:merume_mobile/models/author_model.dart';
 import 'package:merume_mobile/utils/error_custom_snackbar.dart';
 import 'package:merume_mobile/screens/main/channel_screens/channel_details_screen.dart';
 import 'package:merume_mobile/screens/main/channel_screens/components/post_day_formation_widget.dart';
 import 'package:merume_mobile/screens/main/channel_screens/models/post_sent_model.dart';
 import 'package:merume_mobile/screens/main/components/enums.dart';
-import 'package:merume_mobile/utils/exceptions.dart';
+import 'package:merume_mobile/constants/exceptions.dart';
 import 'package:merume_mobile/models/channel_model.dart';
 import 'package:merume_mobile/models/post_model.dart';
 import 'package:merume_mobile/screens/main/channel_screens/posts_screens/posts_list_widget.dart';
@@ -31,13 +34,12 @@ class ChannelScreen extends StatefulWidget {
 
 class _ChannelScreenState extends State<ChannelScreen> {
   late ScrollController _scrollController;
+  late TextEditingController _textEditingController;
 
+  late User? userInfo;
   bool isAuthor = false;
 
-  TextEditingController textEditingController = TextEditingController();
-
   Map<String, List<List<PostSent>>> posts = {};
-
   final itemsController = StreamController<Map<String, List<List<PostSent>>>>();
 
   String postBody = '';
@@ -45,7 +47,32 @@ class _ChannelScreenState extends State<ChannelScreen> {
 
   bool isLoading = true;
 
+  late ErrorProvider errorProvider;
   String errorMessage = '';
+  ErrorConsumerDisplay errorDisplayWidget = const ErrorConsumerDisplay();
+  Timer? _retryTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController();
+    _textEditingController = TextEditingController();
+
+    userInfo = Provider.of<UserProvider>(context, listen: false).userInfo;
+    isAuthor = userInfo != null && userInfo?.id == widget.channel.author.id;
+
+    errorProvider = Provider.of<ErrorProvider>(context, listen: false);
+
+    _initializeStream();
+  }
+
+  @override
+  void dispose() {
+    itemsController.sink.close();
+    itemsController.close();
+    _retryTimer?.cancel();
+    super.dispose();
+  }
 
   void _handleAppBarPress() {
     Navigator.push(
@@ -56,20 +83,6 @@ class _ChannelScreenState extends State<ChannelScreen> {
         ),
       ),
     );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _scrollController = ScrollController();
-    _initializeStream();
-  }
-
-  @override
-  void dispose() {
-    itemsController.sink.close();
-    itemsController.close();
-    super.dispose();
   }
 
   void _scrollToNewPost() {
@@ -85,6 +98,10 @@ class _ChannelScreenState extends State<ChannelScreen> {
   }
 
   void _initializeStream() {
+    _fetchPosts();
+  }
+
+  void _fetchPosts() {
     final Stream<Map<String, List<List<PostSent>>>> webSocketStream =
         fetchChannelPosts(widget.channel.id);
     webSocketStream.listen(
@@ -121,12 +138,10 @@ class _ChannelScreenState extends State<ChannelScreen> {
               }
             }
           } else {
-            // Add new date entry
             posts[date] = arrayOfPostArrays;
           }
         });
 
-        // Remove deleted posts
         posts.forEach((date, arrayOfPostArrays) {
           for (var postList in arrayOfPostArrays) {
             postList.removeWhere((postSent) =>
@@ -136,36 +151,38 @@ class _ChannelScreenState extends State<ChannelScreen> {
           }
         });
 
-        // Add data to the stream
         if (!itemsController.isClosed) {
           itemsController.add(posts);
         }
       },
       onError: (e) {
-        // Handle error states
         if (kDebugMode) {
           print('Error in channel_screen: $e');
         }
 
         if (e is TokenErrorException) {
           navigateToLogin(context);
-        } else {
+        } /*  else {
           showCustomSnackBar(
             context,
             message: 'Oops! Something went wrong. Please try again later.',
           );
-        }
+        } */
+
+        errorProvider.setError(10);
+
+        // Retry fetching channels with a timer
+        _retryTimer = Timer(const Duration(seconds: 10), () {
+          if (!itemsController.isClosed) {
+            _fetchPosts();
+          }
+        });
       },
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    final userInfo = Provider.of<UserProvider>(context, listen: false).userInfo;
-
-    // Check if the user is the author of the channel
-    isAuthor = userInfo != null && userInfo.id == widget.channel.author.id;
-
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(60),
@@ -288,7 +305,6 @@ class _ChannelScreenState extends State<ChannelScreen> {
                               },
                             );
                           } else {
-                            // If posts is empty, display the "No posts yet" message
                             return const Center(
                               child: Text(
                                 'No posts yet..',
@@ -312,6 +328,10 @@ class _ChannelScreenState extends State<ChannelScreen> {
                   _buildChatInputBox(),
                 ],
               ),
+            ),
+            Align(
+              alignment: Alignment.topCenter,
+              child: errorDisplayWidget,
             ),
             // Row(
             //   mainAxisAlignment: MainAxisAlignment.center,
@@ -356,7 +376,7 @@ class _ChannelScreenState extends State<ChannelScreen> {
               children: [
                 Expanded(
                   child: TextField(
-                    controller: textEditingController,
+                    controller: _textEditingController,
                     decoration: const InputDecoration(
                       hintText: 'Share progress...',
                       hintStyle: TextStyle(color: AppColors.mellowLemon),
@@ -384,7 +404,7 @@ class _ChannelScreenState extends State<ChannelScreen> {
                             String formattedDate =
                                 DateFormat('yyyy-MM-dd').format(now);
 
-                            textEditingController.clear();
+                            _textEditingController.clear();
 
                             Author author = Author(
                                 id: widget.channel.author.id,

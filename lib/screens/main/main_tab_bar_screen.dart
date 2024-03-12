@@ -1,13 +1,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:merume_mobile/providers/error_provider.dart';
-import 'package:merume_mobile/screens/main/components/error_consumer_display_widget.dart';
+import 'package:merume_mobile/screens/shared/error_consumer_display_widget.dart';
 import 'package:merume_mobile/utils/navigate_to_login.dart';
-import 'package:merume_mobile/utils/text_styles.dart';
+import 'package:merume_mobile/constants/text_styles.dart';
 import 'package:provider/provider.dart';
 import 'package:merume_mobile/api/user_api/heartbeat_api.dart';
-import 'package:merume_mobile/utils/colors.dart';
-import 'package:merume_mobile/utils/exceptions.dart';
+import 'package:merume_mobile/constants/colors.dart';
+import 'package:merume_mobile/constants/exceptions.dart';
 import 'package:merume_mobile/screens/main/add_channel_screens/add_channel_tab_screen.dart';
 import 'package:merume_mobile/screens/main/tab_bar_screens/account_tab_bar_screen/account_screen.dart';
 import 'package:merume_mobile/screens/main/tab_bar_screens/created_channels_tab_bar_screen/created_channels_screen.dart';
@@ -25,7 +25,7 @@ class _MainTabBarScreenState extends State<MainTabBarScreen> {
   int _currentIndex = 0;
   int _oldCurrentIndex = 0;
 
-  final ErrorProvider errorProvider = ErrorProvider();
+  late ErrorProvider errorProvider;
   static const ErrorConsumerDisplay errorConsumerDisplay =
       ErrorConsumerDisplay();
 
@@ -64,6 +64,7 @@ class _MainTabBarScreenState extends State<MainTabBarScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    errorProvider = Provider.of<ErrorProvider>(context, listen: false);
     final passedTabIndex = ModalRoute.of(context)!.settings.arguments as int?;
     if (passedTabIndex != null && (passedTabIndex > -1 && passedTabIndex < 3)) {
       setState(() {
@@ -222,7 +223,6 @@ class _MainTabBarScreenState extends State<MainTabBarScreen> {
                       icon: Icon(Icons.person),
                       label: 'Profile',
                     ),
-                    // other bottom tab bar items here
                   ],
                 ),
               )),
