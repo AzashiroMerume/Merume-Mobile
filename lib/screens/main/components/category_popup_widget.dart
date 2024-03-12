@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:merume_mobile/utils/colors.dart';
+import 'package:merume_mobile/constants/colors.dart';
 import 'package:merume_mobile/screens/shared/basic/basic_elevated_button_widget.dart';
 
 class CategoryPopup extends StatefulWidget {

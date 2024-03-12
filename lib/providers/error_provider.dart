@@ -24,9 +24,7 @@ class ErrorProvider extends ChangeNotifier {
     _showError = false;
     _errorMessage = '';
     _retrySeconds = 0;
-    if (_retryTimer != null) {
-      _retryTimer?.cancel();
-    }
+    _retryTimer?.cancel();
     notifyListeners();
   }
 

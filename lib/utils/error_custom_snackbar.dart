@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:merume_mobile/utils/colors.dart';
+import 'package:merume_mobile/constants/colors.dart';
 import 'package:smart_snackbars/enums/animate_from.dart';
 import 'package:smart_snackbars/smart_snackbars.dart';
 

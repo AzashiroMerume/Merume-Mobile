@@ -5,10 +5,10 @@ import 'package:merume_mobile/api/user_api/user_channels_api/followed_channels_a
 import 'package:merume_mobile/models/channel_model.dart';
 import 'package:merume_mobile/providers/error_provider.dart';
 import 'package:merume_mobile/screens/main/channel_screens/channels_list_widget.dart';
-import 'package:merume_mobile/screens/main/components/error_consumer_display_widget.dart';
-import 'package:merume_mobile/utils/exceptions.dart';
+import 'package:merume_mobile/screens/shared/error_consumer_display_widget.dart';
+import 'package:merume_mobile/constants/exceptions.dart';
 import 'package:merume_mobile/utils/navigate_to_login.dart';
-import 'package:merume_mobile/utils/text_styles.dart';
+import 'package:merume_mobile/constants/text_styles.dart';
 import 'package:provider/provider.dart';
 
 class FollowingChannelsScreen extends StatefulWidget {
@@ -104,7 +104,6 @@ class _FollowingChannelsScreenState extends State<FollowingChannelsScreen>
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
                           if (snapshot.data!.isEmpty) {
-                            // If there are no channels, display the "No channels yet" message
                             return const Center(
                               child: Text(
                                 'No channels yet..',

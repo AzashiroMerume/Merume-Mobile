@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:merume_mobile/utils/colors.dart';
+import 'package:merume_mobile/constants/colors.dart';
 
 class TextStyles {
   static const TextStyle title = TextStyle(
-    fontSize: 24.0,
+    fontSize: 22.0,
     fontFamily: 'Franklin-Gothic-Medium',
   );
 

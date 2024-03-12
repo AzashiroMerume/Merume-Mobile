@@ -6,13 +6,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:merume_mobile/api/user_api/user_channels_api/new_channel_api.dart';
-import 'package:merume_mobile/utils/colors.dart';
-import 'package:merume_mobile/utils/exceptions.dart';
+import 'package:merume_mobile/constants/colors.dart';
+import 'package:merume_mobile/constants/exceptions.dart';
 import 'package:merume_mobile/utils/error_custom_snackbar.dart';
 import 'package:merume_mobile/screens/shared/basic/basic_elevated_button_widget.dart';
 import 'package:merume_mobile/screens/shared/pfp_load_image_widget.dart';
 import 'package:merume_mobile/screens/main/components/category_popup_widget.dart';
-import 'package:merume_mobile/screens/shared/categories.dart';
+import 'package:merume_mobile/constants/categories.dart';
 import 'package:merume_mobile/screens/main/components/enums.dart';
 import 'package:objectid/objectid.dart';
 

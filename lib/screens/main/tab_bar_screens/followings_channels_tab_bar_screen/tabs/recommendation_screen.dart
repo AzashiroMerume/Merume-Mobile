@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:merume_mobile/utils/colors.dart';
-import 'package:merume_mobile/utils/exceptions.dart';
+import 'package:merume_mobile/constants/colors.dart';
+import 'package:merume_mobile/constants/exceptions.dart';
 import 'package:merume_mobile/models/channel_model.dart';
 import 'package:merume_mobile/api/user_api/recommendations_api/recommendations_api.dart';
 import 'package:merume_mobile/screens/main/channel_screens/channels_list_widget.dart';

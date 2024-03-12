@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:merume_mobile/models/channel_model.dart';
-import 'package:merume_mobile/utils/colors.dart';
+import 'package:merume_mobile/constants/colors.dart';
 import 'package:merume_mobile/screens/main/channel_screens/channel_screen.dart';
-import 'package:merume_mobile/utils/text_styles.dart';
+import 'package:merume_mobile/constants/text_styles.dart';
 
 class ChannelCard extends StatelessWidget {
   final Channel channel;

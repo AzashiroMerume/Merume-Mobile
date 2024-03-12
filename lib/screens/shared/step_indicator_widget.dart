@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:merume_mobile/utils/colors.dart';
+import 'package:merume_mobile/constants/colors.dart';
 
 class StepIndicator extends StatelessWidget {
   final int coloredStep;

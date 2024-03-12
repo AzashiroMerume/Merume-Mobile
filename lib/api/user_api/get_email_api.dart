@@ -4,8 +4,8 @@ import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
-import 'package:merume_mobile/utils/api_config.dart';
-import 'package:merume_mobile/utils/exceptions.dart';
+import 'package:merume_mobile/constants/api_config.dart';
+import 'package:merume_mobile/constants/exceptions.dart';
 
 Future<String> getEmailByNickname(String nickname) async {
   try {

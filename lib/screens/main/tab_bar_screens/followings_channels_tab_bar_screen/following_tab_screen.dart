@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:merume_mobile/screens/main/components/error_consumer_display_widget.dart';
-import 'package:merume_mobile/utils/colors.dart';
+import 'package:merume_mobile/screens/shared/error_consumer_display_widget.dart';
+import 'package:merume_mobile/constants/colors.dart';
 import 'package:merume_mobile/screens/main/tab_bar_screens/followings_channels_tab_bar_screen/tabs/following_channels_screen.dart';
 import 'package:merume_mobile/screens/main/tab_bar_screens/followings_channels_tab_bar_screen/tabs/recommendation_screen.dart';
 import 'package:merume_mobile/providers/user_provider.dart';
