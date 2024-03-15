@@ -162,12 +162,7 @@ class _ChannelScreenState extends State<ChannelScreen> {
 
         if (e is TokenErrorException) {
           navigateToLogin(context);
-        } /*  else {
-          showCustomSnackBar(
-            context,
-            message: 'Oops! Something went wrong. Please try again later.',
-          );
-        } */
+        }
 
         errorProvider.setError(10);
 

@@ -9,7 +9,7 @@ import 'package:merume_mobile/models/channel_model.dart';
 
 const storage = FlutterSecureStorage();
 
-Stream<List<Channel>> fetchFollowings() async* {
+Stream<List<Channel>> fetchFollowedChannels() async* {
   const channelUrl = '${ConfigAPI.wsURL}user/channels/subscriptions';
 
   while (true) {

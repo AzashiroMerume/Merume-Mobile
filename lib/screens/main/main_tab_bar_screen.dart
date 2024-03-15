@@ -11,7 +11,7 @@ import 'package:merume_mobile/constants/exceptions.dart';
 import 'package:merume_mobile/screens/main/add_channel_screens/add_channel_tab_screen.dart';
 import 'package:merume_mobile/screens/main/tab_bar_screens/account_tab_bar_screen/account_screen.dart';
 import 'package:merume_mobile/screens/main/tab_bar_screens/created_channels_tab_bar_screen/created_channels_screen.dart';
-import 'package:merume_mobile/screens/main/tab_bar_screens/followings_channels_tab_bar_screen/following_tab_screen.dart';
+import 'package:merume_mobile/screens/main/tab_bar_screens/followed_channels_tab_bar_screen/followed_tab_screen.dart';
 import 'package:web_socket_channel/io.dart';
 
 class MainTabBarScreen extends StatefulWidget {
@@ -217,7 +217,7 @@ class _MainTabBarScreenState extends State<MainTabBarScreen> {
                     ),
                     BottomNavigationBarItem(
                       icon: Icon(Icons.subscriptions),
-                      label: 'Followings',
+                      label: 'Followed',
                     ),
                     BottomNavigationBarItem(
                       icon: Icon(Icons.person),

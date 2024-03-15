@@ -1,14 +1,12 @@
 import 'dart:async';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:merume_mobile/api/user_api/user_channels_api/followed_channels_api.dart/followed_channels_api.dart';
 import 'package:merume_mobile/models/channel_model.dart';
 import 'package:merume_mobile/providers/error_provider.dart';
 import 'package:merume_mobile/screens/main/channel_screens/channels_list_widget.dart';
 import 'package:merume_mobile/screens/shared/error_consumer_display_widget.dart';
-import 'package:merume_mobile/constants/exceptions.dart';
-import 'package:merume_mobile/utils/navigate_to_login.dart';
 import 'package:merume_mobile/constants/text_styles.dart';
+import 'package:merume_mobile/utils/data_fetching_utils/basic_stream_data_handler.dart';
 import 'package:provider/provider.dart';
 
 class FollowingChannelsScreen extends StatefulWidget {
@@ -24,63 +22,30 @@ class FollowingChannelsScreen extends StatefulWidget {
 class _FollowingChannelsScreenState extends State<FollowingChannelsScreen>
     with AutomaticKeepAliveClientMixin {
   final itemsController = StreamController<List<Channel>>();
+  late BasicStreamDataHandler<List<Channel>> streamDataHandler;
   late ErrorProvider errorProvider;
-  Timer? _retryTimer;
 
   @override
   void initState() {
     super.initState();
     errorProvider = Provider.of<ErrorProvider>(context, listen: false);
-    _initializeStream();
+    const timerDuration = Duration(seconds: 10);
+
+    streamDataHandler = BasicStreamDataHandler<List<Channel>>(
+      context: context,
+      fetchFunction: fetchFollowedChannels,
+      controller: itemsController,
+      errorProvider: errorProvider,
+      retryTimerDuration: timerDuration,
+    );
+    streamDataHandler.fetchStreamData();
   }
 
   @override
   void dispose() {
     itemsController.sink.close();
     itemsController.close();
-    _retryTimer?.cancel();
     super.dispose();
-  }
-
-  void _initializeStream() {
-    _fetchChannels();
-  }
-
-  void _fetchChannels() {
-    fetchFollowings().listen(
-      (List<Channel> channels) {
-        // Data received successfully
-        if (errorProvider.showError) {
-          errorProvider.clearError();
-        }
-
-        if (!itemsController.isClosed) {
-          itemsController.add(channels);
-        }
-      },
-      onError: (error) {
-        if (kDebugMode) {
-          print('Error in following channels: $error');
-        }
-
-        if (error is TokenErrorException) {
-          navigateToLogin(context);
-        }
-
-        errorProvider.setError(10);
-
-        // Retry fetching channels with a timer
-        _retryTimer = Timer(const Duration(seconds: 10), () {
-          if (!itemsController.isClosed) {
-            _fetchChannels();
-          }
-        });
-
-        if (!itemsController.isClosed) {
-          itemsController.addError(error);
-        }
-      },
-    );
   }
 
   @override
