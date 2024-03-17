@@ -18,6 +18,8 @@ import 'package:merume_mobile/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
 const storage = FlutterSecureStorage();
+final RouteObserver<ModalRoute<void>> routeObserver =
+    RouteObserver<ModalRoute<void>>();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -100,6 +102,7 @@ class MyApp extends StatelessWidget {
       home: NetworkWrapper(
         child: isAuthenticated ? const MainTabBarScreen() : const StartScreen(),
       ),
+      navigatorObservers: [routeObserver],
       routes: {
         '/login': (context) => const LoginScreen(),
         '/register': (context) => const RegisterScreen(),

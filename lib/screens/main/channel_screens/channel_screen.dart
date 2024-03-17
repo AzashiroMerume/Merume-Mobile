@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:merume_mobile/api/channel_api/channel_posts_api.dart';
 import 'package:merume_mobile/api/posts_api/create_post_api.dart';
+import 'package:merume_mobile/main.dart';
 import 'package:merume_mobile/models/user_model.dart';
 import 'package:merume_mobile/providers/error_provider.dart';
 import 'package:merume_mobile/screens/shared/error_consumer_display_widget.dart';
 import 'package:merume_mobile/constants/colors.dart';
 import 'package:merume_mobile/models/author_model.dart';
+import 'package:merume_mobile/utils/channel_last_position_manager.dart';
 import 'package:merume_mobile/utils/error_custom_snackbar.dart';
 import 'package:merume_mobile/screens/main/channel_screens/channel_details_screen.dart';
 import 'package:merume_mobile/screens/main/channel_screens/components/post_day_formation_widget.dart';
@@ -32,7 +34,7 @@ class ChannelScreen extends StatefulWidget {
   State<ChannelScreen> createState() => _ChannelScreenState();
 }
 
-class _ChannelScreenState extends State<ChannelScreen> {
+class _ChannelScreenState extends State<ChannelScreen> with RouteAware {
   late ScrollController _scrollController;
   late TextEditingController _textEditingController;
 
@@ -67,10 +69,24 @@ class _ChannelScreenState extends State<ChannelScreen> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context)!);
+  }
+
+  @override
+  void didPop() {
+    super.didPop();
+    print('Hppaneed');
+    _saveLastScrollPosition();
+  }
+
+  @override
   void dispose() {
     itemsController.sink.close();
     itemsController.close();
     _retryTimer?.cancel();
+    routeObserver.unsubscribe(this);
     super.dispose();
   }
 
@@ -85,9 +101,26 @@ class _ChannelScreenState extends State<ChannelScreen> {
     );
   }
 
+  void _saveLastScrollPosition() async {
+    final double currentPosition = _scrollController.position.pixels;
+    if (_scrollController.hasClients) {
+      await ChannelLastPositionManager.savePosition(
+          widget.channel.id, currentPosition);
+    }
+  }
+
+  void _moveToLastScrollPosition() async {
+    final double? savedPosition =
+        await ChannelLastPositionManager.getPosition(widget.channel.id);
+    if (_scrollController.hasClients &&
+        savedPosition != null &&
+        !savedPosition.isNegative) {
+      _scrollController.jumpTo(savedPosition);
+    }
+  }
+
   void _scrollToNewPost() {
     if (_scrollController.hasClients) {
-      // Check if ScrollController has attached to a scrollable widget
       final double position = _scrollController.position.maxScrollExtent;
       _scrollController.animateTo(
         position,
@@ -222,8 +255,11 @@ class _ChannelScreenState extends State<ChannelScreen> {
                       stream: itemsController.stream,
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            _moveToLastScrollPosition();
+                          });
+
                           isLoading = false;
-                          // Check if posts contains any data
                           if (posts.isNotEmpty) {
                             return ListView.builder(
                               controller: _scrollController,
