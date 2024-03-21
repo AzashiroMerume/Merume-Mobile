@@ -15,18 +15,13 @@ import 'package:merume_mobile/network_checking/network_wrapper.dart';
 import 'package:merume_mobile/providers/error_provider.dart';
 import 'package:merume_mobile/screens/on_boarding/start_screen.dart';
 import 'package:merume_mobile/providers/user_provider.dart';
+import 'package:merume_mobile/utils/observer_utils.dart';
 import 'package:provider/provider.dart';
 
 const storage = FlutterSecureStorage();
-final RouteObserver<ModalRoute<void>> routeObserver =
-    RouteObserver<ModalRoute<void>>();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  User? user;
-  bool isAuthenticated = false;
-  String errorMessage = '';
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -35,6 +30,10 @@ void main() async {
   await FirebaseAppCheck.instance.activate(
     androidProvider: AndroidProvider.debug,
   );
+
+  User? user;
+  bool isAuthenticated = false;
+  String errorMessage = '';
 
   try {
     isAuthenticated = await verifyAuthInFirebase();
@@ -102,7 +101,7 @@ class MyApp extends StatelessWidget {
       home: NetworkWrapper(
         child: isAuthenticated ? const MainTabBarScreen() : const StartScreen(),
       ),
-      navigatorObservers: [routeObserver],
+      navigatorObservers: [ObserverUtils.routeObserver],
       routes: {
         '/login': (context) => const LoginScreen(),
         '/register': (context) => const RegisterScreen(),

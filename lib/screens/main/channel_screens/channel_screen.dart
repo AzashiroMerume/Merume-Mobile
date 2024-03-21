@@ -4,13 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:merume_mobile/api/channel_api/channel_posts_api.dart';
 import 'package:merume_mobile/api/posts_api/create_post_api.dart';
-import 'package:merume_mobile/main.dart';
+import 'package:merume_mobile/local_db/repositories/channel_last_scroll_position_repository.dart';
 import 'package:merume_mobile/models/user_model.dart';
 import 'package:merume_mobile/providers/error_provider.dart';
 import 'package:merume_mobile/screens/shared/error_consumer_display_widget.dart';
 import 'package:merume_mobile/constants/colors.dart';
 import 'package:merume_mobile/models/author_model.dart';
-import 'package:merume_mobile/utils/channel_last_position_manager.dart';
 import 'package:merume_mobile/utils/error_custom_snackbar.dart';
 import 'package:merume_mobile/screens/main/channel_screens/channel_details_screen.dart';
 import 'package:merume_mobile/screens/main/channel_screens/components/post_day_formation_widget.dart';
@@ -22,6 +21,7 @@ import 'package:merume_mobile/models/post_model.dart';
 import 'package:merume_mobile/screens/main/channel_screens/posts_screens/posts_list_widget.dart';
 import 'package:merume_mobile/providers/user_provider.dart';
 import 'package:merume_mobile/utils/navigate_to_login.dart';
+import 'package:merume_mobile/utils/observer_utils.dart';
 import 'package:objectid/objectid.dart';
 import 'package:provider/provider.dart';
 
@@ -69,25 +69,27 @@ class _ChannelScreenState extends State<ChannelScreen> with RouteAware {
   }
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    routeObserver.subscribe(this, ModalRoute.of(context)!);
-  }
-
-  @override
-  void didPop() {
-    super.didPop();
-    print('Hppaneed');
-    _saveLastScrollPosition();
-  }
-
-  @override
   void dispose() {
     itemsController.sink.close();
     itemsController.close();
     _retryTimer?.cancel();
-    routeObserver.unsubscribe(this);
+    ObserverUtils.routeObserver.unsubscribe(this);
+    _scrollController.dispose();
     super.dispose();
+  }
+
+  @override
+  void didChangeDependencies() {
+    ObserverUtils.routeObserver.subscribe(this, ModalRoute.of(context)!);
+    super.didChangeDependencies();
+  }
+
+  @override
+  void didPop() {
+    if (_scrollController.hasClients) {
+      _saveLastScrollPosition(_scrollController.position.pixels);
+    }
+    super.didPop();
   }
 
   void _handleAppBarPress() {
@@ -101,21 +103,21 @@ class _ChannelScreenState extends State<ChannelScreen> with RouteAware {
     );
   }
 
-  void _saveLastScrollPosition() async {
-    final double currentPosition = _scrollController.position.pixels;
-    if (_scrollController.hasClients) {
-      await ChannelLastPositionManager.savePosition(
-          widget.channel.id, currentPosition);
-    }
+  void _saveLastScrollPosition(double currentPosition) async {
+    ChannelLastScrollPositionRepository.writePosition(
+        widget.channel.id, currentPosition);
   }
 
   void _moveToLastScrollPosition() async {
-    final double? savedPosition =
-        await ChannelLastPositionManager.getPosition(widget.channel.id);
-    if (_scrollController.hasClients &&
-        savedPosition != null &&
-        !savedPosition.isNegative) {
-      _scrollController.jumpTo(savedPosition);
+    final savedPosition =
+        ChannelLastScrollPositionRepository.readPosition(widget.channel.id);
+    if (_scrollController.hasClients) {
+      if (savedPosition != null && !savedPosition.isNegative) {
+        _scrollController.jumpTo(savedPosition);
+      } else {
+        // check, can throw error
+        _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+      }
     }
   }
 
