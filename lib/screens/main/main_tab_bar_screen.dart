@@ -50,21 +50,20 @@ class _MainTabBarScreenState extends State<MainTabBarScreen> {
   @override
   void initState() {
     super.initState();
+    errorProvider = Provider.of<ErrorProvider>(context, listen: false);
+
     _initializeStream();
   }
 
   @override
   void dispose() {
-    if (hearbeatWebsocketChannel != null) {
-      hearbeatWebsocketChannel!.sink.close();
-    }
+    hearbeatWebsocketChannel?.sink.close();
     super.dispose();
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    errorProvider = Provider.of<ErrorProvider>(context, listen: false);
     final passedTabIndex = ModalRoute.of(context)!.settings.arguments as int?;
     if (passedTabIndex != null && (passedTabIndex > -1 && passedTabIndex < 3)) {
       setState(() {
