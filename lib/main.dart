@@ -11,7 +11,7 @@ import 'package:merume_mobile/models/user_model.dart';
 import 'package:merume_mobile/screens/auth/login_screen.dart';
 import 'package:merume_mobile/screens/auth/register_screen.dart';
 import 'package:merume_mobile/screens/main/main_tab_bar_screen.dart';
-import 'package:merume_mobile/network_checking/network_wrapper.dart';
+import 'package:merume_mobile/wrappers/network_checking/network_wrapper.dart';
 import 'package:merume_mobile/providers/error_provider.dart';
 import 'package:merume_mobile/screens/on_boarding/start_screen.dart';
 import 'package:merume_mobile/providers/user_provider.dart';
