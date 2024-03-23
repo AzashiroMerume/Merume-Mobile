@@ -1,5 +1,5 @@
 import 'package:merume_mobile/models/post_model.dart';
-import 'package:merume_mobile/screens/main/components/enums.dart';
+import 'package:merume_mobile/constants/enums.dart';
 
 class PostSent {
   final Post post;

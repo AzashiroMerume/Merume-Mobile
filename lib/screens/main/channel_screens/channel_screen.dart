@@ -14,7 +14,7 @@ import 'package:merume_mobile/utils/error_custom_snackbar.dart';
 import 'package:merume_mobile/screens/main/channel_screens/channel_details_screen.dart';
 import 'package:merume_mobile/screens/main/channel_screens/components/post_day_formation_widget.dart';
 import 'package:merume_mobile/screens/main/channel_screens/models/post_sent_model.dart';
-import 'package:merume_mobile/screens/main/components/enums.dart';
+import 'package:merume_mobile/constants/enums.dart';
 import 'package:merume_mobile/constants/exceptions.dart';
 import 'package:merume_mobile/models/channel_model.dart';
 import 'package:merume_mobile/models/post_model.dart';

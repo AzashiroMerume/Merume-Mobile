@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:merume_mobile/screens/shared/step_indicator_widget.dart';
 import 'package:merume_mobile/screens/main/add_channel_screens/tabs/add_channel_screen_1.dart';
 import 'package:merume_mobile/screens/main/add_channel_screens/tabs/add_channel_screen_2.dart';
-import 'package:merume_mobile/screens/main/components/enums.dart';
+import 'package:merume_mobile/constants/enums.dart';
 
 class AddChannelTabScreen extends StatefulWidget {
   const AddChannelTabScreen({super.key});

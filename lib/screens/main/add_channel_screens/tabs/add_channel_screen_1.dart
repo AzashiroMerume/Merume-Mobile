@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:merume_mobile/constants/colors.dart';
-import 'package:merume_mobile/screens/main/components/enums.dart';
+import 'package:merume_mobile/constants/enums.dart';
 import 'package:merume_mobile/screens/shared/basic/basic_elevated_button_widget.dart';
 import 'package:merume_mobile/constants/text_styles.dart';
 

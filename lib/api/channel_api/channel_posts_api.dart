@@ -6,7 +6,7 @@ import 'package:merume_mobile/constants/api_config.dart';
 import 'package:merume_mobile/models/post_model.dart';
 import 'package:merume_mobile/constants/exceptions.dart';
 import 'package:merume_mobile/screens/main/channel_screens/models/post_sent_model.dart';
-import 'package:merume_mobile/screens/main/components/enums.dart';
+import 'package:merume_mobile/constants/enums.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 

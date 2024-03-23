@@ -13,7 +13,7 @@ import 'package:merume_mobile/screens/shared/basic/basic_elevated_button_widget.
 import 'package:merume_mobile/screens/shared/pfp_load_image_widget.dart';
 import 'package:merume_mobile/screens/main/components/category_popup_widget.dart';
 import 'package:merume_mobile/constants/categories.dart';
-import 'package:merume_mobile/screens/main/components/enums.dart';
+import 'package:merume_mobile/constants/enums.dart';
 import 'package:objectid/objectid.dart';
 
 class AddChannelScreenSecond extends StatefulWidget {
