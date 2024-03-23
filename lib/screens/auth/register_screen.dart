@@ -7,6 +7,8 @@ import 'package:merume_mobile/api/auth_api/firebase_auth_api.dart';
 import 'package:merume_mobile/constants/colors.dart';
 import 'package:merume_mobile/api/auth_api/register_api.dart';
 import 'package:merume_mobile/constants/exceptions.dart';
+import 'package:merume_mobile/models/components/time_zone_model.dart';
+import 'package:merume_mobile/models/user_model.dart';
 import 'package:merume_mobile/providers/user_provider.dart';
 import 'package:merume_mobile/constants/text_styles.dart';
 import 'package:provider/provider.dart';
@@ -169,7 +171,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         : null,
                   ),
                   onChanged: (value) {
-                    // Convert the input to lowercase
                     value = value.toLowerCase();
                     _nicknameController.value =
                         _nicknameController.value.copyWith(
@@ -237,8 +238,29 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 firebaseUserId =
                                     await registerInFirebase(email, password);
 
-                                final user = await register(username, nickname,
-                                    email, password, firebaseUserId!);
+                                String timeZoneName =
+                                    DateTime.now().timeZoneName;
+                                Duration timeZoneOffset =
+                                    DateTime.now().timeZoneOffset;
+
+                                User user;
+
+                                if (firebaseUserId != null) {
+                                  final timeZone = TimeZone(
+                                      name: timeZoneName,
+                                      offset: timeZoneOffset.inMinutes);
+
+                                  user = await register(
+                                      username,
+                                      nickname,
+                                      email,
+                                      password,
+                                      firebaseUserId,
+                                      timeZone);
+                                } else {
+                                  throw ServerException(
+                                      'There was an error on server side, try again later');
+                                }
 
                                 userInfoProvider.setUser(user);
 
@@ -247,9 +269,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   (Route<dynamic> route) => false,
                                 );
                               } catch (e) {
-                                if (e is! fire_base.FirebaseException) {
-                                  deleteCurrentFirebaseUser();
-                                }
+                                deleteCurrentFirebaseUser();
+                                // if (e is fire_base.FirebaseException) {
+                                //   deleteCurrentFirebaseUser();
+                                // }
 
                                 setState(() {
                                   if (e is RegistrationException) {

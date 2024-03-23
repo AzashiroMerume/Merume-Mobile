@@ -6,13 +6,14 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:merume_mobile/constants/api_config.dart';
+import 'package:merume_mobile/constants/exceptions.dart';
+import 'package:merume_mobile/models/components/time_zone_model.dart';
 import 'package:merume_mobile/models/user_model.dart';
-import '../../constants/exceptions.dart';
 
 const storage = FlutterSecureStorage();
 
 Future<User> register(String username, String nickname, String email,
-    String password, String firebaseUserId) async {
+    String password, String firebaseUserId, TimeZone timeZone) async {
   try {
     final connectivityResult = await Connectivity().checkConnectivity();
     if (connectivityResult == ConnectivityResult.none) {
@@ -26,7 +27,8 @@ Future<User> register(String username, String nickname, String email,
         'nickname': nickname,
         'email': email,
         'password': password,
-        'firebase_user_id': firebaseUserId
+        'firebase_user_id': firebaseUserId,
+        'time_zone': timeZone.toJson()
       }),
       headers: {
         'Content-Type': 'application/json',
