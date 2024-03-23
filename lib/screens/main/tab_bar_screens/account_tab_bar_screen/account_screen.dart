@@ -48,7 +48,7 @@ class _AccountScreenState extends State<AccountScreen> {
               ),
               const SizedBox(height: 20.0),
               Text(
-                user.userInfo?.username ?? '', // Use null-aware operator here
+                user.userInfo!.username, // Use null-aware operator here
                 style: const TextStyle(
                   fontSize: 24.0,
                   color: AppColors.mellowLemon,
@@ -58,7 +58,7 @@ class _AccountScreenState extends State<AccountScreen> {
               ),
               const SizedBox(height: 5.0),
               Text(
-                '@${user.userInfo?.nickname ?? ''}', // Use null-aware operator here
+                '@${user.userInfo!.nickname}', // Use null-aware operator here
                 style: const TextStyle(
                   fontSize: 18.0,
                   color: AppColors.lightGrey,
