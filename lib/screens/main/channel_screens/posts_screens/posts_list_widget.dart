@@ -75,7 +75,7 @@ class PostsInListWidget extends StatelessWidget {
                                     ),
                             ),
                           Expanded(
-                            flex: 4,
+                            flex: 5,
                             child: Row(
                               mainAxisAlignment: byMe
                                   ? MainAxisAlignment.end
