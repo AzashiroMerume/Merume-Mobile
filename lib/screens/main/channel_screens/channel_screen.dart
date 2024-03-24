@@ -49,6 +49,8 @@ class _ChannelScreenState extends State<ChannelScreen> with RouteAware {
 
   bool isLoading = true;
 
+  bool displayChallengeInfo = false;
+
   late ErrorProvider errorProvider;
   String errorMessage = '';
   ErrorConsumerDisplay errorDisplayWidget = const ErrorConsumerDisplay();
@@ -263,79 +265,90 @@ class _ChannelScreenState extends State<ChannelScreen> with RouteAware {
 
                           isLoading = false;
                           if (posts.isNotEmpty) {
-                            return ListView.builder(
-                              controller: _scrollController,
-                              itemCount: posts.length,
-                              itemBuilder: (_, index) {
-                                final date = posts.keys.elementAt(index);
-                                final arrayOfPostLists = posts[date]!;
-                                DateTime sentDay = DateTime.parse(date);
-
-                                // Check if there are any remaining posts for this date
-                                final bool hasPostsForDate = arrayOfPostLists
-                                    .any((postList) => postList.isNotEmpty);
-
-                                // Only show the date if there are remaining posts for this date
-                                if (hasPostsForDate) {
-                                  return Column(
-                                    children: [
-                                      Column(
-                                        children: [
-                                          const SizedBox(
-                                            height: 10.0,
-                                          ),
-                                          Container(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 10.0,
-                                                vertical: 5.0),
-                                            decoration: BoxDecoration(
-                                              color: AppColors.postMain,
-                                              borderRadius:
-                                                  BorderRadius.circular(8.0),
-                                            ),
-                                            child: Text(
-                                              formatPostDate(sentDay),
-                                              style: const TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 12,
-                                              ),
-                                            ),
-                                          ),
-                                          const SizedBox(
-                                            height: 5.0,
-                                          ),
-                                        ],
-                                      ),
-                                      ...arrayOfPostLists.asMap().entries.map(
-                                            (entry) => PostsInListWidget(
-                                              postList: entry.value,
-                                              sentDay: sentDay,
-                                              byMe: entry.value.isNotEmpty &&
-                                                  userInfo!.id ==
-                                                      entry.value.first.post
-                                                          .author.id,
-                                            ),
-                                          ),
-                                    ],
-                                  );
-                                } else {
-                                  // If there are no remaining posts for this date, don't display the date
-                                  return Column(
-                                    children: [
-                                      ...arrayOfPostLists.asMap().entries.map(
-                                            (entry) => PostsInListWidget(
-                                              postList: entry.value,
-                                              sentDay: sentDay,
-                                              byMe: entry.value.isNotEmpty &&
-                                                  userInfo!.id ==
-                                                      entry.value.first.post
-                                                          .author.id,
-                                            ),
-                                          ),
-                                    ],
-                                  );
+                            return GestureDetector(
+                              onHorizontalDragEnd: (DragEndDetails details) {
+                                if (details.primaryVelocity != null &&
+                                    details.primaryVelocity! > 0) {
+                                  setState(() {
+                                    displayChallengeInfo = true;
+                                  });
                                 }
                               },
+                              child: ListView.builder(
+                                controller: _scrollController,
+                                itemCount: posts.length,
+                                itemBuilder: (_, index) {
+                                  final date = posts.keys.elementAt(index);
+                                  final arrayOfPostLists = posts[date]!;
+                                  DateTime sentDay = DateTime.parse(date);
+
+                                  // Check if there are any remaining posts for this date
+                                  final bool hasPostsForDate = arrayOfPostLists
+                                      .any((postList) => postList.isNotEmpty);
+
+                                  // Only show the date if there are remaining posts for this date
+                                  if (hasPostsForDate) {
+                                    return Column(
+                                      children: [
+                                        Column(
+                                          children: [
+                                            const SizedBox(
+                                              height: 10.0,
+                                            ),
+                                            Container(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 10.0,
+                                                      vertical: 5.0),
+                                              decoration: BoxDecoration(
+                                                color: AppColors.postMain,
+                                                borderRadius:
+                                                    BorderRadius.circular(8.0),
+                                              ),
+                                              child: Text(
+                                                formatPostDate(sentDay),
+                                                style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 12,
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              height: 5.0,
+                                            ),
+                                          ],
+                                        ),
+                                        ...arrayOfPostLists.asMap().entries.map(
+                                              (entry) => PostsInListWidget(
+                                                postList: entry.value,
+                                                sentDay: sentDay,
+                                                byMe: entry.value.isNotEmpty &&
+                                                    userInfo!.id ==
+                                                        entry.value.first.post
+                                                            .author.id,
+                                              ),
+                                            ),
+                                      ],
+                                    );
+                                  } else {
+                                    // If there are no remaining posts for this date, don't display the date
+                                    return Column(
+                                      children: [
+                                        ...arrayOfPostLists.asMap().entries.map(
+                                              (entry) => PostsInListWidget(
+                                                postList: entry.value,
+                                                sentDay: sentDay,
+                                                byMe: entry.value.isNotEmpty &&
+                                                    userInfo!.id ==
+                                                        entry.value.first.post
+                                                            .author.id,
+                                              ),
+                                            ),
+                                      ],
+                                    );
+                                  }
+                                },
+                              ),
                             );
                           } else {
                             return const Center(
@@ -366,6 +379,48 @@ class _ChannelScreenState extends State<ChannelScreen> with RouteAware {
               alignment: Alignment.topCenter,
               child: errorDisplayWidget,
             ),
+            if (displayChallengeInfo)
+              Stack(
+                children: [
+                  Positioned.fill(
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          displayChallengeInfo = false;
+                        });
+                      },
+                      child: Container(
+                        color: Colors.black.withOpacity(0.5),
+                      ),
+                    ),
+                  ),
+                  Center(
+                    child: Container(
+                      padding: const EdgeInsets.all(20.0),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      child: const Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            'Challenge Info',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18.0,
+                            ),
+                          ),
+                          SizedBox(height: 10.0),
+                          // Add your challenge info widgets here
+                          Text('Your challenge info goes here...'),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+
             // Row(
             //   mainAxisAlignment: MainAxisAlignment.center,
             //   children: [
