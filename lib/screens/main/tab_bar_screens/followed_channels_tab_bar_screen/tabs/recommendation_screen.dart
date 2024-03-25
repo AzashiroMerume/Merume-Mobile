@@ -243,7 +243,7 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
                           itemCount: recommendations!.length,
                           itemBuilder: (context, index) {
                             final channel = recommendations![index];
-                            return ChannelsInListWidget(channel: channel);
+                            return ChannelsListWidget(channel: channel);
                           },
                         ),
                 ),
