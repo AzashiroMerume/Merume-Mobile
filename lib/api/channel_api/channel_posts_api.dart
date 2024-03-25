@@ -45,22 +45,20 @@ Stream<Map<String, List<List<PostSent>>>> fetchChannelPosts(
     String channelId) async* {
   String channelUrl = '${ConfigAPI.wsURL}channels/$channelId/content';
 
-  final controller = StreamController<Map<String, List<List<PostSent>>>>();
+  while (true) {
+    try {
+      final headers = await getHeadersWithValidAccessToken();
 
-  try {
-    final headers = await getHeadersWithValidAccessToken();
+      final channel =
+          IOWebSocketChannel.connect(Uri.parse(channelUrl), headers: headers);
 
-    final channel =
-        IOWebSocketChannel.connect(Uri.parse(channelUrl), headers: headers);
-
-    channel.stream.listen(
-      (data) {
+      await for (var data in channel.stream) {
         final dynamic responseJson = json.decode(data);
         final WebSocketResponse response =
             WebSocketResponse.fromJson(responseJson);
 
         if (response.success) {
-          // Ensure data is not null before adding to the stream
+          // Ensure data is not null before yielding
           if (response.data != null) {
             // Transform the received posts to PostSent objects
             final transformedData = response.data!.map((key, value) {
@@ -73,34 +71,24 @@ Stream<Map<String, List<List<PostSent>>>> fetchChannelPosts(
               return MapEntry(key, transformedLists);
             });
 
-            controller.add(transformedData);
+            yield transformedData;
           }
         } else {
           if (response.errorMessage == 'Unauthorized access') {
-            controller
-                .addError(UnauthorizedAccessException('Unauthorized access'));
+            throw UnauthorizedAccessException('Unauthorized access');
           } else {
-            controller.addError(ServerException('Server Error'));
+            throw ServerException('Server Error');
           }
         }
-      },
-      onDone: () {
-        controller.close();
-        throw ServerException('Server Error');
-      },
-      onError: (error) {
-        controller.addError(error);
-      },
-      cancelOnError: true,
-    );
-  } catch (e) {
-    if (kDebugMode) {
-      print('Error in channel_posts_api: $e');
+      }
+
+      await channel.sink.close();
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error in channel_posts_api: $e');
+      }
+
+      rethrow;
     }
-
-    controller.addError(e);
   }
-
-  // Return the broadcast stream from the controller
-  yield* controller.stream;
 }
