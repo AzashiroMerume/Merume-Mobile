@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:merume_mobile/providers/error_provider.dart';
-import 'package:merume_mobile/screens/shared/error_consumer_display_widget.dart';
 import 'package:merume_mobile/utils/navigate_to_login.dart';
 import 'package:merume_mobile/constants/text_styles.dart';
 import 'package:provider/provider.dart';
@@ -26,14 +25,10 @@ class _MainTabBarScreenState extends State<MainTabBarScreen> {
   int _oldCurrentIndex = 0;
 
   late ErrorProvider errorProvider;
-  static const ErrorConsumerDisplay errorConsumerDisplay =
-      ErrorConsumerDisplay();
 
   final List<Widget> _screens = [
-    const CreatedChannelsScreen(
-      errorDisplayWidget: errorConsumerDisplay,
-    ),
-    const FollowingTabScreen(errorDisplayWidget: errorConsumerDisplay),
+    const CreatedChannelsScreen(),
+    const FollowingTabScreen(),
     const AccountScreen(),
   ];
 

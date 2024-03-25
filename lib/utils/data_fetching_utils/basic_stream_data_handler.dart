@@ -15,6 +15,7 @@ class BasicStreamDataHandler<T> {
   final bool addErrorToController;
 
   Timer? _retryTimer;
+  bool _disposed = false;
 
   BasicStreamDataHandler({
     required this.context,
@@ -26,18 +27,22 @@ class BasicStreamDataHandler<T> {
   });
 
   void fetchStreamData() {
+    if (_disposed) return;
+
     fetchFunction().listen(
       (data) {
         if (errorProvider.showError) {
           errorProvider.clearError();
         }
 
-        if (!controller.isClosed) {
+        if (!_disposed && !controller.isClosed) {
           controller.add(data);
         }
       },
       onError: (error) {
-        handleError(error);
+        if (!_disposed) {
+          handleError(error);
+        }
       },
     );
   }
@@ -52,17 +57,18 @@ class BasicStreamDataHandler<T> {
     _retryTimer?.cancel();
 
     _retryTimer = Timer(retryTimerDuration, () {
-      if (!controller.isClosed) {
+      if (!_disposed && !controller.isClosed) {
         fetchStreamData();
       }
     });
 
-    if (addErrorToController && !controller.isClosed) {
+    if (!_disposed && addErrorToController && !controller.isClosed) {
       controller.addError(error);
     }
   }
 
   void dispose() {
+    _disposed = true;
     _retryTimer?.cancel();
   }
 }

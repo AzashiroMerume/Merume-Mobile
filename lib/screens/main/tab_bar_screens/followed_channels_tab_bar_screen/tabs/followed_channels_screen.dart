@@ -10,9 +10,7 @@ import 'package:merume_mobile/utils/data_fetching_utils/basic_stream_data_handle
 import 'package:provider/provider.dart';
 
 class FollowingChannelsScreen extends StatefulWidget {
-  final ErrorConsumerDisplay? errorDisplayWidget;
-
-  const FollowingChannelsScreen({super.key, this.errorDisplayWidget});
+  const FollowingChannelsScreen({super.key});
 
   @override
   State<FollowingChannelsScreen> createState() =>
@@ -24,6 +22,8 @@ class _FollowingChannelsScreenState extends State<FollowingChannelsScreen>
   final itemsController = StreamController<List<Channel>>();
   late BasicStreamDataHandler<List<Channel>> streamDataHandler;
   late ErrorProvider errorProvider;
+
+  ErrorConsumerDisplay errorDisplayWidget = const ErrorConsumerDisplay();
 
   @override
   void initState() {
@@ -101,11 +101,10 @@ class _FollowingChannelsScreenState extends State<FollowingChannelsScreen>
                 ],
               ),
             ),
-            if (widget.errorDisplayWidget != null)
-              Align(
-                alignment: Alignment.topCenter,
-                child: widget.errorDisplayWidget,
-              )
+            Align(
+              alignment: Alignment.topCenter,
+              child: errorDisplayWidget,
+            )
           ],
         ),
       ),

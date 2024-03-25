@@ -10,9 +10,7 @@ import 'package:merume_mobile/utils/data_fetching_utils/basic_stream_data_handle
 import 'package:provider/provider.dart';
 
 class CreatedChannelsScreen extends StatefulWidget {
-  final ErrorConsumerDisplay? errorDisplayWidget;
-
-  const CreatedChannelsScreen({super.key, this.errorDisplayWidget});
+  const CreatedChannelsScreen({super.key});
 
   @override
   State<CreatedChannelsScreen> createState() => _CreatedChannelsScreenState();
@@ -22,6 +20,8 @@ class _CreatedChannelsScreenState extends State<CreatedChannelsScreen> {
   final itemsController = StreamController<List<Channel>>();
   late BasicStreamDataHandler<List<Channel>> streamDataHandler;
   late ErrorProvider errorProvider;
+
+  ErrorConsumerDisplay errorDisplayWidget = const ErrorConsumerDisplay();
 
   @override
   void initState() {
@@ -43,6 +43,7 @@ class _CreatedChannelsScreenState extends State<CreatedChannelsScreen> {
   void dispose() {
     itemsController.sink.close();
     itemsController.close();
+    streamDataHandler.dispose();
     super.dispose();
   }
 
@@ -97,11 +98,10 @@ class _CreatedChannelsScreenState extends State<CreatedChannelsScreen> {
                 ],
               ),
             ),
-            if (widget.errorDisplayWidget != null)
-              Align(
-                alignment: Alignment.topCenter,
-                child: widget.errorDisplayWidget,
-              ),
+            Align(
+              alignment: Alignment.topCenter,
+              child: errorDisplayWidget,
+            ),
           ],
         ),
       ),

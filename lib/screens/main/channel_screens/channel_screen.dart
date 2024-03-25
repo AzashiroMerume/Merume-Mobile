@@ -75,8 +75,8 @@ class _ChannelScreenState extends State<ChannelScreen> with RouteAware {
     itemsController.sink.close();
     itemsController.close();
     _retryTimer?.cancel();
-    ObserverUtils.routeObserver.unsubscribe(this);
     _scrollController.dispose();
+    ObserverUtils.routeObserver.unsubscribe(this);
     super.dispose();
   }
 
