@@ -7,6 +7,7 @@ import 'package:merume_mobile/screens/shared/error_consumer_display_widget.dart'
 import 'package:merume_mobile/screens/main/channel_screens/channels_list_widget.dart';
 import 'package:merume_mobile/constants/text_styles.dart';
 import 'package:merume_mobile/utils/data_fetching_utils/basic_stream_data_handler.dart';
+import 'package:merume_mobile/utils/observer_utils.dart';
 import 'package:provider/provider.dart';
 
 class CreatedChannelsScreen extends StatefulWidget {
@@ -16,7 +17,8 @@ class CreatedChannelsScreen extends StatefulWidget {
   State<CreatedChannelsScreen> createState() => _CreatedChannelsScreenState();
 }
 
-class _CreatedChannelsScreenState extends State<CreatedChannelsScreen> {
+class _CreatedChannelsScreenState extends State<CreatedChannelsScreen>
+    with RouteAware {
   final itemsController = StreamController<List<Channel>>();
   late BasicStreamDataHandler<List<Channel>> streamDataHandler;
   late ErrorProvider errorProvider;
@@ -44,7 +46,26 @@ class _CreatedChannelsScreenState extends State<CreatedChannelsScreen> {
     itemsController.sink.close();
     itemsController.close();
     streamDataHandler.dispose();
+    ObserverUtils.routeObserver.unsubscribe(this);
     super.dispose();
+  }
+
+  @override
+  void didChangeDependencies() {
+    ObserverUtils.routeObserver.subscribe(this, ModalRoute.of(context)!);
+    super.didChangeDependencies();
+  }
+
+  @override
+  void didPop() {
+    errorProvider.clearError();
+    super.didPop();
+  }
+
+  @override
+  void didPushNext() {
+    streamDataHandler.dispose();
+    super.didPushNext();
   }
 
   @override

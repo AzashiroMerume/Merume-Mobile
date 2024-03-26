@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:merume_mobile/api/channel_api/channel_posts_api.dart';
@@ -63,9 +62,9 @@ class _ChannelScreenState extends State<ChannelScreen> with RouteAware {
     _textEditingController = TextEditingController();
 
     userInfo = Provider.of<UserProvider>(context, listen: false).userInfo;
-    isAuthor = userInfo != null && userInfo?.id == widget.channel.author.id;
-
     errorProvider = Provider.of<ErrorProvider>(context, listen: false);
+
+    isAuthor = userInfo != null && userInfo?.id == widget.channel.author.id;
 
     _initializeStream();
   }
@@ -91,6 +90,7 @@ class _ChannelScreenState extends State<ChannelScreen> with RouteAware {
     if (_scrollController.hasClients) {
       _saveLastScrollPosition(_scrollController.position.pixels);
     }
+    errorProvider.clearError();
     super.didPop();
   }
 
@@ -143,6 +143,10 @@ class _ChannelScreenState extends State<ChannelScreen> with RouteAware {
         fetchChannelPosts(widget.channel.id);
     webSocketStream.listen(
       (Map<String, List<List<PostSent>>> data) {
+        if (errorProvider.showError) {
+          errorProvider.clearError();
+        }
+
         // Merge received data with existing posts
         data.forEach((date, arrayOfPostArrays) {
           if (posts.containsKey(date)) {
@@ -193,10 +197,6 @@ class _ChannelScreenState extends State<ChannelScreen> with RouteAware {
         }
       },
       onError: (e) {
-        if (kDebugMode) {
-          print('Error in channel_screen: $e');
-        }
-
         if (e is TokenErrorException) {
           navigateToLogin(context);
         }
@@ -375,8 +375,7 @@ class _ChannelScreenState extends State<ChannelScreen> with RouteAware {
                 ],
               ),
             ),
-            Align(
-              alignment: Alignment.topCenter,
+            Container(
               child: errorDisplayWidget,
             ),
             if (displayChallengeInfo)

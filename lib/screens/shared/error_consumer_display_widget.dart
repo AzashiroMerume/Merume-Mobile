@@ -11,52 +11,63 @@ class ErrorConsumerDisplay extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<ErrorProvider>(
       builder: (context, provider, _) {
-        if (provider.showError) {
-          return FractionallySizedBox(
-            widthFactor: 0.8,
-            heightFactor: 0.2,
-            child: Container(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 15.0, horizontal: 5.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  if (provider.retrySeconds > 0)
-                    Container(
-                      margin: const EdgeInsets.only(top: 10.0),
-                      padding: const EdgeInsets.all(15.0),
-                      decoration: BoxDecoration(
-                        color: AppColors.postMain,
-                        borderRadius: BorderRadius.circular(15.0),
-                      ),
-                      child: Column(
-                        children: [
-                          Text(provider.errorMessage,
-                              style: TextStyles.errorSmall),
-                          Text(
-                            'Retrying in ${provider.retrySeconds} seconds...',
-                            style: TextStyles.errorSmall,
-                          ),
-                        ],
-                      ),
-                    ),
-                  if (provider.retrySeconds == 0)
-                    Container(
-                      margin: const EdgeInsets.only(top: 10),
-                      height: 15,
-                      width: 15,
-                      child: const CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(
-                            AppColors.mellowLemon),
-                      ),
-                    ),
-                ],
+        return Stack(
+          children: [
+            if (provider.showError)
+              Positioned.fill(
+                child: Container(
+                  color: Colors.black.withOpacity(0.5),
+                ),
               ),
+            Align(
+              alignment: Alignment.topCenter,
+              child: provider.showError
+                  ? FractionallySizedBox(
+                      widthFactor: 0.8,
+                      heightFactor: 0.2,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 15.0, horizontal: 5.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            if (provider.retrySeconds > 0)
+                              Container(
+                                margin: const EdgeInsets.only(top: 10.0),
+                                padding: const EdgeInsets.all(15.0),
+                                decoration: BoxDecoration(
+                                  color: AppColors.postMain,
+                                  borderRadius: BorderRadius.circular(15.0),
+                                ),
+                                child: Column(
+                                  children: [
+                                    Text(provider.errorMessage,
+                                        style: TextStyles.errorSmall),
+                                    Text(
+                                      'Retrying in ${provider.retrySeconds} seconds...',
+                                      style: TextStyles.errorSmall,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            if (provider.retrySeconds == 0)
+                              Container(
+                                margin: const EdgeInsets.only(top: 10),
+                                height: 15,
+                                width: 15,
+                                child: const CircularProgressIndicator(
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                      AppColors.mellowLemon),
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
+                    )
+                  : const SizedBox(),
             ),
-          );
-        } else {
-          return const SizedBox();
-        }
+          ],
+        );
       },
     );
   }
