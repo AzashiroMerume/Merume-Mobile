@@ -29,14 +29,13 @@ class _FollowingChannelsScreenState extends State<FollowingChannelsScreen>
   void initState() {
     super.initState();
     errorProvider = Provider.of<ErrorProvider>(context, listen: false);
-    const timerDuration = Duration(seconds: 10);
 
     streamDataHandler = BasicStreamDataHandler<List<Channel>>(
       context: context,
       fetchFunction: fetchFollowedChannels,
       controller: itemsController,
       errorProvider: errorProvider,
-      retryTimerDuration: timerDuration,
+      retryDelaySeconds: 10,
     );
     streamDataHandler.fetchStreamData();
   }

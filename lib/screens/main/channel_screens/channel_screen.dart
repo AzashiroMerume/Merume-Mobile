@@ -54,6 +54,7 @@ class _ChannelScreenState extends State<ChannelScreen> with RouteAware {
   String errorMessage = '';
   ErrorConsumerDisplay errorDisplayWidget = const ErrorConsumerDisplay();
   Timer? _retryTimer;
+  static const int _retryDelaySeconds = 10;
 
   @override
   void initState() {
@@ -147,50 +148,7 @@ class _ChannelScreenState extends State<ChannelScreen> with RouteAware {
           errorProvider.clearError();
         }
 
-        // Merge received data with existing posts
-        data.forEach((date, arrayOfPostArrays) {
-          if (posts.containsKey(date)) {
-            // Update existing posts or add new ones
-            for (var newPostList in arrayOfPostArrays) {
-              final existingPostList = posts[date]!;
-              for (var newPost in newPostList) {
-                // Find if the new post exists in the existing list
-                final existingPostIndex = existingPostList.indexWhere(
-                    (existingPostSentList) => existingPostSentList.any(
-                        (existingPost) =>
-                            existingPost.post.id == newPost.post.id));
-                if (existingPostIndex != -1) {
-                  // Update existing post
-                  final existingPostListToUpdate =
-                      existingPostList[existingPostIndex];
-                  final existingPostToUpdateIndex =
-                      existingPostListToUpdate.indexWhere((existingPost) =>
-                          existingPost.post.id == newPost.post.id);
-                  if (existingPostToUpdateIndex != -1) {
-                    existingPostListToUpdate[existingPostToUpdateIndex] =
-                        newPost;
-                  } else {
-                    existingPostListToUpdate.add(newPost);
-                  }
-                } else {
-                  // Add new post
-                  existingPostList.add([newPost]);
-                }
-              }
-            }
-          } else {
-            posts[date] = arrayOfPostArrays;
-          }
-        });
-
-        posts.forEach((date, arrayOfPostArrays) {
-          for (var postList in arrayOfPostArrays) {
-            postList.removeWhere((postSent) =>
-                !data.containsKey(date) ||
-                !data[date]!.any((newPostList) => newPostList
-                    .any((newPost) => newPost.post.id == postSent.post.id)));
-          }
-        });
+        _transformReceivedData(data);
 
         if (!itemsController.isClosed) {
           itemsController.add(posts);
@@ -201,16 +159,64 @@ class _ChannelScreenState extends State<ChannelScreen> with RouteAware {
           navigateToLogin(context);
         }
 
-        errorProvider.setError(10);
+        errorProvider.setError(_retryDelaySeconds);
 
-        // Retry fetching channels with a timer
-        _retryTimer = Timer(const Duration(seconds: 10), () {
-          if (!itemsController.isClosed) {
-            _fetchPosts();
+        _retryTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+          if (errorProvider.retrySeconds > 0) {
+            errorProvider.decreaseRetrySeconds();
+          } else {
+            _retryTimer?.cancel();
+            if (!itemsController.isClosed) {
+              _fetchPosts();
+            }
           }
         });
       },
     );
+  }
+
+  void _transformReceivedData(Map<String, List<List<PostSent>>> data) {
+    data.forEach((date, arrayOfPostArrays) {
+      if (posts.containsKey(date)) {
+        // Update existing posts or add new ones
+        for (var newPostList in arrayOfPostArrays) {
+          final existingPostList = posts[date]!;
+          for (var newPost in newPostList) {
+            // Find if the new post exists in the existing list
+            final existingPostIndex = existingPostList.indexWhere(
+                (existingPostSentList) => existingPostSentList.any(
+                    (existingPost) => existingPost.post.id == newPost.post.id));
+            if (existingPostIndex != -1) {
+              // Update existing post
+              final existingPostListToUpdate =
+                  existingPostList[existingPostIndex];
+              final existingPostToUpdateIndex =
+                  existingPostListToUpdate.indexWhere((existingPost) =>
+                      existingPost.post.id == newPost.post.id);
+              if (existingPostToUpdateIndex != -1) {
+                existingPostListToUpdate[existingPostToUpdateIndex] = newPost;
+              } else {
+                existingPostListToUpdate.add(newPost);
+              }
+            } else {
+              // Add new post
+              existingPostList.add([newPost]);
+            }
+          }
+        }
+      } else {
+        posts[date] = arrayOfPostArrays;
+      }
+    });
+
+    posts.forEach((date, arrayOfPostArrays) {
+      for (var postList in arrayOfPostArrays) {
+        postList.removeWhere((postSent) =>
+            !data.containsKey(date) ||
+            !data[date]!.any((newPostList) => newPostList
+                .any((newPost) => newPost.post.id == postSent.post.id)));
+      }
+    });
   }
 
   @override

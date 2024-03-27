@@ -11,7 +11,7 @@ class BasicStreamDataHandler<T> {
   final FetchFunction<T> fetchFunction;
   final StreamController<T> controller;
   final ErrorProvider errorProvider;
-  final Duration retryTimerDuration;
+  final int retryDelaySeconds;
   final bool addErrorToController;
 
   Timer? _retryTimer;
@@ -22,7 +22,7 @@ class BasicStreamDataHandler<T> {
     required this.fetchFunction,
     required this.controller,
     required this.errorProvider,
-    required this.retryTimerDuration,
+    required this.retryDelaySeconds,
     this.addErrorToController = true,
   });
 
@@ -52,13 +52,18 @@ class BasicStreamDataHandler<T> {
       navigateToLogin(context);
     }
 
-    errorProvider.setError(10);
+    errorProvider.setError(retryDelaySeconds);
 
     _retryTimer?.cancel();
 
-    _retryTimer = Timer(retryTimerDuration, () {
-      if (!_disposed && !controller.isClosed) {
-        fetchStreamData();
+    _retryTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (errorProvider.retrySeconds > 0) {
+        errorProvider.decreaseRetrySeconds();
+      } else {
+        _retryTimer?.cancel();
+        if (!_disposed && !controller.isClosed) {
+          fetchStreamData();
+        }
       }
     });
 

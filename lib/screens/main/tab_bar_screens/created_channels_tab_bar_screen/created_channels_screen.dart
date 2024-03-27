@@ -29,14 +29,13 @@ class _CreatedChannelsScreenState extends State<CreatedChannelsScreen>
   void initState() {
     super.initState();
     errorProvider = Provider.of<ErrorProvider>(context, listen: false);
-    const timerDuration = Duration(seconds: 10);
 
     streamDataHandler = BasicStreamDataHandler<List<Channel>>(
       context: context,
       fetchFunction: fetchOwnChannels,
       controller: itemsController,
       errorProvider: errorProvider,
-      retryTimerDuration: timerDuration,
+      retryDelaySeconds: 10,
     );
     streamDataHandler.fetchStreamData();
   }
