@@ -127,7 +127,7 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
                       showDialog(
                         context: context,
                         builder: (BuildContext dialogContext) {
-                          return ConfirmationDialog(
+                          return ConfirmationPopup(
                             onCancel: () {
                               state.pop(dialogContext); // Close the dialog
                             },

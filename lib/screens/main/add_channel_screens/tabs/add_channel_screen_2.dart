@@ -169,7 +169,7 @@ class _AddChannelScreenSecondState extends State<AddChannelScreenSecond> {
                   ),
                 ),
                 const SizedBox(height: 32.0),
-                PfpLoadImageWidget(
+                PfpLoadImage(
                   onImageSelected: handleImageUpload,
                 ),
                 const SizedBox(height: 32.0),

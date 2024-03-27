@@ -97,7 +97,7 @@ class _CreatedChannelsScreenState extends State<CreatedChannelsScreen>
                           final channels = snapshot.data!;
                           return ListView.builder(
                             itemCount: channels.length,
-                            itemBuilder: (_, index) => ChannelsListWidget(
+                            itemBuilder: (_, index) => ChannelItem(
                               channel: channels[index],
                             ),
                           );

@@ -3,11 +3,11 @@ import 'package:merume_mobile/constants/colors.dart';
 import 'package:merume_mobile/screens/shared/basic/basic_elevated_button_widget.dart';
 import 'package:merume_mobile/constants/text_styles.dart';
 
-class ConfirmationDialog extends StatelessWidget {
+class ConfirmationPopup extends StatelessWidget {
   final VoidCallback onCancel;
   final VoidCallback onSave;
 
-  const ConfirmationDialog({
+  const ConfirmationPopup({
     required this.onCancel,
     required this.onSave,
     super.key,

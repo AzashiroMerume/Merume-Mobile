@@ -3,19 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:merume_mobile/constants/colors.dart';
 
-class PfpLoadImageWidget extends StatefulWidget {
+class PfpLoadImage extends StatefulWidget {
   final Function(String?) onImageSelected;
 
-  const PfpLoadImageWidget({
+  const PfpLoadImage({
     super.key,
     required this.onImageSelected,
   });
 
   @override
-  PfpLoadImageWidgetState createState() => PfpLoadImageWidgetState();
+  PfpLoadImageState createState() => PfpLoadImageState();
 }
 
-class PfpLoadImageWidgetState extends State<PfpLoadImageWidget> {
+class PfpLoadImageState extends State<PfpLoadImage> {
   final ImagePicker picker = ImagePicker();
   XFile? pickedImage;
   String? imagePath;
