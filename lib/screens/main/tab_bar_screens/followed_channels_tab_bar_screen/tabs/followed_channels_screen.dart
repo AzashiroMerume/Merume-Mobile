@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:merume_mobile/api/user_api/user_channels_api/followed_channels_api.dart/followed_channels_api.dart';
 import 'package:merume_mobile/models/channel_model.dart';
 import 'package:merume_mobile/providers/error_provider.dart';
-import 'package:merume_mobile/screens/main/channel_screens/channels_list_widget.dart';
+import 'package:merume_mobile/screens/main/channel_screens/channels_item_widget.dart';
 import 'package:merume_mobile/screens/shared/error_consumer_display_widget.dart';
 import 'package:merume_mobile/constants/text_styles.dart';
 import 'package:merume_mobile/utils/data_fetching_utils/basic_stream_data_handler.dart';

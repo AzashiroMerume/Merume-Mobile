@@ -42,6 +42,14 @@ class ChannelItem extends StatelessWidget {
                             height: 60.0,
                             width: 60.0,
                             fit: BoxFit.cover,
+                            errorBuilder: ((context, error, stackTrace) {
+                              return Image.asset(
+                                'assets/images/pfp_outline.png',
+                                height: 60.0,
+                                width: 60.0,
+                                fit: BoxFit.cover,
+                              );
+                            }),
                           )
                         : Image.asset(
                             'assets/images/pfp_outline.png',
