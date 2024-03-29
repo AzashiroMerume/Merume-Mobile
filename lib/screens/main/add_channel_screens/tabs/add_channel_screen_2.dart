@@ -8,20 +8,22 @@ import 'package:flutter/services.dart';
 import 'package:merume_mobile/api/user_api/user_channels_api/new_channel_api.dart';
 import 'package:merume_mobile/constants/colors.dart';
 import 'package:merume_mobile/constants/exceptions.dart';
+import 'package:merume_mobile/models/channel_model.dart' as channel_model;
 import 'package:merume_mobile/utils/error_custom_snackbar.dart';
 import 'package:merume_mobile/screens/shared/basic/basic_elevated_button_widget.dart';
 import 'package:merume_mobile/screens/shared/pfp_load_image_widget.dart';
 import 'package:merume_mobile/screens/main/components/category_popup_widget.dart';
 import 'package:merume_mobile/constants/categories.dart';
-import 'package:merume_mobile/constants/enums.dart';
 import 'package:objectid/objectid.dart';
 
 class AddChannelScreenSecond extends StatefulWidget {
-  final ChannelType? selectedChannelType;
+  final channel_model.ChallengeType? selectedChallengeType;
   final Function(int step) onComplete;
 
   const AddChannelScreenSecond(
-      {super.key, required this.selectedChannelType, required this.onComplete});
+      {super.key,
+      required this.selectedChallengeType,
+      required this.onComplete});
 
   @override
   State<AddChannelScreenSecond> createState() => _AddChannelScreenSecondState();
@@ -40,7 +42,8 @@ class _AddChannelScreenSecondState extends State<AddChannelScreenSecond> {
   String challengeName = '';
   int? challengeGoal;
   String challengeDescription = '';
-  String challengeVisibility = 'Public';
+  channel_model.VisibilityType challengeVisibility =
+      channel_model.VisibilityType.public;
   List<String> challengeCategories = [];
 
   String? selectedImagePath;
@@ -127,7 +130,7 @@ class _AddChannelScreenSecondState extends State<AddChannelScreenSecond> {
           'Challenge must have at least one category';
     }
 
-    if (widget.selectedChannelType == ChannelType.fixed) {
+    if (widget.selectedChallengeType == channel_model.ChallengeType.fixed) {
       if (_challengeGoalController.text.isEmpty) {
         errors['challengeGoal'] = 'Challenge goal is required';
       } else {
@@ -188,7 +191,8 @@ class _AddChannelScreenSecondState extends State<AddChannelScreenSecond> {
                   },
                 ),
                 const SizedBox(height: 32.0),
-                if (widget.selectedChannelType == ChannelType.fixed)
+                if (widget.selectedChallengeType ==
+                    channel_model.ChallengeType.fixed)
                   Column(
                     children: [
                       TextField(
@@ -237,13 +241,19 @@ class _AddChannelScreenSecondState extends State<AddChannelScreenSecond> {
                     borderRadius: BorderRadius.circular(4.0),
                   ),
                   child: DropdownButtonHideUnderline(
-                    child: DropdownButton<String>(
+                    child: DropdownButton<channel_model.VisibilityType>(
                       value: challengeVisibility,
                       style: const TextStyle(color: Colors.black),
-                      items: <String>['Public', 'Private'].map((String value) {
-                        return DropdownMenuItem<String>(
+                      items: <channel_model.VisibilityType>[
+                        channel_model.VisibilityType.public,
+                        channel_model.VisibilityType.private
+                      ].map((channel_model.VisibilityType value) {
+                        final formattedVisibility =
+                            value.name[0].toUpperCase() +
+                                value.name.substring(1);
+                        return DropdownMenuItem<channel_model.VisibilityType>(
                           value: value,
-                          child: Text(value),
+                          child: Text((formattedVisibility)),
                         );
                       }).toList(),
                       onChanged: (value) {
@@ -331,7 +341,7 @@ class _AddChannelScreenSecondState extends State<AddChannelScreenSecond> {
                                     await uploadImage(selectedImagePath);
 
                                 await newChannel(
-                                  widget.selectedChannelType!,
+                                  widget.selectedChallengeType!,
                                   challengeName,
                                   challengeGoal,
                                   challengeVisibility,

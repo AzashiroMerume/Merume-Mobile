@@ -3,30 +3,26 @@ import 'package:merume_mobile/models/author_model.dart';
 class Channel {
   final String id;
   final Author author;
-  final String channelType;
   final String name;
-  final int? goal;
-  final String channelVisibility;
+  final Visibility visibility;
   final String description;
   final List<String> categories;
+  final Challenge challenge;
   final List<String>? contributors;
   final Followers followers;
-  final int currentChallengeDay;
   final String? channelProfilePictureUrl;
   final DateTime createdAt;
 
   const Channel({
     required this.id,
     required this.author,
-    required this.channelType,
     required this.name,
-    this.goal,
-    required this.channelVisibility,
+    required this.visibility,
     required this.description,
     required this.categories,
+    required this.challenge,
     this.contributors,
     required this.followers,
-    required this.currentChallengeDay,
     this.channelProfilePictureUrl,
     required this.createdAt,
   });
@@ -35,23 +31,45 @@ class Channel {
     return Channel(
       id: json['_id']['\$oid'],
       author: Author.fromJson(json['author']),
-      channelType: json['channel_type'],
       name: json['name'],
-      goal: json['goal'],
-      channelVisibility: json['channel_visibility'],
+      visibility: Visibility.fromString(json['visibility']),
       description: json['description'],
       categories: List<String>.from(json['categories']),
+      challenge: Challenge.fromJson(json['challenge']),
       contributors: (json['contributors'] != null &&
               json['contributors'] is List)
           ? List<String>.from(
               json['contributors'].map((contributor) => contributor['\$oid']))
           : null,
       followers: Followers.fromJson(json['followers']),
-      currentChallengeDay: json['current_challenge_day'],
       channelProfilePictureUrl: json['channel_profile_picture_url'],
       createdAt: DateTime.parse(json['created_at']).toLocal(),
     );
   }
+}
+
+class Visibility {
+  final VisibilityType value;
+
+  const Visibility({
+    required this.value,
+  });
+
+  factory Visibility.fromString(String value) {
+    switch (value.toLowerCase()) {
+      case 'public':
+        return const Visibility(value: VisibilityType.public);
+      case 'private':
+        return const Visibility(value: VisibilityType.private);
+      default:
+        throw Exception('Invalid visibility type: $value');
+    }
+  }
+}
+
+enum VisibilityType {
+  public,
+  private,
 }
 
 class Followers {
@@ -78,4 +96,55 @@ class Followers {
       lastUpdated: DateTime.parse(json['last_updated']).toLocal(),
     );
   }
+}
+
+class Challenge {
+  final ChallengeType challengeType;
+  final int? goal;
+  final int points;
+  final int currentDay;
+  final int streak;
+  final int missedCount;
+  final List<DateTime>? missedDays;
+
+  const Challenge({
+    required this.challengeType,
+    this.goal,
+    required this.points,
+    required this.currentDay,
+    required this.streak,
+    required this.missedCount,
+    this.missedDays,
+  });
+
+  factory Challenge.fromJson(Map<String, dynamic> json) {
+    return Challenge(
+      challengeType: challengeTypeFromString(json['challenge_type']),
+      goal: json['goal'],
+      points: json['points'],
+      currentDay: json['current_day'],
+      streak: json['streak'],
+      missedCount: json['missed_count'],
+      missedDays: json['missed_days'] != null
+          ? List<DateTime>.from(
+              json['missed_days'].map((date) => DateTime.parse(date)))
+          : null,
+    );
+  }
+
+  static ChallengeType challengeTypeFromString(String type) {
+    switch (type.toLowerCase()) {
+      case 'fixed':
+        return ChallengeType.fixed;
+      case 'unfixed':
+        return ChallengeType.unfixed;
+      default:
+        throw Exception('Invalid challenge type: $type');
+    }
+  }
+}
+
+enum ChallengeType {
+  fixed,
+  unfixed,
 }

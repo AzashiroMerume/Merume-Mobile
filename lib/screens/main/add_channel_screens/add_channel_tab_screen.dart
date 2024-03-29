@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:merume_mobile/models/channel_model.dart';
 import 'package:merume_mobile/screens/shared/step_indicator_widget.dart';
 import 'package:merume_mobile/screens/main/add_channel_screens/tabs/add_channel_screen_1.dart';
 import 'package:merume_mobile/screens/main/add_channel_screens/tabs/add_channel_screen_2.dart';
-import 'package:merume_mobile/constants/enums.dart';
 
 class AddChannelTabScreen extends StatefulWidget {
   const AddChannelTabScreen({super.key});
@@ -15,7 +15,7 @@ class _AddChannelTabScreenState extends State<AddChannelTabScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   int colorStep = 0;
-  ChannelType? _selectedItem;
+  ChallengeType? _selectedItem;
 
   @override
   void initState() {
@@ -73,7 +73,7 @@ class _AddChannelTabScreenState extends State<AddChannelTabScreen>
                     initialSelectedItem: _selectedItem,
                   ),
                   AddChannelScreenSecond(
-                    selectedChannelType: _selectedItem,
+                    selectedChallengeType: _selectedItem,
                     onComplete: (step) {
                       _updateStep(step);
                     },

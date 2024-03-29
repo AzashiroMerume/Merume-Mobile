@@ -159,7 +159,7 @@ class _ChannelDetailsScreenState extends State<ChannelDetailsScreen> {
                     ),
                   ),
                   subtitle: Text(
-                    widget.channel.currentChallengeDay.toString(),
+                    widget.channel.challenge.currentDay.toString(),
                     style: const TextStyle(
                       fontSize: 18.0,
                       fontFamily: 'WorkSans',

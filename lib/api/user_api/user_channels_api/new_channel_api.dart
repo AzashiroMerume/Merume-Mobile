@@ -7,16 +7,16 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:merume_mobile/api/auth_api/access_token_api.dart';
 import 'package:merume_mobile/constants/api_config.dart';
-import 'package:merume_mobile/constants/enums.dart';
-import '../../../constants/exceptions.dart';
+import 'package:merume_mobile/constants/exceptions.dart';
+import 'package:merume_mobile/models/channel_model.dart';
 
 const storage = FlutterSecureStorage();
 
 Future<void> newChannel(
-    ChannelType channelType,
+    ChallengeType challengeType,
     String name,
     int? challangeGoal,
-    String channelVisibility,
+    VisibilityType visibility,
     String description,
     List<String> categories,
     String? channelProfilePictureUrl) async {
@@ -31,10 +31,10 @@ Future<void> newChannel(
     final response = await http.post(
       Uri.parse('${ConfigAPI.baseURL}user/channels/new'),
       body: json.encode({
-        'channel_type': channelType.name,
         'name': name,
+        'challenge_type': challengeType.name,
         'goal': challangeGoal,
-        'channel_visibility': channelVisibility,
+        'visibility': visibility.name,
         'description': description,
         'categories': categories,
         'channel_profile_picture_url': channelProfilePictureUrl
@@ -58,10 +58,10 @@ Future<void> newChannel(
         if (newAccessToken != null) {
           await storage.write(key: 'accessToken', value: newAccessToken);
           return await newChannel(
-              channelType,
+              challengeType,
               name,
               challangeGoal,
-              channelVisibility,
+              visibility,
               description,
               categories,
               channelProfilePictureUrl); // Retry with the new access token
