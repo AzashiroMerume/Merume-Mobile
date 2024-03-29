@@ -30,6 +30,10 @@ class _FollowingChannelsScreenState extends State<FollowingChannelsScreen>
     super.initState();
     errorProvider = Provider.of<ErrorProvider>(context, listen: false);
 
+    _initializeStream();
+  }
+
+  void _initializeStream() {
     streamDataHandler = BasicStreamDataHandler<List<Channel>>(
       context: context,
       fetchFunction: fetchFollowedChannels,
@@ -44,6 +48,7 @@ class _FollowingChannelsScreenState extends State<FollowingChannelsScreen>
   void dispose() {
     itemsController.sink.close();
     itemsController.close();
+    streamDataHandler.dispose();
     super.dispose();
   }
 

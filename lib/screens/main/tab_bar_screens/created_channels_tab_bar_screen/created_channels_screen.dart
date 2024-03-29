@@ -30,6 +30,10 @@ class _CreatedChannelsScreenState extends State<CreatedChannelsScreen>
     super.initState();
     errorProvider = Provider.of<ErrorProvider>(context, listen: false);
 
+    _initializeStream();
+  }
+
+  void _initializeStream() {
     streamDataHandler = BasicStreamDataHandler<List<Channel>>(
       context: context,
       fetchFunction: fetchOwnChannels,
@@ -59,6 +63,12 @@ class _CreatedChannelsScreenState extends State<CreatedChannelsScreen>
   void didPop() {
     errorProvider.clearError();
     super.didPop();
+  }
+
+  @override
+  void didPopNext() {
+    _initializeStream();
+    super.didPopNext();
   }
 
   @override
