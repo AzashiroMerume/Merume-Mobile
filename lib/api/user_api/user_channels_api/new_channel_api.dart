@@ -19,7 +19,7 @@ Future<void> newChannel(
     VisibilityType visibility,
     String description,
     List<String> categories,
-    String? channelProfilePictureUrl) async {
+    String? channelPfpLink) async {
   final accessToken = await storage.read(key: 'accessToken');
 
   try {
@@ -37,7 +37,7 @@ Future<void> newChannel(
         'visibility': visibility.name,
         'description': description,
         'categories': categories,
-        'channel_profile_picture_url': channelProfilePictureUrl
+        'channel_pfp_link': channelPfpLink
       }),
       headers: {
         'Content-Type': 'application/json',
@@ -64,7 +64,7 @@ Future<void> newChannel(
               visibility,
               description,
               categories,
-              channelProfilePictureUrl); // Retry with the new access token
+              channelPfpLink); // Retry with the new access token
         } else {
           throw TokenErrorException('Token authentication error');
         }

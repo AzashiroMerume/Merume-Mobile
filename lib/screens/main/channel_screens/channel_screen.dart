@@ -6,6 +6,7 @@ import 'package:merume_mobile/api/posts_api/create_post_api.dart';
 import 'package:merume_mobile/local_db/repositories/channel_last_scroll_position_repository.dart';
 import 'package:merume_mobile/models/user_model.dart';
 import 'package:merume_mobile/providers/error_provider.dart';
+import 'package:merume_mobile/screens/main/channel_screens/components/channel_info_popup.dart';
 import 'package:merume_mobile/screens/shared/error_consumer_display_widget.dart';
 import 'package:merume_mobile/constants/colors.dart';
 import 'package:merume_mobile/models/author_model.dart';
@@ -52,7 +53,6 @@ class _ChannelScreenState extends State<ChannelScreen> with RouteAware {
 
   late ErrorProvider errorProvider;
   String errorMessage = '';
-  ErrorConsumerDisplay errorDisplayWidget = const ErrorConsumerDisplay();
   Timer? _retryTimer;
   static const int _retryDelaySeconds = 10;
 
@@ -136,10 +136,6 @@ class _ChannelScreenState extends State<ChannelScreen> with RouteAware {
   }
 
   void _initializeStream() {
-    _fetchPosts();
-  }
-
-  void _fetchPosts() {
     final Stream<Map<String, List<List<PostSent>>>> webSocketStream =
         fetchChannelPosts(widget.channel.id);
     webSocketStream.listen(
@@ -167,7 +163,7 @@ class _ChannelScreenState extends State<ChannelScreen> with RouteAware {
           } else {
             _retryTimer?.cancel();
             if (!itemsController.isClosed) {
-              _fetchPosts();
+              _initializeStream();
             }
           }
         });
@@ -381,50 +377,16 @@ class _ChannelScreenState extends State<ChannelScreen> with RouteAware {
                 ],
               ),
             ),
-            Container(
-              child: errorDisplayWidget,
-            ),
+            const ErrorConsumerDisplay(),
             if (displayChallengeInfo)
-              Stack(
-                children: [
-                  Positioned.fill(
-                    child: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          displayChallengeInfo = false;
-                        });
-                      },
-                      child: Container(
-                        color: Colors.black.withOpacity(0.5),
-                      ),
-                    ),
-                  ),
-                  Center(
-                    child: Container(
-                      padding: const EdgeInsets.all(20.0),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      child: const Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            'Challenge Info',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18.0,
-                            ),
-                          ),
-                          SizedBox(height: 10.0),
-                          // Add your challenge info widgets here
-                          Text('Your challenge info goes here...'),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+              ChannelInfoPopup(
+                channel: widget.channel,
+                onCancel: () => {
+                  setState(() {
+                    displayChallengeInfo = false;
+                  })
+                },
+              )
 
             // Row(
             //   mainAxisAlignment: MainAxisAlignment.center,
@@ -512,7 +474,7 @@ class _ChannelScreenState extends State<ChannelScreen> with RouteAware {
                               body: postBody,
                               images: postImages,
                               writtenChallengeDay:
-                                  widget.channel.currentChallengeDay,
+                                  widget.channel.challenge.currentDay,
                               likes: 0,
                               dislikes: 0,
                               alreadyChanged: false,

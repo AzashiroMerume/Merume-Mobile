@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:merume_mobile/api/auth_api/firebase_auth_api.dart';
 import 'package:merume_mobile/api/auth_api/logout_api.dart';
 import 'package:merume_mobile/constants/colors.dart';
+import 'package:merume_mobile/utils/image_loading.dart';
 import 'package:merume_mobile/utils/last_time_online.dart';
 import 'package:merume_mobile/providers/user_provider.dart';
 import 'package:provider/provider.dart';
@@ -41,10 +42,11 @@ class _AccountScreenState extends State<AccountScreen> {
               const SizedBox(height: 20.0),
               CircleAvatar(
                 radius: 80.0,
-                backgroundImage: user.userInfo?.pfpLink != null
-                    ? NetworkImage(user.userInfo!.pfpLink!)
-                    : const AssetImage('assets/images/pfp_outline.png')
-                        as ImageProvider,
+                child: ClipOval(
+                  child: buildImage(
+                      user.userInfo?.pfpLink, 'assets/images/pfp_outline.png',
+                      height: 160.0, width: 160.0),
+                ),
               ),
               const SizedBox(height: 20.0),
               Text(

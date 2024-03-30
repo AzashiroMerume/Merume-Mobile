@@ -10,7 +10,7 @@ class Channel {
   final Challenge challenge;
   final List<String>? contributors;
   final Followers followers;
-  final String? channelProfilePictureUrl;
+  final String? channelPfpLink;
   final DateTime createdAt;
 
   const Channel({
@@ -23,7 +23,7 @@ class Channel {
     required this.challenge,
     this.contributors,
     required this.followers,
-    this.channelProfilePictureUrl,
+    this.channelPfpLink,
     required this.createdAt,
   });
 
@@ -42,7 +42,7 @@ class Channel {
               json['contributors'].map((contributor) => contributor['\$oid']))
           : null,
       followers: Followers.fromJson(json['followers']),
-      channelProfilePictureUrl: json['channel_profile_picture_url'],
+      channelPfpLink: json['channel_pfp_link'],
       createdAt: DateTime.parse(json['created_at']).toLocal(),
     );
   }

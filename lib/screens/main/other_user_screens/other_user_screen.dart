@@ -6,6 +6,7 @@ import 'package:merume_mobile/models/channel_model.dart';
 import 'package:merume_mobile/models/user_model.dart';
 import 'package:merume_mobile/constants/colors.dart';
 import 'package:merume_mobile/constants/exceptions.dart';
+import 'package:merume_mobile/utils/image_loading.dart';
 import 'package:merume_mobile/utils/last_time_online.dart';
 import 'package:merume_mobile/screens/main/components/channel_card_widget.dart';
 import 'package:merume_mobile/utils/navigate_to_login.dart';
@@ -90,10 +91,11 @@ class _OtherUserScreenState extends State<OtherUserScreen> {
             const SizedBox(height: 20.0),
             CircleAvatar(
               radius: 80.0,
-              backgroundImage: widget.user.pfpLink != null
-                  ? NetworkImage(widget.user.pfpLink!)
-                  : const AssetImage('assets/images/pfp_outline.png')
-                      as ImageProvider,
+              child: ClipOval(
+                child: buildImage(
+                    widget.user.pfpLink, 'assets/images/pfp_outline.png',
+                    height: 160.0, width: 160.0),
+              ),
             ),
             const SizedBox(height: 20.0),
             Text(

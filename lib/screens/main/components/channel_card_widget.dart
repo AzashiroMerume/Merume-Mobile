@@ -3,6 +3,7 @@ import 'package:merume_mobile/models/channel_model.dart';
 import 'package:merume_mobile/constants/colors.dart';
 import 'package:merume_mobile/screens/main/channel_screens/channel_screen.dart';
 import 'package:merume_mobile/constants/text_styles.dart';
+import 'package:merume_mobile/utils/image_loading.dart';
 
 class ChannelCard extends StatelessWidget {
   final Channel channel;
@@ -31,19 +32,8 @@ class ChannelCard extends StatelessWidget {
           leading: CircleAvatar(
             radius: 30.0,
             child: ClipOval(
-              child: channel.channelProfilePictureUrl != null
-                  ? Image.network(
-                      channel.channelProfilePictureUrl!,
-                      height: 60.0,
-                      width: 60.0,
-                      fit: BoxFit.cover,
-                    )
-                  : Image.asset(
-                      'assets/images/pfp_outline.png',
-                      height: 60.0,
-                      width: 60.0,
-                      fit: BoxFit.cover,
-                    ),
+              child: buildImage(
+                  channel.channelPfpLink, 'assets/images/pfp_outline.png'),
             ),
           ),
           title: Text(

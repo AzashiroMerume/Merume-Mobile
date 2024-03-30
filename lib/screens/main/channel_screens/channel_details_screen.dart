@@ -6,6 +6,7 @@ import 'package:merume_mobile/models/channel_model.dart';
 import 'package:merume_mobile/models/user_model.dart';
 import 'package:merume_mobile/constants/colors.dart';
 import 'package:merume_mobile/constants/exceptions.dart';
+import 'package:merume_mobile/utils/image_loading.dart';
 import 'package:merume_mobile/utils/last_time_online.dart';
 import 'package:merume_mobile/screens/main/other_user_screens/other_user_screen.dart';
 
@@ -128,10 +129,11 @@ class _ChannelDetailsScreenState extends State<ChannelDetailsScreen> {
                 const EdgeInsets.symmetric(vertical: 30.0, horizontal: 20.0),
             child: CircleAvatar(
               radius: 80.0,
-              backgroundImage: widget.channel.channelProfilePictureUrl != null
-                  ? NetworkImage(widget.channel.channelProfilePictureUrl!)
-                  : const AssetImage('assets/images/pfp_outline.png')
-                      as ImageProvider,
+              child: ClipOval(
+                child: buildImage(widget.channel.channelPfpLink,
+                    'assets/images/pfp_outline.png',
+                    height: 160.0, width: 160.0),
+              ),
             ),
           ),
           Text(
@@ -309,11 +311,12 @@ class _ChannelDetailsScreenState extends State<ChannelDetailsScreen> {
                           },
                           leading: CircleAvatar(
                             radius: 30.0,
-                            backgroundImage: follower.pfpLink != null
-                                ? NetworkImage(follower.pfpLink!)
-                                : const AssetImage(
-                                        'assets/images/pfp_outline.png')
-                                    as ImageProvider,
+                            child: ClipOval(
+                              child: buildImage(
+                                follower.pfpLink,
+                                'assets/images/pfp_outline.png',
+                              ),
+                            ),
                           ),
                           title: Row(
                             children: [

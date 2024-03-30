@@ -1,12 +1,9 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:merume_mobile/api/user_api/heartbeat_manager.dart';
 import 'package:merume_mobile/providers/error_provider.dart';
-import 'package:merume_mobile/utils/navigate_to_login.dart';
 import 'package:merume_mobile/constants/text_styles.dart';
 import 'package:provider/provider.dart';
-import 'package:merume_mobile/api/user_api/heartbeat_api.dart';
 import 'package:merume_mobile/constants/colors.dart';
-import 'package:merume_mobile/constants/exceptions.dart';
 import 'package:merume_mobile/screens/main/add_channel_screens/add_channel_tab_screen.dart';
 import 'package:merume_mobile/screens/main/tab_bar_screens/account_tab_bar_screen/account_screen.dart';
 import 'package:merume_mobile/screens/main/tab_bar_screens/created_channels_tab_bar_screen/created_channels_screen.dart';
@@ -24,6 +21,7 @@ class _MainTabBarScreenState extends State<MainTabBarScreen> {
   int _currentIndex = 0;
   int _oldCurrentIndex = 0;
 
+  late HeartbeatManager _heartbeatManager;
   late ErrorProvider errorProvider;
 
   final List<Widget> _screens = [
@@ -47,12 +45,12 @@ class _MainTabBarScreenState extends State<MainTabBarScreen> {
     super.initState();
     errorProvider = Provider.of<ErrorProvider>(context, listen: false);
 
-    _initializeStream();
+    _heartbeatManager = HeartbeatManager();
   }
 
   @override
   void dispose() {
-    hearbeatWebsocketChannel?.sink.close();
+    _heartbeatManager.close();
     super.dispose();
   }
 
@@ -64,22 +62,6 @@ class _MainTabBarScreenState extends State<MainTabBarScreen> {
       setState(() {
         _currentIndex = passedTabIndex;
       });
-    }
-  }
-
-  void _initializeStream() async {
-    try {
-      hearbeatWebsocketChannel = await heartbeat();
-    } catch (e) {
-      if (e is TokenErrorException) {
-        if (mounted) {
-          navigateToLogin(context);
-        }
-      }
-
-      if (kDebugMode) {
-        print('Error in heartbeat websocket: $e');
-      }
     }
   }
 
