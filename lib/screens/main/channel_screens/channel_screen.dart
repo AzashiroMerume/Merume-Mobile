@@ -6,6 +6,7 @@ import 'package:merume_mobile/api/posts_api/create_post_api.dart';
 import 'package:merume_mobile/local_db/repositories/channel_last_scroll_position_repository.dart';
 import 'package:merume_mobile/models/user_model.dart';
 import 'package:merume_mobile/providers/error_provider.dart';
+import 'package:merume_mobile/providers/select_mode_provider.dart';
 import 'package:merume_mobile/screens/main/channel_screens/components/channel_info_popup.dart';
 import 'package:merume_mobile/screens/shared/error_consumer_display_widget.dart';
 import 'package:merume_mobile/constants/colors.dart';
@@ -37,6 +38,10 @@ class ChannelScreen extends StatefulWidget {
 class _ChannelScreenState extends State<ChannelScreen> with RouteAware {
   late ScrollController _scrollController;
   late TextEditingController _textEditingController;
+  late SelectModeProvider _selectModeProvider;
+
+  bool _showPostInteractionAppBar = false;
+  Set<String> selectedPosts = {};
 
   late User? userInfo;
   bool isAuthor = false;
@@ -64,6 +69,7 @@ class _ChannelScreenState extends State<ChannelScreen> with RouteAware {
 
     userInfo = Provider.of<UserProvider>(context, listen: false).userInfo;
     errorProvider = Provider.of<ErrorProvider>(context, listen: false);
+    _selectModeProvider = SelectModeProvider();
 
     isAuthor = userInfo != null && userInfo?.id == widget.channel.author.id;
 
@@ -215,200 +221,290 @@ class _ChannelScreenState extends State<ChannelScreen> with RouteAware {
     });
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(60),
-        child: GestureDetector(
-          onTap: _handleAppBarPress,
-          child: Container(
-            decoration: BoxDecoration(
-              border: Border(
-                bottom: BorderSide(
-                  color: AppColors.lavenderHaze.withOpacity(0.5),
-                  width: 1.0,
-                ),
-              ),
-            ),
-            child: AppBar(
-              title: Container(
-                padding: const EdgeInsets.only(left: 20.0),
-                child: Text(
-                  widget.channel.name,
-                  style: const TextStyle(
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-              automaticallyImplyLeading: false,
-            ),
+  AppBar _buildDefaultAppBar() {
+    return AppBar(
+      title: Container(
+        padding: const EdgeInsets.only(left: 20.0),
+        child: Text(
+          widget.channel.name,
+          style: const TextStyle(
+            color: Colors.white,
           ),
         ),
       ),
-      body: SafeArea(
-        child: Stack(
-          children: [
-            Padding(
-              padding:
-                  const EdgeInsets.only(top: 20.0, right: 15.0, left: 15.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: StreamBuilder<Map<String, List<List<PostSent>>>>(
-                      stream: itemsController.stream,
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          WidgetsBinding.instance.addPostFrameCallback((_) {
-                            _moveToLastScrollPosition();
-                          });
+      automaticallyImplyLeading: false,
+    );
+  }
 
-                          isLoading = false;
-                          if (posts.isNotEmpty) {
-                            return GestureDetector(
-                              onHorizontalDragEnd: (DragEndDetails details) {
-                                if (details.primaryVelocity != null &&
-                                    details.primaryVelocity! > 0) {
-                                  setState(() {
-                                    displayChallengeInfo = true;
-                                  });
-                                }
-                              },
-                              child: ListView.builder(
-                                controller: _scrollController,
-                                itemCount: posts.length,
-                                itemBuilder: (_, index) {
-                                  final date = posts.keys.elementAt(index);
-                                  final arrayOfPostLists = posts[date]!;
-                                  DateTime sentDay = DateTime.parse(date);
+  AppBar _buildPostInteractionAppBar() {
+    return AppBar(
+      title: Container(
+        padding: const EdgeInsets.only(left: 20.0),
+        child: const Text(
+          "Action",
+          style: TextStyle(color: Colors.white),
+        ),
+      ),
+      automaticallyImplyLeading: false,
+      actions: [
+        TextButton(
+          onPressed: () {
+            setState(() {
+              _showPostInteractionAppBar = false;
+            });
+            _selectModeProvider.setSelectMode(false);
+            selectedPosts.clear();
+          },
+          child: const Text(
+            "CANCEL",
+            style: TextStyle(color: Colors.white),
+          ),
+        ),
+      ],
+    );
+  }
 
-                                  // Check if there are any remaining posts for this date
-                                  final bool hasPostsForDate = arrayOfPostLists
-                                      .any((postList) => postList.isNotEmpty);
+  void _longPressAction() {
+    setState(() {
+      _showPostInteractionAppBar = true;
+    });
+  }
 
-                                  // Only show the date if there are remaining posts for this date
-                                  if (hasPostsForDate) {
-                                    return Column(
-                                      children: [
-                                        Column(
-                                          children: [
-                                            const SizedBox(
-                                              height: 10.0,
-                                            ),
-                                            Container(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 10.0,
-                                                      vertical: 5.0),
-                                              decoration: BoxDecoration(
-                                                color: AppColors.postMain,
-                                                borderRadius:
-                                                    BorderRadius.circular(8.0),
-                                              ),
-                                              child: Text(
-                                                formatPostDate(sentDay),
-                                                style: const TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 12,
-                                                ),
-                                              ),
-                                            ),
-                                            const SizedBox(
-                                              height: 5.0,
-                                            ),
-                                          ],
-                                        ),
-                                        ...arrayOfPostLists.asMap().entries.map(
-                                              (entry) => PostsInListWidget(
-                                                postList: entry.value,
-                                                sentDay: sentDay,
-                                                byMe: entry.value.isNotEmpty &&
-                                                    userInfo!.id ==
-                                                        entry.value.first.post
-                                                            .author.id,
-                                              ),
-                                            ),
-                                      ],
-                                    );
-                                  } else {
-                                    // If there are no remaining posts for this date, don't display the date
-                                    return Column(
-                                      children: [
-                                        ...arrayOfPostLists.asMap().entries.map(
-                                              (entry) => PostsInListWidget(
-                                                postList: entry.value,
-                                                sentDay: sentDay,
-                                                byMe: entry.value.isNotEmpty &&
-                                                    userInfo!.id ==
-                                                        entry.value.first.post
-                                                            .author.id,
-                                              ),
-                                            ),
-                                      ],
-                                    );
+  void _selectPostAction(String postId) {
+    if (!_selectModeProvider.selectModeEnabled) {
+      _selectModeProvider.setSelectMode(true);
+    }
+    selectedPosts.add(postId);
+  }
+
+  void _deselectPostAction(String postId) {
+    selectedPosts.remove(postId);
+    if (selectedPosts.isEmpty) {
+      setState(() {
+        _showPostInteractionAppBar = false;
+      });
+      _selectModeProvider.setSelectMode(false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider.value(
+      value: _selectModeProvider,
+      child: Scaffold(
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(60),
+          child: GestureDetector(
+            onTap: _handleAppBarPress,
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(
+                    color: AppColors.lavenderHaze.withOpacity(0.5),
+                    width: 1.0,
+                  ),
+                ),
+              ),
+              child: _showPostInteractionAppBar
+                  ? _buildPostInteractionAppBar()
+                  : _buildDefaultAppBar(),
+            ),
+          ),
+        ),
+        body: SafeArea(
+          child: Stack(
+            children: [
+              Padding(
+                padding:
+                    const EdgeInsets.only(top: 20.0, right: 15.0, left: 15.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: StreamBuilder<Map<String, List<List<PostSent>>>>(
+                        stream: itemsController.stream,
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                              _moveToLastScrollPosition();
+                            });
+
+                            isLoading = false;
+                            if (posts.isNotEmpty) {
+                              return GestureDetector(
+                                onHorizontalDragEnd: (DragEndDetails details) {
+                                  if (details.primaryVelocity != null &&
+                                      details.primaryVelocity! > 0) {
+                                    setState(() {
+                                      displayChallengeInfo = true;
+                                    });
                                   }
                                 },
-                              ),
-                            );
-                          } else {
-                            return const Center(
-                              child: Text(
-                                'No posts yet..',
-                                style: TextStyle(
-                                  color: AppColors.mellowLemon,
-                                  fontFamily: 'WorkSans',
-                                  fontSize: 15,
+                                child: ListView.builder(
+                                  controller: _scrollController,
+                                  itemCount: posts.length,
+                                  itemBuilder: (_, index) {
+                                    final date = posts.keys.elementAt(index);
+                                    final arrayOfPostLists = posts[date]!;
+                                    DateTime sentDay = DateTime.parse(date);
+
+                                    // Check if there are any remaining posts for this date
+                                    final bool hasPostsForDate =
+                                        arrayOfPostLists.any(
+                                            (postList) => postList.isNotEmpty);
+
+                                    // Only show the date if there are remaining posts for this date
+                                    if (hasPostsForDate) {
+                                      return Column(
+                                        children: [
+                                          Column(
+                                            children: [
+                                              const SizedBox(
+                                                height: 10.0,
+                                              ),
+                                              Container(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 10.0,
+                                                        vertical: 5.0),
+                                                decoration: BoxDecoration(
+                                                  color: AppColors.postMain,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          8.0),
+                                                ),
+                                                child: Text(
+                                                  formatPostDate(sentDay),
+                                                  style: const TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 12,
+                                                  ),
+                                                ),
+                                              ),
+                                              const SizedBox(
+                                                height: 5.0,
+                                              ),
+                                            ],
+                                          ),
+                                          ...arrayOfPostLists
+                                              .asMap()
+                                              .entries
+                                              .map(
+                                                (entry) => PostsListWidget(
+                                                  postList: entry.value,
+                                                  sentDay: sentDay,
+                                                  byMe:
+                                                      entry.value.isNotEmpty &&
+                                                          userInfo!.id ==
+                                                              entry
+                                                                  .value
+                                                                  .first
+                                                                  .post
+                                                                  .author
+                                                                  .id,
+                                                  longPressAction:
+                                                      _longPressAction,
+                                                  selectPostAction:
+                                                      _selectPostAction,
+                                                  deselectPostAction:
+                                                      _deselectPostAction,
+                                                ),
+                                              ),
+                                        ],
+                                      );
+                                    } else {
+                                      // If there are no remaining posts for this date, don't display the date
+                                      return Column(
+                                        children: [
+                                          ...arrayOfPostLists
+                                              .asMap()
+                                              .entries
+                                              .map(
+                                                (entry) => PostsListWidget(
+                                                  postList: entry.value,
+                                                  sentDay: sentDay,
+                                                  byMe:
+                                                      entry.value.isNotEmpty &&
+                                                          userInfo!.id ==
+                                                              entry
+                                                                  .value
+                                                                  .first
+                                                                  .post
+                                                                  .author
+                                                                  .id,
+                                                  longPressAction:
+                                                      _longPressAction,
+                                                  selectPostAction:
+                                                      _selectPostAction,
+                                                  deselectPostAction:
+                                                      _deselectPostAction,
+                                                ),
+                                              ),
+                                        ],
+                                      );
+                                    }
+                                  },
                                 ),
-                              ),
+                              );
+                            } else {
+                              return const Center(
+                                child: Text(
+                                  'No posts yet..',
+                                  style: TextStyle(
+                                    color: AppColors.mellowLemon,
+                                    fontFamily: 'WorkSans',
+                                    fontSize: 15,
+                                  ),
+                                ),
+                              );
+                            }
+                          } else {
+                            isLoading = true;
+                            return const Center(
+                              child: CircularProgressIndicator(),
                             );
                           }
-                        } else {
-                          isLoading = true;
-                          return const Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        }
-                      },
+                        },
+                      ),
                     ),
-                  ),
-                  _buildChatInputBox(),
-                ],
+                    _buildChatInputBox(),
+                  ],
+                ),
               ),
-            ),
-            const ErrorConsumerDisplay(),
-            if (displayChallengeInfo)
-              ChannelInfoPopup(
-                channel: widget.channel,
-                onCancel: () => {
-                  setState(() {
-                    displayChallengeInfo = false;
-                  })
-                },
-              )
+              const ErrorConsumerDisplay(),
+              if (displayChallengeInfo)
+                ChannelInfoPopup(
+                  channel: widget.channel,
+                  onCancel: () => {
+                    setState(() {
+                      displayChallengeInfo = false;
+                    })
+                  },
+                )
 
-            // Row(
-            //   mainAxisAlignment: MainAxisAlignment.center,
-            //   children: [
-            //     Container(
-            //       padding: const EdgeInsets.symmetric(
-            //           horizontal: 10.0, vertical: 5.0),
-            //       decoration: BoxDecoration(
-            //         color: AppColors.postMain,
-            //         borderRadius: BorderRadius.circular(8.0),
-            //       ),
-            //       child: const Text(
-            //         /*  formatPostDate(sentDay) */ 'dude',
-            //         style: TextStyle(
-            //           color: Colors.white,
-            //           fontSize: 12,
-            //         ),
-            //       ),
-            //     ),
-            //   ],
-            // ),
-          ],
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.center,
+              //   children: [
+              //     Container(
+              //       padding: const EdgeInsets.symmetric(
+              //           horizontal: 10.0, vertical: 5.0),
+              //       decoration: BoxDecoration(
+              //         color: AppColors.postMain,
+              //         borderRadius: BorderRadius.circular(8.0),
+              //       ),
+              //       child: const Text(
+              //         /*  formatPostDate(sentDay) */ 'dude',
+              //         style: TextStyle(
+              //           color: Colors.white,
+              //           fontSize: 12,
+              //         ),
+              //       ),
+              //     ),
+              //   ],
+              // ),
+            ],
+          ),
         ),
       ),
     );
