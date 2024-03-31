@@ -183,9 +183,11 @@ class _ChannelScreenState extends State<ChannelScreen> with RouteAware {
   }
 
   void _longPressAction() {
-    setState(() {
-      _showPostInteractionAppBar = true;
-    });
+    if (!_showPostInteractionAppBar) {
+      setState(() {
+        _showPostInteractionAppBar = true;
+      });
+    }
   }
 
   void _cancelPostInteractionAppBar() {

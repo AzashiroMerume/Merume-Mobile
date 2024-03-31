@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:merume_mobile/constants/colors.dart';
+import 'package:merume_mobile/constants/text_styles.dart';
 import 'package:merume_mobile/providers/select_mode_provider.dart';
 import 'package:merume_mobile/screens/main/channel_screens/models/post_sent_model.dart';
 import 'package:merume_mobile/constants/enums.dart';
+import 'package:merume_mobile/screens/main/channel_screens/posts_screens/components/show_actions_modal_widget.dart';
 import 'package:merume_mobile/screens/main/channel_screens/posts_screens/components/minimized_pfp_widget.dart';
 import 'package:merume_mobile/screens/main/channel_screens/posts_screens/components/message_bubble_widget.dart';
 import 'package:provider/provider.dart';
@@ -35,7 +38,7 @@ class PostItemWidget extends StatefulWidget {
 }
 
 class PostItemWidgetState extends State<PostItemWidget> {
-  bool isSelected = false;
+  bool _isSelected = false;
   late SelectModeProvider selectModeProvider;
 
   @override
@@ -53,11 +56,36 @@ class PostItemWidgetState extends State<PostItemWidget> {
   }
 
   void handleSelectModeChange() {
-    if (!selectModeProvider.selectModeEnabled && isSelected) {
+    if (!selectModeProvider.selectModeEnabled && _isSelected) {
       setState(() {
-        isSelected = false;
+        _isSelected = false;
       });
     }
+  }
+
+  void _replyAction() {} // implement design and backend endpoint
+
+  void _updateAction() {} // implement backend endpoint
+
+  void _copyToClipboardAction() {
+    Clipboard.setData(ClipboardData(text: widget.postSent.post.body ?? ''))
+        .then((_) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text(
+        'Copied to your clipboard!',
+        style: TextStyles.hintedText,
+      )));
+    });
+  }
+
+  void _deleteAction() {} // implement backend endpoint
+
+  void _selectAction() {
+    widget.longPressAction();
+    widget.selectPostAction(widget.postSent.post.id);
+    setState(() {
+      _isSelected = true;
+    });
   }
 
   @override
@@ -70,14 +98,25 @@ class PostItemWidgetState extends State<PostItemWidget> {
 
     return GestureDetector(
       onTap: (() {
-        if (!isSelected && selectModeProvider.selectModeEnabled) {
+        if (!_isSelected && !selectModeProvider.selectModeEnabled) {
+          showActionsModal(
+            context,
+            byMe: widget.byMe,
+            replyAction: _replyAction,
+            updateAction: _updateAction,
+            copyToClipboardAction: _copyToClipboardAction,
+            deleteAction: _deleteAction,
+            selectAction: _selectAction,
+          );
+        } else if (!_isSelected && selectModeProvider.selectModeEnabled) {
+          widget.selectPostAction(widget.postSent.post.id);
           setState(() {
-            isSelected = true;
+            _isSelected = true;
           });
         } else {
           widget.deselectPostAction(widget.postSent.post.id);
           setState(() {
-            isSelected = false;
+            _isSelected = false;
           });
         }
       }),
@@ -85,7 +124,7 @@ class PostItemWidgetState extends State<PostItemWidget> {
         widget.longPressAction();
         widget.selectPostAction(widget.postSent.post.id);
         setState(() {
-          isSelected = true;
+          _isSelected = true;
         });
       },
       child: Container(
@@ -111,7 +150,10 @@ class PostItemWidgetState extends State<PostItemWidget> {
                                 width: 10.0,
                               ),
                               CustomPaint(
-                                painter: MessageBubble(Colors.grey[900]!,
+                                painter: MessageBubble(
+                                    _isSelected
+                                        ? AppColors.royalPurple
+                                        : AppColors.postMain,
                                     direction: false),
                               ),
                             ],
@@ -129,7 +171,7 @@ class PostItemWidgetState extends State<PostItemWidget> {
                         padding: const EdgeInsets.symmetric(
                             vertical: 10.0, horizontal: 15.0),
                         decoration: BoxDecoration(
-                          color: isSelected
+                          color: _isSelected
                               ? AppColors.royalPurple
                               : AppColors.postMain,
                           borderRadius: BorderRadius.circular(8.0),
@@ -230,7 +272,10 @@ class PostItemWidgetState extends State<PostItemWidget> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               CustomPaint(
-                                painter: MessageBubble(Colors.grey[900]!,
+                                painter: MessageBubble(
+                                    _isSelected
+                                        ? AppColors.royalPurple
+                                        : AppColors.postMain,
                                     direction: true),
                               ),
                               const SizedBox(

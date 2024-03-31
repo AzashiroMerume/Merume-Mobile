@@ -15,11 +15,11 @@ class MessageBubble extends CustomPainter {
     if (direction) {
       path.lineTo(12.5, 0); // Move right to make wider
       path.lineTo(0, 15); // Increase height
-      path.lineTo(-10, 0); // Move left to make wider
+      path.lineTo(0, 0); // Move left to make wider
     } else {
       path.lineTo(-12.5, 0); // Move left to make wider
       path.lineTo(0, 15); // Increase height
-      path.lineTo(10, 0); // Move right to make wider
+      path.lineTo(0, 0); // Move right to make wider
     }
 
     canvas.drawPath(path, paint);
