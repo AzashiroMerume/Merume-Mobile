@@ -3,16 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:merume_mobile/api/channel_api/channel_posts_api.dart';
 import 'package:merume_mobile/api/posts_api/create_post_api.dart';
-import 'package:merume_mobile/local_db/repositories/channel_last_scroll_position_repository.dart';
 import 'package:merume_mobile/models/user_model.dart';
 import 'package:merume_mobile/providers/error_provider.dart';
 import 'package:merume_mobile/providers/select_mode_provider.dart';
+import 'package:merume_mobile/screens/main/channel_screens/channel_screen_utils.dart';
 import 'package:merume_mobile/screens/main/channel_screens/components/channel_info_popup.dart';
 import 'package:merume_mobile/screens/shared/error_consumer_display_widget.dart';
 import 'package:merume_mobile/constants/colors.dart';
 import 'package:merume_mobile/models/author_model.dart';
 import 'package:merume_mobile/utils/error_custom_snackbar.dart';
-import 'package:merume_mobile/screens/main/channel_screens/channel_details_screen.dart';
 import 'package:merume_mobile/screens/main/channel_screens/components/post_day_formation_widget.dart';
 import 'package:merume_mobile/screens/main/channel_screens/models/post_sent_model.dart';
 import 'package:merume_mobile/constants/enums.dart';
@@ -38,9 +37,10 @@ class ChannelScreen extends StatefulWidget {
 class _ChannelScreenState extends State<ChannelScreen> with RouteAware {
   late ScrollController _scrollController;
   late TextEditingController _textEditingController;
-  late SelectModeProvider _selectModeProvider;
 
   bool _showPostInteractionAppBar = false;
+
+  late SelectModeProvider _selectModeProvider;
   Set<String> selectedPosts = {};
 
   late User? userInfo;
@@ -95,50 +95,11 @@ class _ChannelScreenState extends State<ChannelScreen> with RouteAware {
   @override
   void didPop() {
     if (_scrollController.hasClients) {
-      _saveLastScrollPosition(_scrollController.position.pixels);
+      saveLastScrollPosition(
+          widget.channel.id, _scrollController.position.pixels);
     }
     errorProvider.clearError();
     super.didPop();
-  }
-
-  void _handleAppBarPress() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ChannelDetailsScreen(
-          channel: widget.channel,
-        ),
-      ),
-    );
-  }
-
-  void _saveLastScrollPosition(double currentPosition) async {
-    ChannelLastScrollPositionRepository.writePosition(
-        widget.channel.id, currentPosition);
-  }
-
-  void _moveToLastScrollPosition() async {
-    final savedPosition =
-        ChannelLastScrollPositionRepository.readPosition(widget.channel.id);
-    if (_scrollController.hasClients) {
-      if (savedPosition != null && !savedPosition.isNegative) {
-        _scrollController.jumpTo(savedPosition);
-      } else {
-        // check, can throw error
-        _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
-      }
-    }
-  }
-
-  void _scrollToNewPost() {
-    if (_scrollController.hasClients) {
-      final double position = _scrollController.position.maxScrollExtent;
-      _scrollController.animateTo(
-        position,
-        duration: const Duration(milliseconds: 500),
-        curve: Curves.easeInOut,
-      );
-    }
   }
 
   void _initializeStream() {
@@ -221,53 +182,18 @@ class _ChannelScreenState extends State<ChannelScreen> with RouteAware {
     });
   }
 
-  AppBar _buildDefaultAppBar() {
-    return AppBar(
-      title: Container(
-        padding: const EdgeInsets.only(left: 20.0),
-        child: Text(
-          widget.channel.name,
-          style: const TextStyle(
-            color: Colors.white,
-          ),
-        ),
-      ),
-      automaticallyImplyLeading: false,
-    );
-  }
-
-  AppBar _buildPostInteractionAppBar() {
-    return AppBar(
-      title: Container(
-        padding: const EdgeInsets.only(left: 20.0),
-        child: const Text(
-          "Action",
-          style: TextStyle(color: Colors.white),
-        ),
-      ),
-      automaticallyImplyLeading: false,
-      actions: [
-        TextButton(
-          onPressed: () {
-            setState(() {
-              _showPostInteractionAppBar = false;
-            });
-            _selectModeProvider.setSelectMode(false);
-            selectedPosts.clear();
-          },
-          child: const Text(
-            "CANCEL",
-            style: TextStyle(color: Colors.white),
-          ),
-        ),
-      ],
-    );
-  }
-
   void _longPressAction() {
     setState(() {
       _showPostInteractionAppBar = true;
     });
+  }
+
+  void _cancelPostInteractionAppBar() {
+    setState(() {
+      _showPostInteractionAppBar = false;
+    });
+    _selectModeProvider.setSelectMode(false);
+    selectedPosts.clear();
   }
 
   void _selectPostAction(String postId) {
@@ -295,7 +221,9 @@ class _ChannelScreenState extends State<ChannelScreen> with RouteAware {
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(60),
           child: GestureDetector(
-            onTap: _handleAppBarPress,
+            onTap: (() {
+              handleAppBarPress(context, widget.channel);
+            }),
             child: Container(
               decoration: BoxDecoration(
                 border: Border(
@@ -306,8 +234,8 @@ class _ChannelScreenState extends State<ChannelScreen> with RouteAware {
                 ),
               ),
               child: _showPostInteractionAppBar
-                  ? _buildPostInteractionAppBar()
-                  : _buildDefaultAppBar(),
+                  ? buildPostInteractionAppBar(_cancelPostInteractionAppBar)
+                  : buildDefaultAppBar(widget.channel.name),
             ),
           ),
         ),
@@ -327,7 +255,8 @@ class _ChannelScreenState extends State<ChannelScreen> with RouteAware {
                         builder: (context, snapshot) {
                           if (snapshot.hasData) {
                             WidgetsBinding.instance.addPostFrameCallback((_) {
-                              _moveToLastScrollPosition();
+                              moveToLastScrollPosition(
+                                  widget.channel.id, _scrollController);
                             });
 
                             isLoading = false;
@@ -609,7 +538,7 @@ class _ChannelScreenState extends State<ChannelScreen> with RouteAware {
                               ]);
                             });
 
-                            _scrollToNewPost();
+                            scrollToNewPost(_scrollController);
 
                             final tempPostBody = postBody;
                             final tempPostImages = postImages;

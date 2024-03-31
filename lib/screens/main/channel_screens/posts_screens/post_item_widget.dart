@@ -36,6 +36,29 @@ class PostItemWidget extends StatefulWidget {
 
 class PostItemWidgetState extends State<PostItemWidget> {
   bool isSelected = false;
+  late SelectModeProvider selectModeProvider;
+
+  @override
+  void initState() {
+    super.initState();
+    selectModeProvider =
+        Provider.of<SelectModeProvider>(context, listen: false);
+    selectModeProvider.addListener(handleSelectModeChange);
+  }
+
+  @override
+  void dispose() {
+    selectModeProvider.removeListener(handleSelectModeChange);
+    super.dispose();
+  }
+
+  void handleSelectModeChange() {
+    if (!selectModeProvider.selectModeEnabled && isSelected) {
+      setState(() {
+        isSelected = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +82,6 @@ class PostItemWidgetState extends State<PostItemWidget> {
         }
       }),
       onLongPress: () {
-        print("Post ID: ${widget.postSent.post.id} is pressed for a while.");
         widget.longPressAction();
         widget.selectPostAction(widget.postSent.post.id);
         setState(() {
