@@ -7,16 +7,16 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:merume_mobile/api/auth_api/access_token_api.dart';
 import 'package:merume_mobile/constants/api_config.dart';
+import 'package:merume_mobile/constants/enums.dart';
 import 'package:merume_mobile/constants/exceptions.dart';
-import 'package:merume_mobile/models/channel_model.dart';
 
 const storage = FlutterSecureStorage();
 
 Future<void> newChannel(
-    ChallengeType challengeType,
+    ChallengeTypes challengeType,
     String name,
     int? challangeGoal,
-    VisibilityType visibility,
+    VisibilityTypes visibility,
     String description,
     List<String> categories,
     String? channelPfpLink) async {

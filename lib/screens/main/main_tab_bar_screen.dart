@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:merume_mobile/api/user_api/heartbeat_manager.dart';
 import 'package:merume_mobile/providers/error_provider.dart';
 import 'package:merume_mobile/constants/text_styles.dart';
 import 'package:provider/provider.dart';
@@ -8,7 +7,6 @@ import 'package:merume_mobile/screens/main/add_channel_screens/add_channel_tab_s
 import 'package:merume_mobile/screens/main/tab_bar_screens/account_tab_bar_screen/account_screen.dart';
 import 'package:merume_mobile/screens/main/tab_bar_screens/created_channels_tab_bar_screen/created_channels_screen.dart';
 import 'package:merume_mobile/screens/main/tab_bar_screens/followed_channels_tab_bar_screen/followed_tab_screen.dart';
-import 'package:web_socket_channel/io.dart';
 
 class MainTabBarScreen extends StatefulWidget {
   const MainTabBarScreen({super.key});
@@ -21,7 +19,6 @@ class _MainTabBarScreenState extends State<MainTabBarScreen> {
   int _currentIndex = 0;
   int _oldCurrentIndex = 0;
 
-  late HeartbeatManager _heartbeatManager;
   late ErrorProvider errorProvider;
 
   final List<Widget> _screens = [
@@ -38,19 +35,14 @@ class _MainTabBarScreenState extends State<MainTabBarScreen> {
     style: TextStyles.title,
   );
 
-  IOWebSocketChannel? hearbeatWebsocketChannel;
-
   @override
   void initState() {
     super.initState();
     errorProvider = Provider.of<ErrorProvider>(context, listen: false);
-
-    _heartbeatManager = HeartbeatManager();
   }
 
   @override
   void dispose() {
-    _heartbeatManager.close();
     super.dispose();
   }
 

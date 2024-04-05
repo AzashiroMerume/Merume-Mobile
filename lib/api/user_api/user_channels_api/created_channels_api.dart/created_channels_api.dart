@@ -14,7 +14,7 @@ Stream<List<Channel>> fetchOwnChannels() async* {
 
   while (true) {
     try {
-      final headers = await getHeadersWithValidAccessToken();
+      final headers = await getHeaderWithValidAccessToken();
 
       final channel = IOWebSocketChannel.connect(
         Uri.parse(channelUrl),

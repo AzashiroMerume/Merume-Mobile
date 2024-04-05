@@ -229,14 +229,14 @@ class PostItemWidgetState extends State<PostItemWidget> {
                                 ),
                                 const SizedBox(width: 8.0),
                                 if (widget.postSent.status ==
-                                    MessageStatus.error)
+                                    MessageStatuses.error)
                                   const Icon(
                                     Icons.error_outline_outlined,
                                     color: Colors.red,
                                     size: 20.0,
                                   )
                                 else if (widget.postSent.status ==
-                                    MessageStatus.waiting)
+                                    MessageStatuses.waiting)
                                   const SizedBox(
                                     width: 20.0,
                                     height: 20.0,

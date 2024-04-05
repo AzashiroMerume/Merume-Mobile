@@ -527,7 +527,7 @@ class _ChannelScreenState extends State<ChannelScreen> with RouteAware {
                                   lastPostList.add(
                                     PostSent(
                                         post: post,
-                                        status: MessageStatus.waiting),
+                                        status: MessageStatuses.waiting),
                                   );
                                   return; // Exit the function since post is added
                                 }
@@ -536,7 +536,8 @@ class _ChannelScreenState extends State<ChannelScreen> with RouteAware {
                               // Create a new list and add the new post if not within 5 minutes
                               posts[formattedDate]!.add([
                                 PostSent(
-                                    post: post, status: MessageStatus.waiting),
+                                    post: post,
+                                    status: MessageStatuses.waiting),
                               ]);
                             });
 
@@ -564,10 +565,10 @@ class _ChannelScreenState extends State<ChannelScreen> with RouteAware {
                                     for (final postSent in postList) {
                                       // Check if the conditions match for the `PostSent` object
                                       if (postSent.status ==
-                                              MessageStatus.waiting &&
+                                              MessageStatuses.waiting &&
                                           postSent.post.id == post.id) {
                                         // Update the status to error
-                                        postSent.status = MessageStatus.error;
+                                        postSent.status = MessageStatuses.error;
                                         return; // Exit the function since we found the matching post
                                       }
                                     }
@@ -578,7 +579,7 @@ class _ChannelScreenState extends State<ChannelScreen> with RouteAware {
                                     posts[formattedDate]!.add([
                                       PostSent(
                                           post: post,
-                                          status: MessageStatus.error)
+                                          status: MessageStatuses.error)
                                     ]);
                                   });
                                 } else {
@@ -588,7 +589,7 @@ class _ChannelScreenState extends State<ChannelScreen> with RouteAware {
                                       [
                                         PostSent(
                                             post: post,
-                                            status: MessageStatus.error)
+                                            status: MessageStatuses.error)
                                       ]
                                     ];
                                   });

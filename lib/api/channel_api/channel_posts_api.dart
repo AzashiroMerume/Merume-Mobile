@@ -47,7 +47,7 @@ Stream<Map<String, List<List<PostSent>>>> fetchChannelPosts(
 
   while (true) {
     try {
-      final headers = await getHeadersWithValidAccessToken();
+      final headers = await getHeaderWithValidAccessToken();
 
       final channel =
           IOWebSocketChannel.connect(Uri.parse(channelUrl), headers: headers);
@@ -65,7 +65,7 @@ Stream<Map<String, List<List<PostSent>>>> fetchChannelPosts(
               final List<List<PostSent>> transformedLists =
                   value.map((innerList) {
                 return innerList.map((post) {
-                  return PostSent(post: post, status: MessageStatus.done);
+                  return PostSent(post: post, status: MessageStatuses.done);
                 }).toList();
               }).toList();
               return MapEntry(key, transformedLists);

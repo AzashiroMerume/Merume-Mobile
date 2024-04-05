@@ -23,7 +23,7 @@ class HeartbeatManager {
 
   void _initializeWebSocket() async {
     const heartbeatUrl = '${ConfigAPI.wsURL}user/heartbeat';
-    final headers = await getHeadersWithValidAccessToken();
+    final headers = await getHeaderWithValidAccessToken();
     _webSocketChannel = IOWebSocketChannel.connect(
       Uri.parse(heartbeatUrl),
       headers: headers,

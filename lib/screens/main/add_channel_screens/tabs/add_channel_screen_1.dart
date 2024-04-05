@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:merume_mobile/constants/colors.dart';
-import 'package:merume_mobile/models/channel_model.dart';
+import 'package:merume_mobile/constants/enums.dart';
 import 'package:merume_mobile/screens/shared/basic/basic_elevated_button_widget.dart';
 import 'package:merume_mobile/constants/text_styles.dart';
 
 class AddChannelScreenFirst extends StatefulWidget {
   final VoidCallback onComplete;
-  final Function(ChallengeType?) onItemSelected;
-  final ChallengeType? initialSelectedItem;
+  final Function(ChallengeTypes?) onItemSelected;
+  final ChallengeTypes? initialSelectedItem;
 
   const AddChannelScreenFirst({
     super.key,
@@ -21,7 +21,7 @@ class AddChannelScreenFirst extends StatefulWidget {
 }
 
 class _AddChannelScreenFirstState extends State<AddChannelScreenFirst> {
-  ChallengeType? selectedItem;
+  ChallengeTypes? selectedItem;
 
   @override
   void initState() {
@@ -29,7 +29,7 @@ class _AddChannelScreenFirstState extends State<AddChannelScreenFirst> {
     selectedItem = widget.initialSelectedItem;
   }
 
-  void selectItem(ChallengeType item) {
+  void selectItem(ChallengeTypes item) {
     setState(() {
       selectedItem = item;
     });
@@ -62,17 +62,17 @@ class _AddChannelScreenFirstState extends State<AddChannelScreenFirst> {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      selectItem(ChallengeType.fixed);
+                      selectItem(ChallengeTypes.fixed);
                     },
                     child: Container(
                       margin: const EdgeInsets.only(bottom: 5.0),
                       padding: const EdgeInsets.all(10.0),
                       decoration: BoxDecoration(
-                        color: selectedItem == ChallengeType.fixed
+                        color: selectedItem == ChallengeTypes.fixed
                             ? AppColors.royalPurple
                             : Colors.transparent,
                         border: Border.all(
-                          color: selectedItem == ChallengeType.fixed
+                          color: selectedItem == ChallengeTypes.fixed
                               ? AppColors.royalPurple
                               : Colors.transparent,
                           width: 2.0,
@@ -87,7 +87,7 @@ class _AddChannelScreenFirstState extends State<AddChannelScreenFirst> {
                             style: TextStyle(
                               fontSize: 20.0,
                               fontFamily: "Poppins",
-                              color: selectedItem == ChallengeType.fixed
+                              color: selectedItem == ChallengeTypes.fixed
                                   ? Colors.white
                                   : AppColors.royalPurple,
                             ),
@@ -111,17 +111,17 @@ class _AddChannelScreenFirstState extends State<AddChannelScreenFirst> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      selectItem(ChallengeType.unfixed);
+                      selectItem(ChallengeTypes.unfixed);
                     },
                     child: Container(
                       margin: const EdgeInsets.only(bottom: 5.0),
                       padding: const EdgeInsets.all(10.0),
                       decoration: BoxDecoration(
-                        color: selectedItem == ChallengeType.unfixed
+                        color: selectedItem == ChallengeTypes.unfixed
                             ? AppColors.royalPurple
                             : Colors.transparent,
                         border: Border.all(
-                          color: selectedItem == ChallengeType.unfixed
+                          color: selectedItem == ChallengeTypes.unfixed
                               ? AppColors.royalPurple
                               : Colors.transparent,
                           width: 2.0,
@@ -136,7 +136,7 @@ class _AddChannelScreenFirstState extends State<AddChannelScreenFirst> {
                             style: TextStyle(
                               fontSize: 20.0,
                               fontFamily: "Poppins",
-                              color: selectedItem == ChallengeType.unfixed
+                              color: selectedItem == ChallengeTypes.unfixed
                                   ? Colors.white
                                   : AppColors.royalPurple,
                             ),

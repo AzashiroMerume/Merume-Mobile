@@ -1,10 +1,11 @@
+import 'package:merume_mobile/constants/enums.dart';
 import 'package:merume_mobile/models/author_model.dart';
 
 class Channel {
   final String id;
   final Author author;
   final String name;
-  final Visibility visibility;
+  final VisibilityTypes visibility;
   final String description;
   final List<String> categories;
   final Challenge challenge;
@@ -32,7 +33,7 @@ class Channel {
       id: json['_id']['\$oid'],
       author: Author.fromJson(json['author']),
       name: json['name'],
-      visibility: Visibility.fromString(json['visibility']),
+      visibility: visibilityTypeFromString(json['visibility']),
       description: json['description'],
       categories: List<String>.from(json['categories']),
       challenge: Challenge.fromJson(json['challenge']),
@@ -46,30 +47,6 @@ class Channel {
       createdAt: DateTime.parse(json['created_at']).toLocal(),
     );
   }
-}
-
-class Visibility {
-  final VisibilityType value;
-
-  const Visibility({
-    required this.value,
-  });
-
-  factory Visibility.fromString(String value) {
-    switch (value.toLowerCase()) {
-      case 'public':
-        return const Visibility(value: VisibilityType.public);
-      case 'private':
-        return const Visibility(value: VisibilityType.private);
-      default:
-        throw Exception('Invalid visibility type: $value');
-    }
-  }
-}
-
-enum VisibilityType {
-  public,
-  private,
 }
 
 class Followers {
@@ -99,7 +76,7 @@ class Followers {
 }
 
 class Challenge {
-  final ChallengeType challengeType;
+  final ChallengeTypes challengeType;
   final int? goal;
   final int points;
   final int currentDay;
@@ -131,20 +108,4 @@ class Challenge {
           : null,
     );
   }
-
-  static ChallengeType challengeTypeFromString(String type) {
-    switch (type.toLowerCase()) {
-      case 'fixed':
-        return ChallengeType.fixed;
-      case 'unfixed':
-        return ChallengeType.unfixed;
-      default:
-        throw Exception('Invalid challenge type: $type');
-    }
-  }
-}
-
-enum ChallengeType {
-  fixed,
-  unfixed,
 }

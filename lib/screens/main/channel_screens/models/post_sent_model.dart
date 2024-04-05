@@ -3,7 +3,7 @@ import 'package:merume_mobile/constants/enums.dart';
 
 class PostSent {
   final Post post;
-  MessageStatus status;
+  MessageStatuses status;
 
   PostSent({
     required this.post,

@@ -7,8 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:merume_mobile/api/user_api/user_channels_api/new_channel_api.dart';
 import 'package:merume_mobile/constants/colors.dart';
+import 'package:merume_mobile/constants/enums.dart';
 import 'package:merume_mobile/constants/exceptions.dart';
-import 'package:merume_mobile/models/channel_model.dart' as channel_model;
 import 'package:merume_mobile/utils/error_custom_snackbar.dart';
 import 'package:merume_mobile/screens/shared/basic/basic_elevated_button_widget.dart';
 import 'package:merume_mobile/screens/shared/pfp_load_image_widget.dart';
@@ -17,7 +17,7 @@ import 'package:merume_mobile/constants/categories.dart';
 import 'package:objectid/objectid.dart';
 
 class AddChannelScreenSecond extends StatefulWidget {
-  final channel_model.ChallengeType? selectedChallengeType;
+  final ChallengeTypes? selectedChallengeType;
   final Function(int step) onComplete;
 
   const AddChannelScreenSecond(
@@ -42,8 +42,7 @@ class _AddChannelScreenSecondState extends State<AddChannelScreenSecond> {
   String challengeName = '';
   int? challengeGoal;
   String challengeDescription = '';
-  channel_model.VisibilityType challengeVisibility =
-      channel_model.VisibilityType.public;
+  VisibilityTypes challengeVisibility = VisibilityTypes.public;
   List<String> challengeCategories = [];
 
   String? selectedImagePath;
@@ -130,7 +129,7 @@ class _AddChannelScreenSecondState extends State<AddChannelScreenSecond> {
           'Challenge must have at least one category';
     }
 
-    if (widget.selectedChallengeType == channel_model.ChallengeType.fixed) {
+    if (widget.selectedChallengeType == ChallengeTypes.fixed) {
       if (_challengeGoalController.text.isEmpty) {
         errors['challengeGoal'] = 'Challenge goal is required';
       } else {
@@ -191,8 +190,7 @@ class _AddChannelScreenSecondState extends State<AddChannelScreenSecond> {
                   },
                 ),
                 const SizedBox(height: 32.0),
-                if (widget.selectedChallengeType ==
-                    channel_model.ChallengeType.fixed)
+                if (widget.selectedChallengeType == ChallengeTypes.fixed)
                   Column(
                     children: [
                       TextField(
@@ -241,17 +239,17 @@ class _AddChannelScreenSecondState extends State<AddChannelScreenSecond> {
                     borderRadius: BorderRadius.circular(4.0),
                   ),
                   child: DropdownButtonHideUnderline(
-                    child: DropdownButton<channel_model.VisibilityType>(
+                    child: DropdownButton<VisibilityTypes>(
                       value: challengeVisibility,
                       style: const TextStyle(color: Colors.black),
-                      items: <channel_model.VisibilityType>[
-                        channel_model.VisibilityType.public,
-                        channel_model.VisibilityType.private
-                      ].map((channel_model.VisibilityType value) {
+                      items: <VisibilityTypes>[
+                        VisibilityTypes.public,
+                        VisibilityTypes.private
+                      ].map((VisibilityTypes value) {
                         final formattedVisibility =
                             value.name[0].toUpperCase() +
                                 value.name.substring(1);
-                        return DropdownMenuItem<channel_model.VisibilityType>(
+                        return DropdownMenuItem<VisibilityTypes>(
                           value: value,
                           child: Text((formattedVisibility)),
                         );
