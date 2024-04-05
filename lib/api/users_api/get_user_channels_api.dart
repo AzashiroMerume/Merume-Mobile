@@ -24,7 +24,7 @@ Future<List<Channel>?> getUserChannels(String userId) async {
     }
 
     final response = await http.get(
-      Uri.parse('${ConfigAPI.baseURL}user/$userId'),
+      Uri.parse('${ConfigAPI.baseURL}users/$userId'),
       headers: {
         'access_token': accessToken,
       },
