@@ -7,10 +7,10 @@ enum VisibilityTypes {
   private,
 }
 
-visibilityTypeFromString(String visibility) {
+VisibilityTypes visibilityTypeFromString(String visibility) {
   switch (visibility.toLowerCase()) {
     case 'public':
-      return VisibilityTypes;
+      return VisibilityTypes.public;
     case 'private':
       return VisibilityTypes.private;
     default:
