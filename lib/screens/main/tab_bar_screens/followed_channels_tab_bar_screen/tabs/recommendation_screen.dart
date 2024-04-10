@@ -4,7 +4,7 @@ import 'package:merume_mobile/constants/colors.dart';
 import 'package:merume_mobile/constants/exceptions.dart';
 import 'package:merume_mobile/models/channel_model.dart';
 import 'package:merume_mobile/api/user_api/recommendations_api/recommendations_api.dart';
-import 'package:merume_mobile/screens/main/channel_screens/channels_item_widget.dart';
+import 'package:merume_mobile/screens/main/channel_screens/components/channels_item_widget.dart';
 import 'package:merume_mobile/screens/settings/preferences_screen.dart';
 import 'package:merume_mobile/screens/shared/basic/basic_elevated_button_widget.dart';
 

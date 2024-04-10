@@ -5,7 +5,7 @@ import 'package:merume_mobile/constants/api_config.dart';
 import 'package:merume_mobile/models/last_update_model.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:merume_mobile/api/components/get_headers_with_access_token_api.dart';
+import 'package:merume_mobile/api/utils/get_headers_with_access_token_api.dart';
 
 const storage = FlutterSecureStorage();
 

@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
-import 'package:merume_mobile/api/components/get_headers_with_access_token_api.dart';
+import 'package:merume_mobile/api/utils/get_headers_with_access_token_api.dart';
 import 'package:merume_mobile/constants/api_config.dart';
 import 'package:merume_mobile/models/post_model.dart';
 import 'package:merume_mobile/constants/exceptions.dart';

@@ -300,7 +300,7 @@ class _ChannelScreenState extends State<ChannelScreen> with RouteAware {
                                                         horizontal: 10.0,
                                                         vertical: 5.0),
                                                 decoration: BoxDecoration(
-                                                  color: AppColors.postMain,
+                                                  color: AppColors.darkGrey,
                                                   borderRadius:
                                                       BorderRadius.circular(
                                                           8.0),
@@ -421,7 +421,7 @@ class _ChannelScreenState extends State<ChannelScreen> with RouteAware {
               //       padding: const EdgeInsets.symmetric(
               //           horizontal: 10.0, vertical: 5.0),
               //       decoration: BoxDecoration(
-              //         color: AppColors.postMain,
+              //         color: AppColors.darkGrey,
               //         borderRadius: BorderRadius.circular(8.0),
               //       ),
               //       child: const Text(

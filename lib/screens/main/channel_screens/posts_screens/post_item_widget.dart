@@ -153,7 +153,7 @@ class PostItemWidgetState extends State<PostItemWidget> {
                                 painter: MessageBubble(
                                     _isSelected
                                         ? AppColors.royalPurple
-                                        : AppColors.postMain,
+                                        : AppColors.darkGrey,
                                     direction: false),
                               ),
                             ],
@@ -173,7 +173,7 @@ class PostItemWidgetState extends State<PostItemWidget> {
                         decoration: BoxDecoration(
                           color: _isSelected
                               ? AppColors.royalPurple
-                              : AppColors.postMain,
+                              : AppColors.darkGrey,
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                         width: 300.0,
@@ -275,7 +275,7 @@ class PostItemWidgetState extends State<PostItemWidget> {
                                 painter: MessageBubble(
                                     _isSelected
                                         ? AppColors.royalPurple
-                                        : AppColors.postMain,
+                                        : AppColors.darkGrey,
                                     direction: true),
                               ),
                               const SizedBox(

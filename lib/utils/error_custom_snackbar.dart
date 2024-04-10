@@ -10,7 +10,7 @@ void showCustomSnackBar(BuildContext context, {String message = ''}) {
     animationCurve: Curves.fastLinearToSlowEaseIn,
     animateFrom: AnimateFrom.fromTop,
     child: Container(
-      color: AppColors.postMain,
+      color: AppColors.darkGrey,
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
       child: Row(
         mainAxisSize: MainAxisSize.max,

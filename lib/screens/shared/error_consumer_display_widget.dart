@@ -36,7 +36,7 @@ class ErrorConsumerDisplay extends StatelessWidget {
                                 margin: const EdgeInsets.only(top: 10.0),
                                 padding: const EdgeInsets.all(15.0),
                                 decoration: BoxDecoration(
-                                  color: AppColors.postMain,
+                                  color: AppColors.darkGrey,
                                   borderRadius: BorderRadius.circular(15.0),
                                 ),
                                 child: Column(

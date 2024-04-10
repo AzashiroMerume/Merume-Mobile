@@ -13,7 +13,7 @@ class ChannelCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: AppColors.postMain,
+      color: AppColors.darkGrey,
       elevation: 3.0,
       margin: const EdgeInsets.symmetric(vertical: 8.0),
       child: GestureDetector(

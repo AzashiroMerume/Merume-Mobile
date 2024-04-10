@@ -21,7 +21,7 @@ void showActionsModal(
     builder: (BuildContext context) {
       return Container(
         decoration: BoxDecoration(
-          color: AppColors.postMain,
+          color: AppColors.darkGrey,
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(20),
             topRight: Radius.circular(20),

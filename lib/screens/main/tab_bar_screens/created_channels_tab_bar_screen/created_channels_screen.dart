@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:merume_mobile/providers/error_provider.dart';
 import 'package:merume_mobile/models/channel_model.dart';
 import 'package:merume_mobile/api/user_api/user_channels_api/created_channels_api.dart/created_channels_api.dart';
+import 'package:merume_mobile/screens/main/channel_screens/components/channels_list_widget.dart';
 import 'package:merume_mobile/screens/shared/error_consumer_display_widget.dart';
-import 'package:merume_mobile/screens/main/channel_screens/channels_item_widget.dart';
 import 'package:merume_mobile/constants/text_styles.dart';
 import 'package:merume_mobile/utils/data_fetching_utils/basic_stream_data_handler.dart';
 import 'package:merume_mobile/utils/observer_utils.dart';
@@ -104,12 +104,8 @@ class _CreatedChannelsScreenState extends State<CreatedChannelsScreen>
                             );
                           }
 
-                          final channels = snapshot.data!;
-                          return ListView.builder(
-                            itemCount: channels.length,
-                            itemBuilder: (_, index) => ChannelItem(
-                              channel: channels[index],
-                            ),
+                          return ChannelsList(
+                            channels: snapshot.data!,
                           );
                         } else if (snapshot.hasError) {
                           return const Center(
