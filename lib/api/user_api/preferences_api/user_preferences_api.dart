@@ -79,7 +79,7 @@ Future<List<String>?> getPreferences() async {
     }
 
     final response = await http.get(
-      Uri.parse('http://localhost:8081/preferences'),
+      Uri.parse('${ConfigAPI.baseURL}user/preferences'),
       headers: {
         'access_token': accessToken,
       },
@@ -89,17 +89,13 @@ Future<List<String>?> getPreferences() async {
       // Parse the response JSON into a map
       final Map<String, dynamic> responseData = json.decode(response.body);
 
-      if (responseData['success'] == true) {
-        final data = responseData['data'];
+      final data = responseData['data'];
 
-        if (data != null) {
-          List<String> preferences = List<String>.from(data);
-          return preferences;
-        } else {
-          return null;
-        }
+      if (data != null) {
+        List<String> preferences = List<String>.from(data);
+        return preferences;
       } else {
-        throw Exception('Preferences retrieval failed');
+        return null;
       }
     } else if (response.statusCode == 401) {
       throw TokenErrorException('Token authentication error');

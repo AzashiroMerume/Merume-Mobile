@@ -41,14 +41,9 @@ Future<String?> getNewAccessToken() async {
       case 400:
         throw ServerException('Internal server error');
       case 401:
-        /*  final responseData = json.decode(response.body);
-        if (responseData['error_message'] == 'Expired') { */
         await storage.delete(key: 'accessToken');
         await storage.delete(key: 'refreshToken');
         throw TokenErrorException('Token expired');
-      /* } else {
-          throw TokenErrorException('Token authentication error');
-        } */
       case 500:
         throw ServerException('Internal server error');
       default:
